@@ -17,7 +17,7 @@ DEM resolution or mean spacing of spot heights (metres)                       : 
 Distance to search (metres)                                                   : 5
 
 #======================================================================================================================
-Path to all GIS data (all paths below are relative to this)                   : ../../JB_West_Sussex_GIS/
+Path to all GIS data (all paths below are relative to this)                   : /home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/
 
 Output shapefile for flow marker points (no extension)                        : ff_flow_marker_points
 Style file (with extension, blank for default style)                          : ff_flow_marker_points.qml
