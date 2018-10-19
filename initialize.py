@@ -52,18 +52,36 @@ def setUpSimulation():
       printStr = "Both topography and anthropogenic elements considered\n"      
    shared.fpOut.write(printStr)   
 
-   if shared.considerDitches:
-      printStr = "Ditches considered\n"
-   else:
-      printStr = "Ditches not considered\n"
-   shared.fpOut.write(printStr)
-
    if shared.fillBlindPits:
       printStr = "Blind pits filled\n"
    else:
       printStr = "Blind pits not filled\n"
    shared.fpOut.write(printStr)      
    
+   if shared.considerDitches:
+      printStr = "Ditches considered\n"
+   else:
+      printStr = "Ditches not considered\n"
+   shared.fpOut.write(printStr)
+
+   if shared.considerDitches:
+      printStr = "Ditches considered\n"
+   else:
+      printStr = "Ditches not considered\n"
+   shared.fpOut.write(printStr)
+
+   if shared.considerDitches:
+      printStr = "Ditches considered\n"
+   else:
+      printStr = "Ditches not considered\n"
+   shared.fpOut.write(printStr)
+
+   if shared.considerDitches:
+      printStr = "Ditches considered\n"
+   else:
+      printStr = "Ditches not considered\n"
+   shared.fpOut.write(printStr)
+
    shared.fpOut.write("DEM resolution (metres) : " + str(shared.resElevData) + "\n")
    shared.fpOut.write("Distance to search (metres) : " + str(shared.searchDist) + "\n\n")
 

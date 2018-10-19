@@ -153,20 +153,6 @@ def readInput():
          dataLine += 1
          
       elif dataLine == 4:
-         # Consider ditches?
-         tempStr = data.upper().strip()
-         if tempStr == "Y":
-            shared.considerDitches = True
-         elif tempStr == "N":
-            shared.considerDitches = False
-         else:
-            printStr = "ERROR: consider ditches = " + tempStr + ", it must be Y or N\n"
-            print(printStr)
-            
-            return -1            
-         dataLine += 1        
- 
-      elif dataLine == 5:
          # Fill blind pits?
          tempStr = data.upper().strip()
          if tempStr == "Y":
@@ -179,82 +165,147 @@ def readInput():
             
             return -1            
          dataLine += 1        
- 
+         
+      elif dataLine == 5:
+         # Consider ditches and streams?
+         tempStr = data.upper().strip()
+         if tempStr == "Y":
+            shared.considerDitches = True
+         elif tempStr == "N":
+            shared.considerDitches = False
+         else:
+            printStr = "ERROR: consider ditches and streams = " + tempStr + ", it must be Y or N\n"
+            print(printStr)
+            
+            return -1            
+         dataLine += 1        
+         
       elif dataLine == 6:
+         # Consider field boundaries?
+         if shared.runType == "T":
+            shared.considerFieldBoundaries = False
+         else:
+            tempStr = data.upper().strip()
+            if tempStr == "Y":
+               shared.considerFieldBoundaries = True
+            elif tempStr == "N":
+               shared.considerFieldBoundaries = False
+            else:
+               printStr = "ERROR: consider field boundaries = " + tempStr + ", it must be Y or N\n"
+               print(printStr)
+               
+               return -1            
+         dataLine += 1        
+         
+      elif dataLine == 7:
+         # Consider roads?
+         if shared.runType == "T":
+            shared.considerRoad = False
+         else:
+            tempStr = data.upper().strip()
+            if tempStr == "Y":
+               shared.considerRoads = True
+            elif tempStr == "N":
+               shared.considerRoads = False
+            else:
+               printStr = "ERROR: consider roads = " + tempStr + ", it must be Y or N\n"
+               print(printStr)
+               
+               return -1            
+         dataLine += 1        
+         
+      elif dataLine == 8:
+         # Consider tracks and paths?
+         if shared.runType == "T":
+            shared.considerTracks = False
+         else:
+            tempStr = data.upper().strip()
+            if tempStr == "Y":
+               shared.considerTracks = True
+            elif tempStr == "N":
+               shared.considerTracks = False
+            else:
+               printStr = "ERROR: consider tracks and paths = " + tempStr + ", it must be Y or N\n"
+               print(printStr)
+               
+               return -1            
+         dataLine += 1        
+ 
+      elif dataLine == 9:
          # The resolution of the DEM layer or the mean spacing of spot heights (m) 
          shared.resElevData = float(data)
          dataLine += 1
     
-      elif dataLine == 7:
+      elif dataLine == 10:
          # Distance to search (metres)
          shared.searchDist = float(data)
          dataLine += 1
          
-      elif dataLine == 8:
+      elif dataLine == 11:
          # Path to all GIS data
          shared.GISPath = data
          dataLine += 1
          
-      elif dataLine == 9:
+      elif dataLine == 12:
          # Output shapefile for flow marker points
          shared.outFileFlowMarkerPoints = shared.GISPath + data
          dataLine += 1
          
-      elif dataLine == 10:
+      elif dataLine == 13:
          # Style for Output shapefile for flow marker points
          shared.outFileFlowMarkerPointsStyle = shared.GISPath + data
          dataLine += 1
                   
-      elif dataLine == 11:
+      elif dataLine == 14:
          shared.outFileFlowMarkerPointsTransparency = int(data)
          dataLine += 1
    
-      elif dataLine == 12:   
+      elif dataLine == 15:   
           # Output shapefile for flow lines
          shared.outFileFlowLines = shared.GISPath + data
          dataLine += 1
          
-      elif dataLine == 13:   
+      elif dataLine == 16:   
           # Style for output shapefile for flow lines
          shared.outFileFlowLinesStyle = shared.GISPath + data
          dataLine += 1
          
-      elif dataLine == 14:
+      elif dataLine == 17:
          shared.outFileFlowLinesTransparency = int(data)
          dataLine += 1
          
-      elif dataLine == 15:
+      elif dataLine == 18:
          shared.windowWidth = int(data)
          dataLine += 1
           
-      elif dataLine == 16:    
+      elif dataLine == 19:    
          shared.windowHeight = int(data)
          dataLine += 1
          
-      elif dataLine == 17:
+      elif dataLine == 20:
          shared.windowMagnification = float(data)
          dataLine += 1
         
-      elif dataLine == 18:
+      elif dataLine == 21:
          # External coordinate reference system
          shared.externalCRS = data  
          dataLine += 1
          
-      elif dataLine == 19:
+      elif dataLine == 22:
          # Coordinates of SW corner of area displayed
          coords = data.split(',')
          shared.extentRect.setXMinimum(int(coords[0]))
          shared.extentRect.setYMinimum(int(coords[1]))
          dataLine += 1
          
-      elif dataLine == 20:
+      elif dataLine == 23:
          # Coordinates of NE corner of area displayed 
          coords = data.split(',')
          shared.extentRect.setXMaximum(int(coords[0]))
          shared.extentRect.setYMaximum(int(coords[1]))
          dataLine += 1
              
-      elif dataLine == 21:
+      elif dataLine == 24:
          # Vector files
          first = True
          vecLine = 0
@@ -300,7 +351,7 @@ def readInput():
                
          dataLine += 1
                
-      elif dataLine == 22:
+      elif dataLine == 25:
          # Raster files
          first = True
          rasLine = 0
@@ -342,7 +393,7 @@ def readInput():
                
          dataLine += 1
             
-      elif dataLine == 23:
+      elif dataLine == 26:
          # Field observations, don't bother reading them if this is a topography-only run
          if shared.runType == "T":
             break

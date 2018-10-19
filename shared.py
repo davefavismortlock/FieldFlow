@@ -107,10 +107,16 @@ MARKER_AT_STREAM              = "Enter stream?"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "16 October 2018 version"
+progVer = "19 October 2018 version"
 runType = ""
 runTitle = ""
+
+fillBlindPits = ""
 considerDitches = ""
+considerFieldBoundaries = ""
+considerRoads = ""
+considerTracks = ""
+
 externalCRS = ""
 GISPath = ""
 dataInputFile = ""
@@ -140,7 +146,6 @@ resElevData = 0
 distDiag = 0
 
 searchDist = 0
-fillBlindPits = ""
 
 cellWidthDEM = 0
 cellHeightDEM = 0
