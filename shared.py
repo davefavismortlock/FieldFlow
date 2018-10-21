@@ -107,7 +107,7 @@ MARKER_AT_STREAM              = "Enter stream?"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "19 October 2018 version"
+progVer = "21 October 2018 version"
 runType = ""
 runTitle = ""
 

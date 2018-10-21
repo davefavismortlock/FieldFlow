@@ -32,7 +32,7 @@ Transparency for flow lines (0-100)                                           : 
 
 Width of window (pixels)                                                      : 500
 Height of window (pixels)                                                     : 1150
-Initial magnification                                                         : 2.0
+Initial magnification                                                         : 1.5
    
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 

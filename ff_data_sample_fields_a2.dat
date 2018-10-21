@@ -108,7 +108,7 @@ END OF VECTOR LAYERS ===========================================================
 
 # Raster files ========================================================================================================
 
-# DEM EITHER VECTOR OR RASTER REQUIRED ==================================================================================
+# DEM REQUIRED ========================================================================================================
 DEM file (with extension)                                                     : terrain-5-dtm/su/terrain-5-dtm-SU82SW.tif
 DEM title                                                                     : OS Terrain 5 SU82sw
 Style file (with extension, blank for default style)                          : terrain-5-dtm/default.qml
