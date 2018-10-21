@@ -3,17 +3,17 @@
 # Data for FieldFlow: West Sussex Sample Fields A
 #
 #======================================================================================================================
-Run title                                                                     : West Sussex: Sample Fields A. NO FIELD OBS, FILL BLIND PITS
+Run title                                                                     : West Sussex: Sample Fields A. CONSIDER ALL FIELD OBERVATIONS
 
 Fields which generate flow (comma-separated list, blank for auto)             : 22a, Unknown, B6
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
-Consider field observations?                                                  : N
-Fill blind pits?                                                              : Y
-Consider ditches and streams?                                                 : N
-Consider roads? (is N if field observations not considered)                   : N
-Consider tracks and paths? (is N if field observations not considered)        : N
-Consider field boundaries (is N if field observations not considered)         : N
+Consider field observations?                                                  : Y
+Fill blind pits?                                                              : N
+Consider ditches and streams?                                                 : Y
+Consider roads? (is N if field observations not considered)                   : Y
+Consider tracks and paths? (is N if field observations not considered)        : Y
+Consider field boundaries (is N if field observations not considered)         : Y
 
 DEM resolution or mean spacing of spot heights (metres)                       : 5
 Distance to search (metres)                                                   : 5
@@ -21,11 +21,11 @@ Distance to search (metres)                                                   : 
 #======================================================================================================================
 Path to all GIS data (all paths below are relative to this)                   : /home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/
 
-Output shapefile for flow marker points (no extension)                        : ff_flow_marker_points_A2
+Output shapefile for flow marker points (no extension)                        : ff_flow_marker_points_A4
 Style file (with extension, blank for default style)                          : ff_flow_marker_points.qml
 Transparency for flow marker points (0-100)                                   : 0
 
-Output shapefile for flow lines (no extension)                                : ff_flow_A2
+Output shapefile for flow lines (no extension)                                : ff_flow_A4
 Style file (with extension, blank for default style)                          : ff_flow.qml
 Transparency for flow lines (0-100)                                           : 0
 

@@ -122,28 +122,18 @@ def readInput():
       if data == -1:
          continue
       
-      if dataLine == 0:
-         # For flow down the steepest slope, are we considering only topography (T), or considering both topography and anthropogenic elements (A)?
-         shared.runType = data
-         if shared.runType != "T" and shared.runType != "A":
-            printStr = "ERROR: run type = " + shared.runType + ", it must be T or A\n"
-            print(printStr)
-            
-            return -1            
-         dataLine += 1
-   
-      elif dataLine == 1:
+      elif dataLine == 0:
          shared.runTitle = data
          dataLine += 1
          
-      elif dataLine == 2:
+      elif dataLine == 1:
          if data:
             dataSplit = data.split(',')
             for fld in dataSplit:
                shared.fieldsWithFlow.append(fld.strip())
          dataLine += 1
          
-      elif dataLine == 3:
+      elif dataLine == 2:
          shared.weightBoundary = float(data)
          if shared.weightBoundary > 1:
             printStr = "ERROR: flow start weighting must be less than or equal to 1.0\n"
@@ -152,55 +142,58 @@ def readInput():
             return -1
          dataLine += 1
          
+      elif dataLine == 3:
+         # Consider field observations?
+         tempStr = data.upper().strip()
+         if tempStr == "Y":
+            shared.considerFieldObservations = True
+         elif tempStr == "N":
+            shared.considerFieldObservations = False
+         else:
+            printStr = "ERROR: consider field observations = " + tempStr + ", it must be Y or N\n"
+            print(printStr)
+            
+            return -1            
+         dataLine += 1
+   
       elif dataLine == 4:
          # Fill blind pits?
-         tempStr = data.upper().strip()
-         if tempStr == "Y":
-            shared.fillBlindPits = True
-         elif tempStr == "N":
+         if shared.considerFieldObservations:
             shared.fillBlindPits = False
-         else:
-            printStr = "ERROR: fill blind pits = " + tempStr + ", it must be Y or N\n"
-            print(printStr)
-            
-            return -1            
-         dataLine += 1        
-         
-      elif dataLine == 5:
-         # Consider ditches and streams?
-         tempStr = data.upper().strip()
-         if tempStr == "Y":
-            shared.considerDitches = True
-         elif tempStr == "N":
-            shared.considerDitches = False
-         else:
-            printStr = "ERROR: consider ditches and streams = " + tempStr + ", it must be Y or N\n"
-            print(printStr)
-            
-            return -1            
-         dataLine += 1        
-         
-      elif dataLine == 6:
-         # Consider field boundaries?
-         if shared.runType == "T":
-            shared.considerFieldBoundaries = False
          else:
             tempStr = data.upper().strip()
             if tempStr == "Y":
-               shared.considerFieldBoundaries = True
+               shared.fillBlindPits = True
             elif tempStr == "N":
-               shared.considerFieldBoundaries = False
+               shared.fillBlindPits = False
             else:
-               printStr = "ERROR: consider field boundaries = " + tempStr + ", it must be Y or N\n"
+               printStr = "ERROR: fill blind pits = " + tempStr + ", it must be Y or N\n"
                print(printStr)
                
                return -1            
          dataLine += 1        
          
-      elif dataLine == 7:
+      elif dataLine == 5:
+         # Consider ditches and streams?
+         if shared.considerFieldObservations:
+            shared.considerDitches = True
+         else:
+            tempStr = data.upper().strip()
+            if tempStr == "Y":
+               shared.considerDitches = True
+            elif tempStr == "N":
+               shared.considerDitches = False
+            else:
+               printStr = "ERROR: consider ditches and streams = " + tempStr + ", it must be Y or N\n"
+               print(printStr)
+               
+               return -1            
+         dataLine += 1        
+         
+      elif dataLine == 6:
          # Consider roads?
-         if shared.runType == "T":
-            shared.considerRoad = False
+         if not shared.considerFieldObservations:
+            shared.considerRoads = False
          else:
             tempStr = data.upper().strip()
             if tempStr == "Y":
@@ -214,9 +207,9 @@ def readInput():
                return -1            
          dataLine += 1        
          
-      elif dataLine == 8:
+      elif dataLine == 7:
          # Consider tracks and paths?
-         if shared.runType == "T":
+         if not shared.considerFieldObservations:
             shared.considerTracks = False
          else:
             tempStr = data.upper().strip()
@@ -231,6 +224,23 @@ def readInput():
                return -1            
          dataLine += 1        
  
+      elif dataLine == 8:
+         # Consider field boundaries?
+         if not shared.considerFieldObservations:
+            shared.considerFieldBoundaries = False
+         else:
+            tempStr = data.upper().strip()
+            if tempStr == "Y":
+               shared.considerFieldBoundaries = True
+            elif tempStr == "N":
+               shared.considerFieldBoundaries = False
+            else:
+               printStr = "ERROR: consider field boundaries = " + tempStr + ", it must be Y or N\n"
+               print(printStr)
+               
+               return -1            
+         dataLine += 1        
+         
       elif dataLine == 9:
          # The resolution of the DEM layer or the mean spacing of spot heights (m) 
          shared.resElevData = float(data)
@@ -395,7 +405,7 @@ def readInput():
             
       elif dataLine == 26:
          # Field observations, don't bother reading them if this is a topography-only run
-         if shared.runType == "T":
+         if shared.considerFieldObservations == "T":
             break
          
          first = True

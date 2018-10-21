@@ -3,18 +3,17 @@
 # Data for FieldFlow: West Sussex Sample Fields C
 #
 #======================================================================================================================
-# Are we considering only topography (T), or considering both topography and anthropogenic elements (A)?
-Run type                                                                      : T
-Run title                                                                     : West Sussex: Sample Fields C. TOPO ONLY, FILL BLIND PITS, CONSIDER DITCHES/STREAMS
+Run title                                                                     : West Sussex: Sample Fields C. NO FIELD OBS, FILL BLIND PITS, CONSIDER DITCHES/STREAMS
 
 Fields which generate flow (comma-separated list, blank for auto)             : 67, 69, 71, 73, 77, 79
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
+Consider field observations?                                                  : N
 Fill blind pits?                                                              : Y
 Consider ditches and streams?                                                 : Y
-Consider field boundaries (is N if 'Run type' is topo-only)                   : N
-Consider roads?  (is N if 'Run type' is topo-only)                            : N
-Consider tracks and paths?  (is N if 'Run type' is topo-only)                 : N
+Consider roads? (is N if field observations not considered)                   : N
+Consider tracks and paths? (is N if field observations not considered)        : N
+Consider field boundaries (is N if field observations not considered)         : N
 
 DEM resolution or mean spacing of spot heights (metres)                       : 5
 Distance to search (metres)                                                   : 5

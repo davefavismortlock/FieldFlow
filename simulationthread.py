@@ -234,13 +234,13 @@ class SimulationThread(QThread):
                thisPoint = tempPoint            
                
             #=============================================================================================================
-            #  OK, we are now (optionally) considering anthropogenic landscape elements
+            #  OK, we are now considering field observations
             #=============================================================================================================
-            if shared.runType == "A": 
+            if shared.considerFieldObservations: 
                #==========================================================================================================
                # Search for a field observation of a landscape element near this point
                #==========================================================================================================
-               if hitRoad: shared.fpOut.write("Searching for field observations for flow from field " + str(fieldCode) + " near " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
+               shared.fpOut.write("Searching for field observations for flow from field " + str(fieldCode) + " near " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
                indx = FindNearbyFieldObservation(thisPoint)
                if indx == -1:
                   # Did not find a field observation near this point
@@ -304,32 +304,35 @@ class SimulationThread(QThread):
                #==========================================================================================================
                # Search for vector roads near this point
                #==========================================================================================================
-               rtn = FindNearbyRoad(thisPoint, fieldCode)
-               if rtn == -1:
-                  # Problem! Exit the program
-                  exit (-1)
-               elif rtn == 1:
-                  # We have found a road, so set a switch since we don't know whether flow goes under, over or along the road
-                  hitRoad = True
-                  
-                  # Back to the start of the inner loop
-                  #shared.fpOut.write("XXX\n")
-                  continue
-                  
-               # No road found
+               if shared.considerRoads:
+                  rtn = FindNearbyRoad(thisPoint, fieldCode)
+                  if rtn == -1:
+                     # Problem! Exit the program
+                     exit (-1)
+                  elif rtn == 1:
+                     # We have found a road, so set a switch since we don't know whether flow goes under, over or along the road
+                     hitRoad = True
+                     
+                     # Back to the start of the inner loop
+                     #shared.fpOut.write("XXX\n")
+                     continue
+                     
+                  # No road found
                
                #==========================================================================================================
                # Search for raster paths near this point TODO              
                #==========================================================================================================
-               #rtn = FindNearbyPath(thisPoint, fieldCode)            
-               #if rtn == -1:
-                  ## Problem! Exit the program
-                  #exit (-1)
-               #elif rtn == 1:
-                  ## We have found a road, so set a switch since we don't know whether flow goes under, over or along the road
-                  #hitPath = True
-                  
-               # No path found
+   #            if shared.considerTracks:
+                  #rtn = FindNearbyPath(thisPoint, fieldCode)            
+                  #if rtn == -1:
+                     ## Problem! Exit the program
+                     #exit (-1)
+                  #elif rtn == 1:
+                     ## We have found a road, so set a switch since we don't know whether flow goes under, over or along the road
+                     #hitPath = True
+                     
+                  # No path found
+
 
                if hitBoundary:
                   shared.fpOut.write("Flow from field " + fieldCode + " hits the boundary of field " + hitFieldCode + " at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow go through this boundary? Please add a field observation\n")  
@@ -339,13 +342,13 @@ class SimulationThread(QThread):
                   break               
             
             #=============================================================================================================
-            # End of anthropogenic-only section
+            # End of considering-field-observations section
             #=============================================================================================================                        
             if inBlindPit:
                if shared.fillBlindPits:
                   addFlowMarkerPoint(thisPoint, "", fieldCode, -1)
                   
-                  newPoint, floodDepth = fillBlindPit(thisPoint, fieldCode)
+                  newPoint, flowDepth = fillBlindPit(thisPoint, fieldCode)
                   if newPoint == -1:
                      # Could not find and overflow point
                      print("Flow from field " + fieldCode + ", no overflow point found from blind pit at " + displayOS(thisPoint.x(), thisPoint.y()))
@@ -356,8 +359,11 @@ class SimulationThread(QThread):
                      break
                      
                   # We have an overflow point
-                  print("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flood depth " + str(floodDepth) + " m\n")
-                  shared.fpOut.write("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flood depth " + str(floodDepth) + " m\n")
+                  print("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m")
+                  shared.fpOut.write("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m\n")
+                  
+                  if flowDepth > shared.blindPitMaxFill:
+                     shared.blindPitMaxFill = flowDepth
                   
                   addFlowLine(thisPoint, newPoint, FLOW_OUT_OF_BLIND_PIT, fieldCode, -1)
                   
@@ -372,7 +378,7 @@ class SimulationThread(QThread):
 
                   shared.fpOut.write("Flow from field " + fieldCode + " hits a blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n") 
                   
-                  if shared.runType == "A":
+                  if shared.considerFieldObservations:
                      shared.fpOut.write("*** Please add a field observation\n")
                
                   # Move on to next field
@@ -397,8 +403,8 @@ class SimulationThread(QThread):
                # Back to the start of the inner loop, keep thisPoint unchanged
                continue
                
-            if shared.runType == "A":
-               # If we are considering anthropogenic elements: is there a field boundary between this point and the adjacent point?
+            if shared.considerFieldObservations:
+               # If we are considering field observations: is there a field boundary between this point and the adjacent point?
                hitBoundary, hitPoint, hitFieldCode = flowHitFieldBoundary(thisPoint, adjPoint, fieldCode)
                if hitBoundary:
                   # Yes, flow hits a field boundary, we have set a switch
@@ -422,6 +428,11 @@ class SimulationThread(QThread):
       # Simulation finished, so update the extents of the vector output files
       shared.outFlowMarkerPointLayer.updateExtents()
       shared.outFlowLineLayer.updateExtents()
+      
+      # If we've filled blind pits, show max flow depth to fill any pit
+      if shared.fillBlindPits:
+         shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
+         shared.fpOut.write("Maximum flow depth to fill any blind pit = " + str(shared.blindPitMaxFill) + " m\n")
       
       # Finally, write the results to shapefiles
       shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")

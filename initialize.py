@@ -46,10 +46,10 @@ def setUpSimulation():
       printStr += "Flow from all fields"      
    shared.fpOut.write(printStr + "\n")   
 
-   if shared.runType == "T":
-      printStr = "Only topography considered\n"
+   if shared.considerFieldObservations:
+      printStr = "Field observations considered\n"
    else:
-      printStr = "Both topography and anthropogenic elements considered\n"      
+      printStr = "Field observations not considered\n"      
    shared.fpOut.write(printStr)   
 
    if shared.fillBlindPits:
@@ -324,7 +324,7 @@ def setUpSimulation():
    
    shared.fpOut.write("FIELD OBSERVATIONS\n\n")
    
-   if shared.runType == "A":
+   if shared.considerFieldObservations:
       # The user-supplied OS coords for field observations are unlikely to be the coords of the raster DEM centroids. This is a problem for flow routing, after flow has passed through a landscape element which has an associated field observation. So we need to modify the 'To' coord of all field observations: check all field observations and adjust if necessary
       shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
       

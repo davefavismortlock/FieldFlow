@@ -3,18 +3,17 @@
 # Data for FieldFlow: West Sussex Sample Fields D
 #
 #======================================================================================================================
-# Are we considering only topography (T), or considering both topography and anthropogenic elements (A)?
-Run type                                                                      : T
-Run title                                                                     : West Sussex: Sample Fields D. TOPO ONLY, FILL BLIND PITS, CONSIDER DITCHES/STREAMS
+Run title                                                                     : West Sussex: Sample Fields D. NO FIELD OBS, FILL BLIND PITS, CONSIDER DITCHES/STREAMS
 
 Fields which generate flow (comma-separated list, blank for auto)             : A5, F, 86, 88
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
+Consider field observations?                                                  : N
 Fill blind pits?                                                              : Y
 Consider ditches and streams?                                                 : Y
-Consider field boundaries (is N if 'Run type' is topo-only)                   : N
-Consider roads?  (is N if 'Run type' is topo-only)                            : N
-Consider tracks and paths?  (is N if 'Run type' is topo-only)                 : N
+Consider roads? (is N if field observations not considered)                   : N
+Consider tracks and paths? (is N if field observations not considered)        : N
+Consider field boundaries (is N if field observations not considered)         : N
 
 DEM resolution or mean spacing of spot heights (metres)                       : 5
 Distance to search (metres)                                                   : 5
@@ -32,12 +31,12 @@ Transparency for flow lines (0-100)                                           : 
 
 Width of window (pixels)                                                      : 500
 Height of window (pixels)                                                     : 1150
-Initial magnification                                                         : 1.5
+Initial magnification                                                         : 1.0
    
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
-Coordinates of SW corner of area displayed                                    : 490880, 120790
-Coordinates of NE corner of area displayed                                    : 492260, 124315
+Coordinates of SW corner of area displayed                                    : 490880, 120791
+Coordinates of NE corner of area displayed                                    : 492260, 124314
  
 # Vector layers =======================================================================================================
 

@@ -3,18 +3,17 @@
 # Data for FieldFlow: West Sussex Sample Fields E
 #
 #======================================================================================================================
-# Are we considering only topography (T), or considering both topography and anthropogenic elements (A)?
-Run type                                                                      : T
-Run title                                                                     : West Sussex: Sample Fields E. TOPO ONLY, FILL BLIND PITS, CONSIDER DITCHES/STREAMS
+Run title                                                                     : West Sussex: Sample Fields E. NO FIELD OBS, FILL BLIND PITS, CONSIDER DITCHES/STREAMS
 
 Fields which generate flow (comma-separated list, blank for auto)             : H, M, N, O, P, Q
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
+Consider field observations?                                                  : N
 Fill blind pits?                                                              : Y
 Consider ditches and streams?                                                 : Y
-Consider field boundaries (is N if 'Run type' is topo-only)                   : N
-Consider roads?  (is N if 'Run type' is topo-only)                            : N
-Consider tracks and paths?  (is N if 'Run type' is topo-only)                 : N
+Consider roads? (is N if field observations not considered)                   : N
+Consider tracks and paths? (is N if field observations not considered)        : N
+Consider field boundaries (is N if field observations not considered)         : N
 
 DEM resolution or mean spacing of spot heights (metres)                       : 5
 Distance to search (metres)                                                   : 5
@@ -30,14 +29,14 @@ Output shapefile for flow lines (no extension)                                : 
 Style file (with extension, blank for default style)                          : ff_flow.qml
 Transparency for flow lines (0-100)                                           : 0
 
-Width of window (pixels)                                                      : 600
+Width of window (pixels)                                                      : 700
 Height of window (pixels)                                                     : 1150
-Initial magnification                                                         : 1.4
+Initial magnification                                                         : 1.0
    
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
-Coordinates of SW corner of area displayed                                    : 494500, 120100
-Coordinates of NE corner of area displayed                                    : 495800, 121800
+Coordinates of SW corner of area displayed                                    : 494500, 120115
+Coordinates of NE corner of area displayed                                    : 495800, 121797
  
 # Vector layers =======================================================================================================
 

@@ -962,7 +962,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
 #======================================================================================================================
 #
-# Fills a blind pit, returning the overflow point and flood depth to create this overflow point
+# Fills a blind pit, returning the overflow point and flow depth needed to create this overflow point
 #
 #======================================================================================================================
 def fillBlindPit(thisPoint, fieldCode): 

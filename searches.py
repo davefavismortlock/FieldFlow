@@ -986,7 +986,7 @@ def FindNearbyStream(point, flowFieldCode):
          break
             
       if not flowRouted:
-         printStr = "No suitable stream segment found\n"
+         #printStr = "No suitable stream segment found"
          shared.fpOut.write(printStr)
          print(printStr)
          

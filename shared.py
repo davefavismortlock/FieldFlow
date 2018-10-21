@@ -108,9 +108,9 @@ MARKER_AT_STREAM              = "Enter stream?"
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
 progVer = "21 October 2018 version"
-runType = ""
 runTitle = ""
 
+considerFieldObservations = ""
 fillBlindPits = ""
 considerDitches = ""
 considerFieldBoundaries = ""
@@ -151,6 +151,8 @@ cellWidthDEM = 0
 cellHeightDEM = 0
 xMinExtentDEM = 0
 yMinExtentDEM = 0
+
+blindPitMaxFill = 0
 
 vectorFileName = 0
 vectorFileTitle = 0
