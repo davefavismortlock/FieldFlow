@@ -90,24 +90,28 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
    #shared.fpOut.write(shared.observedLEFlowTo)
    if not shared.observedLEFlowTo[indx]:
       # The outflow location is not known, so we have flow along a road or along a path
-      if shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_PATH and shared.observedLEBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
-         shared.fpOut.write("Flow along path")
-         rtn, point = flowAlongRasterPath(indx, fieldCode, thisPoint) 
+      if shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_ROAD and shared.observedLEBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
+         #shared.fpOut.write("Flow along road")
+         rtn, point = flowAlongVectorRoad(indx, fieldCode, thisPoint)      
          if rtn == -1:
-            # Problem! Exit the program
+            # Either Problem! Exit the program
             exit (-1)
-            
+
          elif rtn == 1:
-            # Flow has hit a blind pit, or we need another field observation
+            # Flow has hit a blind pit
             return 1, point
+         
+         elif rtn == 2:
+            # Flow has hit a stream
+            return 2, point
          
          else:
             # Carry on from this point
             return 0, point
       
-      elif shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_ROAD and shared.observedLEBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
-         #shared.fpOut.write("Flow along road")
-         rtn, point = flowAlongVectorRoad(indx, fieldCode, thisPoint)      
+      elif shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_PATH and shared.observedLEBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
+         #shared.fpOut.write("Flow along path")
+         rtn, point = flowAlongVectorPath(indx, fieldCode, thisPoint)      
          if rtn == -1:
             # Either Problem! Exit the program
             exit (-1)
@@ -156,16 +160,10 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
          
    # We have a 'From' and a 'To' location: put the marker between the From and To points
    markerPointX = (shared.observedLEFlowTo[indx].x() + shared.observedLEFlowFrom[indx].x())
-   markerPointY = (shared.observedLEFlowTo[indx].y() + shared.observedLEFlowFrom[indx].y())      
-   addFlowMarkerPoint(QgsPoint(markerPointX, markerPointY), shared.observedLEDescription[indx], fieldCode, -1)
+   markerPointY = (shared.observedLEFlowTo[indx].y() + shared.observedLEFlowFrom[indx].y()) 
+   addFlowMarkerPoint(QgsPoint(markerPointX, markerPointY), shared.observedLECategory[indx], fieldCode, -1)
    
-   routeDesc = "through"
-   if shared.observedLEBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
-      routeDesc = "along"
-   if shared.observedLEBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ACROSS:
-      routeDesc = "across"
-   
-   printStr = "Flow from field " + fieldCode + " routed " + routeDesc + " '" + shared.observedLECategory[indx] + "' '" + shared.observedLEBehaviour[indx] + "' '" + shared.observedLEDescription[indx] + "' from " + displayOS(thisPoint.x(), thisPoint.y()) 
+   printStr = "Flow from field " + fieldCode + " routed '" + shared.observedLEBehaviour[indx] + " " + shared.observedLECategory[indx] + " " + shared.observedLEDescription[indx] + "' from " + displayOS(thisPoint.x(), thisPoint.y()) 
    if thisPoint != shared.observedLEFlowFrom[indx]:
       printStr += " via " + displayOS(shared.observedLEFlowFrom[indx].x(), shared.observedLEFlowFrom[indx].y()) 
    printStr += " to " + displayOS(shared.observedLEFlowTo[indx].x(), shared.observedLEFlowTo[indx].y())
@@ -200,73 +198,6 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
    #shared.fpOut.write(printStr)
    
    return 0, shared.observedLEFlowTo[indx]
-#======================================================================================================================
-
-
-#======================================================================================================================
-#
-# Routes flow along a raster representation of a path
-#
-#======================================================================================================================
-def flowAlongRasterPath(indx, fieldCode, prevPoint):   
-   firstTime = True
-   
-   thisPoint = shared.observedLEFlowFrom[indx]
-   obsCategory = shared.observedLECategory[indx]
-   obsBehaviour = shared.observedLEBehaviour[indx]
-   obsDesc = shared.observedLEDescription[indx]
-   
-   shared.thisFieldLEsAlreadyFollowed.append(indx)
-   
-   # Is this cell on a path?
-   found = False
-   thisCellCode = getRasterCellValueAsInt(thisPoint.x(), thisPoint.y())
-   #shared.fpOut.write(displayOS(thisPoint.x(), thisPoint.y()), thisCellCode, obsCategory)
-   
-   if thisCellCode in OS_MASTERMAP_PATH:
-      found = True
-   else:
-      # Path not found on this cell, so try adjacent cells
-      #shared.fpOut.write("Trying adjacent cells for path")
-      foundLE, foundPoint = FindNearbyPath(thisPoint, fieldCode)
-      #shared.fpOut.write(foundLE)   
-      for i in range(len(foundLE)):
-         if foundLE[i] in OS_MASTERMAP_PATH:
-            thisPoint = foundPoint[i]
-            found = True
-            break
-      
-   if not found:
-      printStr = "ERROR: inflow location must be on a path\n"
-      shared.fpOut.write(printStr)
-      print(printStr)
-      
-      return -1
-   
-   # Now follow the path downhill      
-   thisElev = getRasterElev(thisPoint.x(), thisPoint.y())
-   
-   while True:      
-      # Flow along road or path, down steepest slope
-      adjPoint, adjElev = FindSteepestAdjacentRoadOrPath(thisPoint, thisElev)
-      shared.fpOut.write("Along road " + displayOS(adjPoint.x(), adjPoint.y()) + " adjElev = " + str(adjElev))
-      if adjPoint.x() == -1:
-         shared.fpOut.write("Flow along '" + obsCategory + "' '" + obsBehaviour + "' '" + obsDesc + "', from field " + fieldCode + ", hit a blind pit at " + displayOS(thisPoint.x(), thisPoint.y()))                      
-         shared.fpOut.write("\n*** Please add a field observation\n")
-         addFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, thisElev)
-         
-         return adjPoint
-      
-      if firstTime:
-         thisPoint = lastGoodpoint
-         firstTime = False
-   
-      addFlowLine(thisPoint, adjPoint, FLOW_VIA_PATH, fieldCode, -1)
-         
-      thisPoint = adjPoint
-      thisElev = adjElev
-   
-   return adjPoint
 #======================================================================================================================
 
 
@@ -364,10 +295,10 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
          featID = feature.id()
          #shared.fpOut.write("\tTrying road seg ID " + str(featID) + "\n")
          
-         featCode = feature[FEAT_CODE]
-         featDesc = feature[FEAT_DESC]
-         roadName = feature[ROAD_NAME]
-         roadNumber = feature[ROAD_NUMBER]
+         featCode = feature[OS_VECTORMAP_FEAT_CODE]
+         featDesc = feature[OS_VECTORMAP_FEAT_DESC]
+         roadName = feature[OS_VECTORMAP_ROAD_NAME]
+         roadNumber = feature[OS_VECTORMAP_ROAD_NUMBER]
          
          geomFeat = feature.geometry()
          linePoints = geomFeat.asPolyline()
@@ -593,6 +524,335 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
             
       if not flowRouted:
          shared.fpOut.write("\tNo suitable road segment found at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
+         return 1, thisPoint
+      
+   return 0, thisPoint
+#======================================================================================================================
+
+
+#======================================================================================================================
+#
+# Routes flow along a vector representation of a path
+#
+#======================================================================================================================
+def flowAlongVectorPath(indx, fieldCode, thisPoint): 
+   obsCategory = shared.observedLECategory[indx]
+   obsBehaviour = shared.observedLEBehaviour[indx]
+   obsDesc = shared.observedLEDescription[indx]
+   
+   shared.thisFieldLEsAlreadyFollowed.append(indx)
+   
+   #shared.fpOut.write("Entered flowAlongVectorPath at point " + displayOS(thisPoint.x(), thisPoint.y()))
+   layerNum = -1
+   #geomPoint = QgsGeometry.fromPoint(thisPoint)
+   
+   # Find the path network layer
+   pathLayerFound = False
+   for layerNum in range(len(shared.vectorInputLayersCategory)):
+      if shared.vectorInputLayersCategory[layerNum] == INPUT_PATH_NETWORK:
+         pathLayerFound = True
+         break
+   
+   # Safety check
+   if not pathLayerFound:
+      printStr = "ERROR: opening path network layer\n"
+      shared.fpOut.write(printStr)
+      print(printStr)
+      
+      return -1, -1
+   
+   # TODO make this a user setting
+   numberToSearchFor = 4
+
+   while True:
+      # Find the nearest path segments
+      firstTime = True
+      
+      #shared.fpOut.write("Start of flowAlongVectorPath loop at " + displayOS(thisPoint.x(), thisPoint.y()))
+      nearestIDs = shared.vectorInputIndex[layerNum].nearestNeighbor(thisPoint, 3)    
+      request = QgsFeatureRequest().setFilterFids(nearestIDs)
+      features = shared.vectorInputLayers[layerNum].getFeatures(request)
+      
+      distToPoint = []      
+      geomPoint = QgsGeometry.fromPoint(thisPoint)
+
+      for pathSeg in features:
+         # Is this path segment both close enough, and has not already been tried?
+         geomSeg = pathSeg.geometry()
+         nearPoint = geomSeg.nearestPoint(geomPoint)
+         distanceToSeg = geomPoint.distance(nearPoint)
+         segID = pathSeg.id()
+         shared.fpOut.write("\tpath segID = " + str(segID) + ", distanceToSeg = " + str(distanceToSeg) + "\n")
+         
+         if distanceToSeg > shared.searchDist:
+            # Too far away, so forget about this path segment
+            shared.fpOut.write("\tToo far away (" + str(distanceToSeg) + " m) for path segID = " + str(segID) + "\n")
+            
+            continue
+         
+         if segID in shared.thisFieldPathSegIDsTried:
+            # Aready travelled, so forget about this path segment
+            shared.fpOut.write("\tAlready travelled for path segID = " + str(segID) + "\n")
+            
+            continue
+
+         # Is OK, so save the path segment feature, the nearest point, and the distance
+         distToPoint.append([pathSeg, nearPoint.asPoint(), distanceToSeg])
+            
+      # Did we any find suitable path segments?
+      if len(distToPoint) == 0:
+         # Nope
+         #shared.fpOut.write("Flow along path from field " + str(fieldCode) + " ends at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n*** Please add a field observation\n")
+         return 1, thisPoint
+      
+      # OK we have some possibly suitable path segments
+      for n in range(len(distToPoint)):
+         shared.fpOut.write("\tBefore " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+
+      # Sort the list of untravelled path segments, shortest distance first         
+      distToPoint.sort(key = lambda distPoint: distPoint[2])
+
+      for n in range(len(distToPoint)):
+         shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+      
+      flowRouted = False
+      for n in range(len(distToPoint)):
+         # Go through this list of untravelled path segments till we find a suitable one
+         feature = distToPoint[n][0]
+         nearPoint = distToPoint[n][1]
+         distToNearPoint = distToPoint[n][2]
+         featID = feature.id()
+         #shared.fpOut.write("\tTrying path seg ID " + str(featID) + "\n")
+         
+         featCode = feature[OS_VECTORMAP_FEAT_CODE]
+         featDesc = feature[OS_VECTORMAP_FEAT_DESC]
+         pathName = feature[PATH_NAME]
+         pathNumber = feature[PATH_NUMBER]
+         
+         geomFeat = feature.geometry()
+         linePoints = geomFeat.asPolyline()
+         nPoints = len(linePoints)
+
+         firstPoint = linePoints[0]         
+         lastPoint = linePoints[-1]
+         
+         shared.fpOut.write("\tAt " + displayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled path segment " + str(featID) + " '" + str(featDesc) + "' '" + str(pathName) + "' '" + str(pathNumber) + "', which has nearest point " + "{:0.1f}".format(distToNearPoint) + " m away at " + displayOS(nearPoint.x(), nearPoint.y()) + "\n")
+         
+         #shared.fpOut.write("\tFirst point of path segment is " + displayOS(firstPoint.x(), firstPoint.y()) + "\n")
+         #shared.fpOut.write("\tNearest point of path segment is " + displayOS(nearPoint.x(), nearPoint.y()) + "\n")
+         #shared.fpOut.write("\tLast point of path segment is " + displayOS(lastPoint.x(), lastPoint.y()) + "\n")
+         
+         # If there is a choice, then find out which direction along the path has the steepest downhill slope
+         flowToFirstPoint = False
+         flowToLastPoint = False
+         if nearPoint == firstPoint:
+            # The nearest point is the same as the first point
+            numNearPoint = 0
+            
+            elevFirstPoint = getRasterElev(firstPoint.x(), firstPoint.y())
+            elevLastPoint = getRasterElev(lastPoint.x(), lastPoint.y())
+
+            #shared.fpOut.write("A " + str(elevFirstPoint) + " " + str(elevLastPoint) + "\n")
+            
+            if elevFirstPoint > elevLastPoint:
+               # Flow to last point
+               flowToLastPoint = True
+               #shared.fpOut.write("Flow to last point\n")
+            
+         elif nearPoint == lastPoint:
+            # The nearest point is the same as the last point
+            numNearPoint = len(linePoints) - 1
+            
+            elevFirstPoint = getRasterElev(firstPoint.x(), firstPoint.y())
+            elevLastPoint = getRasterElev(lastPoint.x(), lastPoint.y())
+
+            #shared.fpOut.write("B " + str(elevFirstPoint) + " " + str(elevFirstPoint) + "\n")
+            
+            if elevLastPoint > elevFirstPoint:
+               # Flow to first point
+               flowToFirstPoint = True          
+               #shared.fpOut.write("Flow to first point\n")
+         else:
+            # The nearest point is not a point in the line, so we need to insert it. First get the closest vertex
+            linePoints = geomFeat.asPolyline()
+            nPoints = len(linePoints)
+            #for n in range(nPoints):
+               #shared.fpOut.write(str(n) + " " + displayOS(linePoints[n].x(), linePoints[n].y()) + "\n")
+            #shared.fpOut.write("\n")
+
+            dist, p2, numPt = geomFeat.closestSegmentWithContext(nearPoint)
+            if not geomFeat.insertVertex(nearPoint.x(), nearPoint.y(), numPt):
+               # Error, could not insert vertex
+               return -1, -1
+            
+            linePoints = geomFeat.asPolyline()
+            nPoints = len(linePoints)
+            #for n in range(nPoints):
+               #shared.fpOut.write(str(n) + " " + displayOS(linePoints[n].x(), linePoints[n].y()) + "\n")
+            #shared.fpOut.write("\n")
+            
+            numNearPoint = numPt
+            #shared.fpOut.write("numNearPoint = " + str(numNearPoint) + "\n")
+            
+            elevFirstPoint = getRasterElev(firstPoint.x(), firstPoint.y())
+            elevNearPoint = getRasterElev(nearPoint.x(), nearPoint.y())
+            elevLastPoint = getRasterElev(lastPoint.x(), lastPoint.y())
+            
+            #shared.fpOut.write("C " + str(elevFirstPoint) + " " + str(elevNearPoint) + " " + str(elevLastPoint) + "\n")
+            
+            pts = [[NEAR_POINT, elevNearPoint], [FIRST_POINT, elevFirstPoint], [LAST_POINT, elevLastPoint]]
+            pts.sort(key = lambda pt: pt[1])
+
+            #for m in range(3):
+               #shared.fpOut.write("\tpts[" + str(m) + "][0] = " + str(pts[m][0]) + ", pts[" + str(m) + "][1] = " + str(pts[m][1]) + "\n")
+            
+            if pts[0][0] == NEAR_POINT:
+               # Near point is lowest: we are in a blind pit, so try the next path segment
+               shared.fpOut.write("\tIn path blind pit: with this path segment, downhill flow ends at " + displayOS(thisPoint.x(), thisPoint.y()) + ", abandoning\n")
+               
+               shared.thisFieldPathSegIDsTried.append(featID)               
+               continue
+               
+            elif pts[1][0] == NEAR_POINT:
+               if pts[0][0] == FIRST_POINT:
+                  # First point is lower than near point, so flow goes to first point                  
+                  shared.fpOut.write("Flow to first point d\n")
+                  flowToFirstPoint = True
+                  
+               else:
+                  # Last point is lower than near point, so flow goes to last point                  
+                  shared.fpOut.write("Flow to last point a\n")
+                  flowToLastPoint = True
+                  
+            else:
+               # Both first and last points are lower, so we need to compare gradients
+               shared.fpOut.write("firstPoint = " + displayOS(firstPoint.x(), firstPoint.y()) + " nearPoint = " + displayOS(nearPoint.x(), nearPoint.y()) + " lastPoint = " + displayOS(lastPoint.x(), lastPoint.y()) + "\n")
+               
+               flowToLast = FindSteepestSegment(firstPoint, nearPoint, lastPoint, elevNearPoint - elevFirstPoint, elevNearPoint - elevLastPoint)
+               shared.fpOut.write(str(flowToLast) + " \n")
+
+               if flowToLast:
+                  flowToLastPoint = True
+                  shared.fpOut.write("Flow to last point b\n")
+               else:
+                  flowToFirstPoint = True
+                  shared.fpOut.write("Flow to first point c\n")
+               
+         
+         # We are flowing along at least part of this path segment
+         #if firstTime:
+            #shared.fpOut.write("FIRST " + displayOS(prevPoint.x(), prevPoint.y()) + " " + displayOS(nearPoint.x(), nearPoint.y()))
+            #if prevPoint != nearPoint:
+               #addFlowLine(prevPoint, nearPoint, FLOW_VIA_PATH, fieldCode, -1)
+               #firstTime = False
+               
+         # Now check for nearby pre-existing flow lines
+         adjX, adjY = FindNearbyFlowLine(thisPoint)
+         if adjX != -1:
+            # There is an adjacent flow line, so merge the two and finish with this flow line
+            adjPoint = QgsPoint(adjX, adjY)
+            
+            indx = shared.allFieldsFlowPath.index(adjPoint)
+            hitFieldFlowFrom = shared.allFieldsFlowPathFieldCode[indx]         
+            
+            addFlowLine(thisPoint, adjPoint, MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, elev)
+            shared.fpOut.write("Flow from field " + fieldCode + " hit flow from field " + str(hitFieldFlowFrom) + " at " + displayOS(adjPoint.x(), adjPoint.y(), False) + ", so stopped tracing flow from this field\n")
+            
+            return 3, adjPoint       
+
+         # Next check if this path segment intersects a stream segment 
+         rtn = -1
+         intersectPoints = []
+         intersectFound = False
+         rtn, intersectPoints = FindSegmentIntersectionWithStream(feature.geometry())
+         if rtn == -1:
+            # Error
+            return -1, -1
+         
+         elif rtn == 1:
+            # We have at least one path-stream intersection
+            intersectFound = True
+            for point in intersectPoints:
+               #shared.fpOut.write("This path segment intersects a stream segment at " + displayOS(point.x(), point.y()))               
+                        
+               # The intersection point is not necessarily a point in the line. So get the actual point in the line which is closest     
+               intersectPoint = -1
+               numIntersectPoint = -1
+               beforeIntersectPoint = -1
+               afterIntersectPoint = -1
+               sqrDist = -1
+               intersectPoint, numIntersectpoint, beforeIntersectpoint, afterIntersectpoint, sqrDist = geomFeat.closestVertex(point)
+               
+               # And insert the intersection point in the path polyline
+               linePoints.insert(numIntersectpoint, point)  
+
+         # OK now do the along-path routing
+         if flowToLastPoint:
+            # Flow is towards the last point of this path segment
+            flowRouted = True
+            shared.thisFieldRoadSegIDsTried.append(featID)
+            
+            printStr = "Flow from field " + fieldCode + " enters the path segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(pathName) + "' '" + str(pathNumber) + "' at " + displayOS(thisPoint.x(), thisPoint.y()) + " "
+         
+            for m in range(numNearPoint, len(linePoints)-1):
+               if not firstTime:
+                  thisPoint = linePoints[m]
+               nextPoint = linePoints[m+1]
+         
+               addFlowLine(thisPoint, nextPoint, FLOW_VIA_ROAD, fieldCode, -1)
+               #shared.fpOut.write("addFlowLine 1 " + displayOS(thisPoint.x(), thisPoint.y()))
+               
+               firstTime = False
+               
+               if intersectFound:
+                  if nextPoint in intersectPoints:
+                     printStr += ("and hits a stream at " + displayOS(nextPoint.x(), nextPoint.y()) + "\n")
+                     shared.fpOut.write(printStr)
+                     #shared.fpOut.write("======")            
+                     
+                     return 2, nextPoint
+                  
+            printStr += ("and leaves it at " + displayOS(lastPoint.x(), lastPoint.y()) + "\n")
+            shared.fpOut.write(printStr)         
+            #shared.fpOut.write("======")            
+               
+         else:
+            # Flow is towards the first point of this path segment
+            flowRouted = True
+            shared.thisFieldRoadSegIDsTried.append(featID)
+
+            printStr = "Flow from field " + fieldCode + " enters the path segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(pathName) + "' '" + str(pathNumber) + "' at " + displayOS(thisPoint.x(), thisPoint.y()) + " "
+            
+            for m in range(numNearPoint, 1, -1):
+               if not firstTime:
+                  thisPoint = linePoints[m]
+               nextPoint = linePoints[m-1]
+               
+               addFlowLine(thisPoint, nextPoint, FLOW_VIA_ROAD, fieldCode, -1)
+               #shared.fpOut.write("addFlowLine 2 " + displayOS(thisPoint.x(), thisPoint.y()))
+               
+               firstTime = False
+
+               if intersectFound:
+                  if nextPoint in intersectPoints:
+                     printStr += ("and hits a stream at " + displayOS(nextPoint.x(), nextPoint.y()) + "\n*** Does it enter the stream here?\n")
+                     shared.fpOut.write(printStr)
+                     #shared.fpOut.write("======")            
+
+                     return 2, nextPoint
+         
+            printStr += ("and leaves it at " + displayOS(lastPoint.x(), lastPoint.y()) + "\n")
+            shared.fpOut.write(printStr)         
+            #shared.fpOut.write("======")            
+      
+         # Set the end point of this path segment to be the start point, ready for next time round the loop
+         thisPoint = lastPoint
+         
+         # Don't bother with any more possible path segments since we have routed flow via this one
+         break
+            
+      if not flowRouted:
+         shared.fpOut.write("\tNo suitable path segment found at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
          return 1, thisPoint
       
    return 0, thisPoint

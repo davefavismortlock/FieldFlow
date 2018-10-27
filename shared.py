@@ -1,11 +1,10 @@
 from qgis.core import QgsRectangle, QgsPoint, QgsVector
 
 # SHARED CONSTANTS ====================================================================================================
-
 COMMENT1                      = '#'
 COMMENT2                      = ';'
 
-RIVER_ROTHER                  = "ROTHER"
+TARGET_RIVER                  = "ROTHER"
 
 EOF_VECTOR_DATA               = "END OF VECTOR LAYERS"
 EOF_RASTER_DATA               = "END OF RASTER LAYERS"
@@ -24,27 +23,22 @@ INPUT_ROAD_NETWORK            = 5
 INPUT_PATH_NETWORK            = 6
 INPUT_RASTER_BACKGROUND       = 7
 
-# Relevant OS MASTERMAP 1 : 1000 raster cell codes (we ignore all other codes)
-#OS_MASTERMAP_STREAM           = 53
-#OS_MASTERMAP_ROAD             = [174, 182, 186, 189, 193]
-#OS_MASTERMAP_PATH             = [213]
-#OS_MASTERMAP_BUILDING         = 216
-#OS_MASTERMAP_RIVER            = 241
-#OS_MASTERMAP_WOODLAND         = 252
-
 # OS TERRAIN 5 XYZ FIELD NAME
 OS_TERRAIN_5_XYZ_ELEVATION    = "field_3"
 
 # OS MASTERMAP WATER NETWORK FIELD NAMES
-LEVEL                         = "level"
-WATERCOURSE_NAME              = "watercourseName"
-LOCAL_ID                      = "localid"
+OS_WATER_NETWORK_LEVEL        = "level"
+OS_WATER_NETWORK_NAME         = "watercourseName"
+OS_WATER_NETWORK_LOCAL_ID     = "localid"
 
 # OS VECTORMAP LOCAL ROAD CENTRELINE FIELD NAMES
-FEAT_CODE                     = "FeatCode"
-FEAT_DESC                     = "FeatDesc"
-ROAD_NAME                     = "roadName"
-ROAD_NUMBER                   = "roadNumber"
+OS_VECTORMAP_FEAT_CODE        = "FeatCode"
+OS_VECTORMAP_FEAT_DESC        = "FeatDesc"
+OS_VECTORMAP_ROAD_NAME        = "roadName"
+OS_VECTORMAP_ROAD_NUMBER      = "roadNumber"
+
+# Paths and tracks
+PATH_DESC                     = "desc"
 
 # Connected field boundaries
 CONNECTED_FIELD_ID            = "field_ID"
@@ -61,6 +55,7 @@ FIELD_OBS_CATEGORY_DUMMY      = "dummy"
 FIELD_OBS_BEHAVIOUR_ALONG    = "along"
 FIELD_OBS_BEHAVIOUR_UNDER    = "under"
 FIELD_OBS_BEHAVIOUR_ACROSS   = "across"
+FIELD_OBS_BEHAVIOUR_THROUGH  = "through"
 FIELD_OBS_BEHAVIOUR_ENTER    = "enter"
 FIELD_OBS_BEHAVIOUR_DUMMY    = "dummy"
 
@@ -100,14 +95,14 @@ MARKER_FIELD_BOUNDARY         = "Field boundary"
 MARKER_ENTER_STREAM           = "Stream"
 MARKER_ENTER_CULVERT          = "Culvert"
 MARKER_ENTER_RIVER            = "Enter River Rother"
-#MARKER_ROAD                   = "Road"
-#MARKER_PATH                   = "Path"
+MARKER_ROAD                   = "Road"
+MARKER_PATH                   = "Path"
 MARKER_AT_STREAM              = "Enter stream?"
 
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "21 October 2018 version"
+progVer = "27 October 2018 version"
 runTitle = ""
 
 considerFieldObservations = ""
@@ -194,6 +189,7 @@ thisFieldFlowLine = 0
 thisFieldFlowLineFieldCode = 0
 thisFieldLEsAlreadyFollowed = 0
 thisFieldRoadSegIDsTried = 0
+thisFieldPathSegIDsTried = 0
 thisFieldBoundarySegIDsTried = 0
 
 defaultMessageDisplayTime = 5000

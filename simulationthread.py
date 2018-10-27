@@ -6,7 +6,7 @@ import shared
 from shared import *
 from layers import addFlowMarkerPoint, addFlowLine, writeVector
 from simulate import getHighestPointOnFieldBoundary, flowViaLandscapeElement, flowHitFieldBoundary, fillBlindPit
-from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindSteepestAdjacent
+from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
 from utils import getRasterElev, centroidOfContainingDEMCell, displayOS
 
 
@@ -153,6 +153,7 @@ class SimulationThread(QThread):
          shared.thisFieldFlowLine = []
          shared.thisFieldFlowLineFieldCode = []
          shared.thisFieldRoadSegIDsTried = []
+         shared.thisFieldPathSegIDsTried = []
          thisFieldBoundarySegIDsTried = []
          shared.thisFieldLEsAlreadyFollowed = []
             
@@ -175,6 +176,7 @@ class SimulationThread(QThread):
          inBlindPit = False
          hitBoundary = False
          hitRoad = False
+         hitPath = False
          
          hitFieldCode = -1
          
@@ -240,7 +242,7 @@ class SimulationThread(QThread):
                #==========================================================================================================
                # Search for a field observation of a landscape element near this point
                #==========================================================================================================
-               shared.fpOut.write("Searching for field observations for flow from field " + str(fieldCode) + " near " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
+               #shared.fpOut.write("Searching for field observations for flow from field " + str(fieldCode) + " near " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
                indx = FindNearbyFieldObservation(thisPoint)
                if indx == -1:
                   # Did not find a field observation near this point
@@ -260,7 +262,7 @@ class SimulationThread(QThread):
                      self.refresh.emit() 
                      break         
                   
-                  if hitRoad:
+                  if hitRoad or hitPath:
                      # Move on to next field
                      self.refresh.emit() 
                      break 
@@ -297,6 +299,12 @@ class SimulationThread(QThread):
                         # We passed across or along the road, so turn off the switch
                         hitRoad = False
 
+                  if hitPath:
+                     #shared.fpOut.write("ZZZ")
+                     if shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_PATH:
+                        # We passed across or along the path, so turn off the switch
+                        hitPath = False
+
                   # We have the outflow location, so go round the inner loop once more
                   thisPoint = adjPoint                  
                   continue
@@ -310,7 +318,8 @@ class SimulationThread(QThread):
                      # Problem! Exit the program
                      exit (-1)
                   elif rtn == 1:
-                     # We have found a road, so set a switch since we don't know whether flow goes under, over or along the road
+                     # We have found a road, so mark it and set a switch since we don't know whether flow goes under, over or along the road
+                     addFlowMarkerPoint(thisPoint, MARKER_ROAD, fieldCode, -1)
                      hitRoad = True
                      
                      # Back to the start of the inner loop
@@ -320,16 +329,21 @@ class SimulationThread(QThread):
                   # No road found
                
                #==========================================================================================================
-               # Search for raster paths near this point TODO              
+               # Search for raster paths/tracks near this point        
                #==========================================================================================================
-   #            if shared.considerTracks:
-                  #rtn = FindNearbyPath(thisPoint, fieldCode)            
-                  #if rtn == -1:
-                     ## Problem! Exit the program
-                     #exit (-1)
-                  #elif rtn == 1:
-                     ## We have found a road, so set a switch since we don't know whether flow goes under, over or along the road
-                     #hitPath = True
+               if shared.considerTracks:
+                  rtn = FindNearbyPath(thisPoint, fieldCode)
+                  if rtn == -1:
+                     # Problem! Exit the program
+                     exit (-1)
+                  elif rtn == 1:
+                     # We have found a path or track, so mark it and set a switch since we don't know whether flow goes under, over or along the path
+                     addFlowMarkerPoint(thisPoint, MARKER_PATH, fieldCode, -1)
+                     hitPath = True
+                     
+                     # Back to the start of the inner loop
+                     #shared.fpOut.write("AAA\n")
+                     continue
                      
                   # No path found
 

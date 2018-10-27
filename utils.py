@@ -73,7 +73,8 @@ def displayOS(x, y, rounding = True):
    if rounding:
       x = round(x * 2) / 2
       y = round(y * 2) / 2
-      return "{" + "{:08.1f}, {:08.1f}".format(x, y) + "}"
+      #return "{" + "{:08.1f}, {:08.1f}".format(x, y) + "}"
+      return "{" + "{:06.0f}, {:06.0f}".format(x, y) + "}"
    
    else:
       return "{" + str(x) + "," + str(y) + "}"

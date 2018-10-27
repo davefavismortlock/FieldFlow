@@ -326,7 +326,7 @@ def setUpSimulation():
    
    if shared.considerFieldObservations:
       # The user-supplied OS coords for field observations are unlikely to be the coords of the raster DEM centroids. This is a problem for flow routing, after flow has passed through a landscape element which has an associated field observation. So we need to modify the 'To' coord of all field observations: check all field observations and adjust if necessary
-      shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
+      #shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
       
       for obs in range(len(shared.observedLEFlowTo)):
          centroidFromPoint = centroidOfContainingDEMCell(shared.observedLEFlowFrom[obs].x(), shared.observedLEFlowFrom[obs].y())  
@@ -378,7 +378,7 @@ def setUpSimulation():
             shared.observedLEFlowTo[obs] = centroidToPoint      
                
       # Print out the revised field observations
-      shared.fpOut.write("Revised Field Observations\n\n")
+      shared.fpOut.write("\nREVISED FIELD OBSERVATIONS\n\n")
       
       for obs in range(len(shared.observedLEFlowTo)):
          printStr = str(obs) + ": '" + shared.observedLECategory[obs] + "' '" + shared.observedLEBehaviour[obs] + "' '" + shared.observedLEDescription[obs] + "' from " + displayOS(shared.observedLEFlowFrom[obs].x(), shared.observedLEFlowFrom[obs].y(), False)
@@ -389,7 +389,7 @@ def setUpSimulation():
          printStr += "\n"
          shared.fpOut.write(printStr)
                
-   shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
+   #shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
    
    return canvasLayers, canvasLayersCategory
 #======================================================================================================================

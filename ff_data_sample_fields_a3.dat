@@ -29,15 +29,15 @@ Output shapefile for flow lines (no extension)                                : 
 Style file (with extension, blank for default style)                          : ff_flow.qml
 Transparency for flow lines (0-100)                                           : 0
 
-Width of window (pixels)                                                      : 750
-Height of window (pixels)                                                     : 1050
+Width of window (pixels)                                                      : 900
+Height of window (pixels)                                                     : 1150
 Initial magnification                                                         : 1.0
    
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
-Coordinates of SW corner of area displayed                                    : 479000, 123000
+Coordinates of SW corner of area displayed                                    : 479000, 123100
 Coordinates of NE corner of area displayed                                    : 480700, 124900
- 
+
 # Vector files ========================================================================================================
 
 # Field boundaries REQUIRED ===========================================================================================
@@ -184,52 +184,5 @@ Category                                                                      : 
 END OF RASTER LAYERS ==================================================================================================
 
 # Field observations ==================================================================================================
-
-# FIELD B6
-Inflow location                                                               : 480322.5, 124578.5  # with spot heights, 480318.5, 124579.0    
-Category                                                                      : boundary
-Behaviour                                                                     : across
-Description                                                                   : S of B6
-Outflow location                                                              : 480317.0, 124560.0
-
-Inflow location                                                               : 480408, 123683
-Category                                                                      : culvert
-Behaviour                                                                     : across
-Description                                                                   : Culvert under road S of 22
-Outflow location                                                              : 480418, 123633
-
-
-# FIELD 22a
-Inflow location                                                               : 480452, 124407
-Category                                                                      : boundary
-Behaviour                                                                     : across
-Description                                                                   : between 22a and 22
-Outflow location                                                              : 480448, 124404
-
-
-# FIELD UNKNOWN
-Inflow location                                                               : 479937.5, 124479.5
-Category                                                                      : boundary
-Behaviour                                                                     : across
-Description                                                                   : S edge of Unknown
-Outflow location                                                              : 479935, 124470
-
-Inflow location                                                               : 480045, 124292
-Category                                                                      : boundary
-Behaviour                                                                     : across
-Description                                                                   : SE edge of 21
-Outflow location                                                              : 480054.0, 124292.5
-
-Inflow location                                                               : 480054.0, 124292.5
-Category                                                                      : road
-Behaviour                                                                     : across
-Description                                                                   : between 21 and 22
-Outflow location                                                              : 480055.5, 124285.0
-
-Inflow location                                                               : 480055.5, 124285.0
-Category                                                                      : boundary
-Behaviour                                                                     : across
-Description                                                                   : NW edge of 22
-Outflow location                                                              : 480066.0, 124282
 
 END OF FIELD OBSERVATIONS =============================================================================================

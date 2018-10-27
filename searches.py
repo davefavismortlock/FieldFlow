@@ -265,7 +265,7 @@ def FindNearbyFlowLine(thisPoint):
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
          nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
          
-         shared.fpOut.write("At " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + ", flow line stream segment '" + str(featID) + "' was found with nearest point " + displayOS(nearPoint.x(), nearPoint.y()) + " {:0.1f}".format(sqrt(sqrDist)) + " m away\n")
+         shared.fpOut.write("At " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + ", flow line stream segment '" + str(featID) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
          
          return nearPoint.x(), nearPoint.y()
    
@@ -329,137 +329,93 @@ def FindNearbyFlowLine(thisPoint):
 
 #======================================================================================================================
 #
-# Searches a raster layer for nearby paths
+# Is there a path near here?
 #
 #======================================================================================================================
-def FindNearbyPath(point, fieldCode):   
-   x = point.x()
-   y = point.y()
-
-   searchDistMax = int(round(shared.searchDist))
+def FindNearbyPath(point, flowFieldCode): 
+   #shared.fpOut.write("\tEntered FindNearbyPath at point " + displayOS(point.x(), point.y()))
+   layerNum = -1
+   geomPoint = QgsGeometry.fromPoint(point)
    
-   found = []
-   foundPoint = []
+   # Find the path network layer
+   pathLayerFound = False
+   for layerNum in range(len(shared.vectorInputLayersCategory)):
+      if shared.vectorInputLayersCategory[layerNum] == INPUT_PATH_NETWORK:
+         pathLayerFound = True
+         break
    
-   for dist in range(searchDistMax):
-      # N
-      adjX = x
-      adjY = y + dist
+   # Safety check
+   if not pathLayerFound:
+      printStr = "ERROR: opening path network layer\n"
+      shared.fpOut.write(printStr)
+      print(printStr)
       
-      adjPoint = QgsPoint(adjX, adjY)
-      if adjPoint in shared.thisFieldFlowLine:
-         continue
-      
-      adjCellCode = getRasterCellValueAsInt(adjX, adjY)
-      
-      if adjCellCode in shared.rasterPathCodes:
-         found.append(adjCellCode)
-         foundPoint.append(adjPoint)
-
-      # NE
-      adjX = x + dist
-      adjY = y + dist
-      
-      adjPoint = QgsPoint(adjX, adjY)
-      if adjPoint in shared.thisFieldFlowLine:
-         continue
-      
-      adjCellCode = getRasterCellValueAsInt(adjX, adjY)
-      
-      if adjCellCode in shared.rasterPathCodes:
-         found.append(adjCellCode)
-         foundPoint.append(adjPoint)
-
-      # E
-      adjX = x + dist
-      adjY = y
-      
-      adjPoint = QgsPoint(adjX, adjY)
-      if adjPoint in shared.thisFieldFlowLine:
-         continue
-      
-      adjCellCode = getRasterCellValueAsInt(adjX, adjY)
-      
-      if adjCellCode in shared.rasterPathCodes:
-         found.append(adjCellCode)
-         foundPoint.append(adjPoint)
-
-      # SE
-      adjX = x + dist
-      adjY = y - dist
-      
-      adjPoint = QgsPoint(adjX, adjY)
-      if adjPoint in shared.thisFieldFlowLine:
-         continue
-      
-      adjCellCode = getRasterCellValueAsInt(adjX, adjY)
-      
-      if adjCellCode in shared.rasterPathCodes:
-         found.append(adjCellCode)
-         foundPoint.append(adjPoint)
-
-      # S
-      adjX = x
-      adjY = y - dist
-      
-      adjPoint = QgsPoint(adjX, adjY)
-      if adjPoint in shared.thisFieldFlowLine:
-         continue
-      
-      adjCellCode = getRasterCellValueAsInt(adjX, adjY)
-      
-      if adjCellCode in shared.rasterPathCodes:
-         found.append(adjCellCode)
-         foundPoint.append(adjPoint)
-
-      # SW
-      adjX = x - dist
-      adjY = y - dist
-      
-      adjPoint = QgsPoint(adjX, adjY)
-      if adjPoint in shared.thisFieldFlowLine:
-         continue
-      
-      adjCellCode = getRasterCellValueAsInt(adjX, adjY)
-      
-      if adjCellCode in shared.rasterPathCodes:
-         found.append(adjCellCode)
-         foundPoint.append(adjPoint)
-
-      # W
-      adjX = x - dist
-      adjY = y
-      
-      adjPoint = QgsPoint(adjX, adjY)
-      if adjPoint in shared.thisFieldFlowLine:
-         continue
-      
-      adjCellCode = getRasterCellValueAsInt(adjX, adjY)
-      
-      if adjCellCode in shared.rasterPathCodes:
-         found.append(adjCellCode)
-         foundPoint.append(adjPoint)
-
-      # NW
-      adjX = x - dist
-      adjY = y + dist
-      
-      adjPoint = QgsPoint(adjX, adjY)
-      if adjPoint in shared.thisFieldFlowLine:
-         continue
-      
-      adjCellCode = getRasterCellValueAsInt(adjX, adjY)
-      
-      if adjCellCode in shared.rasterPathCodes:
-         found.append(adjCellCode)
-         foundPoint.append(adjPoint)
+      return -1
    
-      # OK, what have we found? 
-      for n in range(len(found)):                  
-         printStr = "Flow from field " + str(fieldCode) + " is near a path at " + displayOS(foundPoint[n].x(), foundPoint[n].y()) + ".\n*** Does flow go over, under or along this path?"
-         shared.fpOut.write(printStr)
+   # TODO make this a user setting
+   numberToSearchFor = 3
+   
+   # Now search for the nearest path segments
+   nearestIDs = shared.vectorInputIndex[layerNum].nearestNeighbor(point, numberToSearchFor)    
+   request = QgsFeatureRequest().setFilterFids(nearestIDs)
+   features = shared.vectorInputLayers[layerNum].getFeatures(request)
+      
+   distToPoint = []      
+   geomPoint = QgsGeometry.fromPoint(point)
+   
+   for pathSeg in features:
+      # Is this path segment both close enough, and has not already been followed?
+      geomSeg = pathSeg.geometry()
+      nearPoint = geomSeg.nearestPoint(geomPoint)
+      distanceToSeg = geomPoint.distance(nearPoint)
+      segID = pathSeg.id()
+      #shared.fpOut.write("segID = " + str(segID) + " distanceToSeg = " + str(distanceToSeg) + "\n")
+      
+      if distanceToSeg > shared.searchDist or segID in shared.thisFieldPathSegIDsTried:
+         # Too far away or already travelled, so forget about this path segment
+         #shared.fpOut.write("Too far for segID = " + str(segID) + "\n")
+         continue
+
+      # Is OK, so save the path segment feature, the nearest point, and the distance
+      distToPoint.append([pathSeg, nearPoint.asPoint(), distanceToSeg])
+            
+   # Did we any find suitable path segments?
+   if len(distToPoint) == 0:
+      # Nope
+      #shared.fpOut.write("Leaving loop")
+      return 0 
+   
+   # OK we have some suitable path segments, sort the list of untravelled path segments, shortest distance first         
+   distToPoint.sort(key = lambda distPoint: distPoint[2])
+   
+   #for n in range(len(distToPoint)):
+      #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+
+   featIDTried = []
+   for n in range(len(distToPoint)):
+      # Go through this list of untravelled path segments
+      feature = distToPoint[n][0]
+      featID = feature.id()
+      
+      if featID not in featIDTried:
+         #shared.fpOut.write("Trying feature ID " + str(featID) + "\n")
+         featIDTried.append(featID)
          
-   return 0
+         featDesc = feature[PATH_DESC]
+         
+         geomFeat = feature.geometry()
+         linePoints = geomFeat.asPolyline()
+         nPoints = len(linePoints)
+
+         # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
+#         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
+         
+         #shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this path? Please add a field observation\n")
+         
+         shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow go over, under or along this path? Please add a field observation\n")
+         
+         
+   return 1
 #======================================================================================================================
 
 
@@ -493,7 +449,7 @@ def FindNearbyFieldObservation(foundPoint):
       
       if xMin < xObs < xMax and yMin < yObs < yMax:
          #shared.fpOut.write("Found " + str(indx))
-         shared.fpOut.write("Field observation '" + shared.observedLECategory[indx] + "' '" + shared.observedLEBehaviour[indx] + "' ' " + shared.observedLEDescription[indx] + "' found at " + displayOS(shared.observedLEFlowFrom[indx].x(), shared.observedLEFlowFrom[indx].y()) + "\n")
+         shared.fpOut.write("Field observation '" + shared.observedLEBehaviour[indx] + " " + shared.observedLECategory[indx] + " " + shared.observedLEDescription[indx] + "' found at " + displayOS(shared.observedLEFlowFrom[indx].x(), shared.observedLEFlowFrom[indx].y()) + "\n")
 
          return indx
    return -1
@@ -574,10 +530,10 @@ def FindNearbyRoad(point, flowFieldCode):
          #shared.fpOut.write("Trying feature ID " + str(featID) + "\n")
          featIDTried.append(featID)
          
-         featCode = feature[FEAT_CODE]
-         featDesc = feature[FEAT_DESC]
-         roadName = feature[ROAD_NAME]
-         roadNumber = feature[ROAD_NUMBER]
+         featCode = feature[OS_VECTORMAP_FEAT_CODE]
+         featDesc = feature[OS_VECTORMAP_FEAT_DESC]
+         roadName = feature[OS_VECTORMAP_ROAD_NAME]
+         roadNumber = feature[OS_VECTORMAP_ROAD_NUMBER]
          
          geomFeat = feature.geometry()
          linePoints = geomFeat.asPolyline()
@@ -586,9 +542,9 @@ def FindNearbyRoad(point, flowFieldCode):
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
 #         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
          
-         #shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + displayOS(nearPoint.x(), nearPoint.y()) + " {:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
+         #shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
          
-         shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " {:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
+         shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
          
          
    return 1
@@ -888,11 +844,11 @@ def FindNearbyStream(point, flowFieldCode):
          featID = feature.id()
          #shared.fpOut.write("Trying feature ID " + str(featID))
          
-         localID = feature[LOCAL_ID]
+         localID = feature[OS_WATER_NETWORK_LOCAL_ID]
          
          # Is this the Rother?
-         streamName = feature[WATERCOURSE_NAME]
-         if streamName != NULL and streamName.upper().find(RIVER_ROTHER) >= 0:
+         streamName = feature[OS_WATER_NETWORK_NAME]
+         if streamName != NULL and streamName.upper().find(TARGET_RIVER) >= 0:
             # Yes, flow has entered the Rother
             shared.fpOut.write("Flow from field " + flowFieldCode + " enters the River Rother at " + displayOS(point.x(), point.y()) + "\n")                  
             addFlowMarkerPoint(point, MARKER_ENTER_RIVER, flowFieldCode, -1)
@@ -916,7 +872,7 @@ def FindNearbyStream(point, flowFieldCode):
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
          nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
                   
-         #shared.fpOut.write("At " + displayOS(point.x(), point.y() + ", an untravelled stream segment " + str(localID) + " found with nearest point " + displayOS(nearPoint.x(), nearPoint.y()) + " {:0.1f}".format(sqrt(sqrDist)) + " m away"))
+         #shared.fpOut.write("At " + displayOS(point.x(), point.y() + ", an untravelled stream segment " + str(localID) + " found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away"))
          
          #shared.fpOut.write("\tFirst point of stream segment is " + displayOS(firstPoint.x(), firstPoint.y()))
          #shared.fpOut.write("\tNearest point of stream segment is " + displayOS(nearPoint.x(), nearPoint.y()))
@@ -966,7 +922,7 @@ def FindNearbyStream(point, flowFieldCode):
             #shared.fpOut.write(fld.displayName())
          #shared.fpOut.write("")
          
-         level = feature[LEVEL]
+         level = feature[OS_WATER_NETWORK_LEVEL]
          if level == "underground":
             typeName = MARKER_ENTER_CULVERT
             if streamName == NULL:
