@@ -425,8 +425,8 @@ def FindNearbyPath(point, flowFieldCode):
 #
 #======================================================================================================================
 def FindNearbyFieldObservation(foundPoint):
-   numObs = len(shared.observedLEFlowFrom)
-   #shared.fpOut.write(shared.observedLEFlowFrom)
+   numObs = len(shared.fieldObservationFlowFrom)
+   #shared.fpOut.write(shared.fieldObservationFlowFrom)
    
    if numObs == 0:
       # No field observations
@@ -444,12 +444,12 @@ def FindNearbyFieldObservation(foundPoint):
       if indx in shared.thisFieldLEsAlreadyFollowed:
          continue
       
-      xObs = shared.observedLEFlowFrom[indx].x()
-      yObs = shared.observedLEFlowFrom[indx].y()
+      xObs = shared.fieldObservationFlowFrom[indx].x()
+      yObs = shared.fieldObservationFlowFrom[indx].y()
       
       if xMin < xObs < xMax and yMin < yObs < yMax:
          #shared.fpOut.write("Found " + str(indx))
-         shared.fpOut.write("Field observation '" + shared.observedLEBehaviour[indx] + " " + shared.observedLECategory[indx] + " " + shared.observedLEDescription[indx] + "' found at " + displayOS(shared.observedLEFlowFrom[indx].x(), shared.observedLEFlowFrom[indx].y()) + "\n")
+         shared.fpOut.write("Field observation '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' found at " + displayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()) + "\n")
 
          return indx
    return -1

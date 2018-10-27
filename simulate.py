@@ -86,15 +86,17 @@ def getHighestPointOnFieldBoundary(fieldBoundary):
 #
 #======================================================================================================================
 def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
-   #shared.fpOut.write(displayOS(thisPoint.x(), thisPoint.y()), displayOS(shared.observedLEFlowFrom[indx].x(), shared.observedLEFlowFrom[indx].y()))
-   #shared.fpOut.write(shared.observedLEFlowTo)
-   if not shared.observedLEFlowTo[indx]:
+   #shared.fpOut.write(displayOS(thisPoint.x(), thisPoint.y()), displayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()))
+   #shared.fpOut.write(shared.fieldObservationFlowTo)
+   if not shared.fieldObservationFlowTo[indx]:
       # The outflow location is not known, so we have flow along a road or along a path
-      if shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_ROAD and shared.observedLEBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
+      if shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_ROAD and shared.fieldObservationBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
          #shared.fpOut.write("Flow along road")
+         addFlowMarkerPoint(thisPoint, MARKER_ROAD, fieldCode, -1)
+         
          rtn, point = flowAlongVectorRoad(indx, fieldCode, thisPoint)      
          if rtn == -1:
-            # Either Problem! Exit the program
+            # A problem! Exit the program
             exit (-1)
 
          elif rtn == 1:
@@ -109,8 +111,10 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
             # Carry on from this point
             return 0, point
       
-      elif shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_PATH and shared.observedLEBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
+      elif shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_PATH and shared.fieldObservationBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
          #shared.fpOut.write("Flow along path")
+         addFlowMarkerPoint(thisPoint, MARKER_PATH, fieldCode, -1)
+
          rtn, point = flowAlongVectorPath(indx, fieldCode, thisPoint)      
          if rtn == -1:
             # Either Problem! Exit the program
@@ -128,8 +132,10 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
             # Carry on from this point
             return 0, point
       
-      elif shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_BOUNDARY and shared.observedLEBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
-         shared.fpOut.write("Flow along boundary\n")
+      elif shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_BOUNDARY and shared.fieldObservationBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
+         #shared.fpOut.write("Flow along boundary\n")
+         addFlowMarkerPoint(thisPoint, MARKER_FIELD_BOUNDARY, fieldCode, -1)
+
          rtn, point = flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint)      
          if rtn == -1:
             # Problem! Exit the program
@@ -152,35 +158,40 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
             return 0, point
          
       else:
-         printStr = "ERROR: must have a 'To' location for field observation " + str(indx) + " '" + shared.observedLECategory[indx] + shared.observedLEBehaviour[indx] + "' '" + shared.observedLEDescription[indx] + "', in flow from field " + str(fieldCode) + " at "+ displayOS(shared.observedLEFlowFrom[indx].x(), shared.observedLEFlowFrom[indx].y()) + "\n"
+         printStr = "ERROR: must have a 'To' location for field observation " + str(indx) + " '" + shared.fieldObservationCategory[indx] + shared.fieldObservationBehaviour[indx] + "' '" + shared.fieldObservationDescription[indx] + "', in flow from field " + str(fieldCode) + " at "+ displayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()) + "\n"
          shared.fpOut.write(printStr)
          print(printStr)
          
          return -1, -1
          
    # We have a 'From' and a 'To' location: put the marker between the From and To points
-   markerPointX = (shared.observedLEFlowTo[indx].x() + shared.observedLEFlowFrom[indx].x())
-   markerPointY = (shared.observedLEFlowTo[indx].y() + shared.observedLEFlowFrom[indx].y()) 
-   addFlowMarkerPoint(QgsPoint(markerPointX, markerPointY), shared.observedLECategory[indx], fieldCode, -1)
+   markerPointX = (shared.fieldObservationFlowTo[indx].x() + shared.fieldObservationFlowFrom[indx].x()) / 2
+   markerPointY = (shared.fieldObservationFlowTo[indx].y() + shared.fieldObservationFlowFrom[indx].y()) / 2
+   if shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_CULVERT:
+      addFlowMarkerPoint(QgsPoint(markerPointX, markerPointY), MARKER_ENTER_CULVERT, fieldCode, -1)
+   elif shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_PATH:
+      addFlowMarkerPoint(QgsPoint(markerPointX, markerPointY), MARKER_PATH, fieldCode, -1)
+   elif shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_ROAD:
+      addFlowMarkerPoint(QgsPoint(markerPointX, markerPointY), MARKER_ROAD, fieldCode, -1)
    
-   printStr = "Flow from field " + fieldCode + " routed '" + shared.observedLEBehaviour[indx] + " " + shared.observedLECategory[indx] + " " + shared.observedLEDescription[indx] + "' from " + displayOS(thisPoint.x(), thisPoint.y()) 
-   if thisPoint != shared.observedLEFlowFrom[indx]:
-      printStr += " via " + displayOS(shared.observedLEFlowFrom[indx].x(), shared.observedLEFlowFrom[indx].y()) 
-   printStr += " to " + displayOS(shared.observedLEFlowTo[indx].x(), shared.observedLEFlowTo[indx].y())
+   printStr = "Flow from field " + fieldCode + " routed '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' from " + displayOS(thisPoint.x(), thisPoint.y()) 
+   if thisPoint != shared.fieldObservationFlowFrom[indx]:
+      printStr += " via " + displayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()) 
+   printStr += " to " + displayOS(shared.fieldObservationFlowTo[indx].x(), shared.fieldObservationFlowTo[indx].y())
    printStr += "\n"
    shared.fpOut.write(printStr)
    
    shared.thisFieldLEsAlreadyFollowed.append(indx)
    
-   if thisPoint != shared.observedLEFlowFrom[indx]:
-      addFlowLine(thisPoint, shared.observedLEFlowFrom[indx], " near to " + shared.observedLEDescription[indx], fieldCode, elev)
-   addFlowLine(shared.observedLEFlowFrom[indx], shared.observedLEFlowTo[indx], shared.observedLEDescription[indx], fieldCode, -1)
+   if thisPoint != shared.fieldObservationFlowFrom[indx]:
+      addFlowLine(thisPoint, shared.fieldObservationFlowFrom[indx], " near to " + shared.fieldObservationDescription[indx], fieldCode, elev)
+   addFlowLine(shared.fieldObservationFlowFrom[indx], shared.fieldObservationFlowTo[indx], shared.fieldObservationDescription[indx], fieldCode, -1)
 
    ## TEST add intermediate points to thisFieldFlowLine and thisFieldFlowLineFieldCode, to prevent backtracking
    #tempPoints = []
-   #if thisPoint != shared.observedLEFlowFrom[indx]:
-      #tempPoints += pointsOnLine(thisPoint, shared.observedLEFlowFrom[indx], shared.resElevData)
-   #tempPoints += pointsOnLine(shared.observedLEFlowFrom[indx], shared.observedLEFlowTo[indx], shared.resElevData)
+   #if thisPoint != shared.fieldObservationFlowFrom[indx]:
+      #tempPoints += pointsOnLine(thisPoint, shared.fieldObservationFlowFrom[indx], shared.resElevData)
+   #tempPoints += pointsOnLine(shared.fieldObservationFlowFrom[indx], shared.fieldObservationFlowTo[indx], shared.resElevData)
    
    #inBetweenPoints = []
    #for point in tempPoints:
@@ -197,7 +208,7 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
       #printStr += " "
    #shared.fpOut.write(printStr)
    
-   return 0, shared.observedLEFlowTo[indx]
+   return 0, shared.fieldObservationFlowTo[indx]
 #======================================================================================================================
 
 
@@ -207,9 +218,9 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
 #
 #======================================================================================================================
 def flowAlongVectorRoad(indx, fieldCode, thisPoint): 
-   obsCategory = shared.observedLECategory[indx]
-   obsBehaviour = shared.observedLEBehaviour[indx]
-   obsDesc = shared.observedLEDescription[indx]
+   obsCategory = shared.fieldObservationCategory[indx]
+   obsBehaviour = shared.fieldObservationBehaviour[indx]
+   obsDesc = shared.fieldObservationDescription[indx]
    
    shared.thisFieldLEsAlreadyFollowed.append(indx)
    
@@ -536,9 +547,9 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
 #
 #======================================================================================================================
 def flowAlongVectorPath(indx, fieldCode, thisPoint): 
-   obsCategory = shared.observedLECategory[indx]
-   obsBehaviour = shared.observedLEBehaviour[indx]
-   obsDesc = shared.observedLEDescription[indx]
+   obsCategory = shared.fieldObservationCategory[indx]
+   obsBehaviour = shared.fieldObservationBehaviour[indx]
+   obsDesc = shared.fieldObservationDescription[indx]
    
    shared.thisFieldLEsAlreadyFollowed.append(indx)
    
@@ -929,9 +940,9 @@ def flowHitFieldBoundary(firstPoint, secondPoint, flowFieldCode):
 #
 #======================================================================================================================
 def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint): 
-   obsCategory = shared.observedLECategory[indx]
-   obsBehaviour = shared.observedLEBehaviour[indx]
-   obsDesc = shared.observedLEDescription[indx]
+   obsCategory = shared.fieldObservationCategory[indx]
+   obsBehaviour = shared.fieldObservationBehaviour[indx]
+   obsDesc = shared.fieldObservationDescription[indx]
    
    shared.thisFieldLEsAlreadyFollowed.append(indx)
 

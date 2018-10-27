@@ -97,7 +97,7 @@ MARKER_ENTER_CULVERT          = "Culvert"
 MARKER_ENTER_RIVER            = "Enter River Rother"
 MARKER_ROAD                   = "Road"
 MARKER_PATH                   = "Path"
-MARKER_AT_STREAM              = "Enter stream?"
+MARKER_AT_STREAM              = "Enter stream"
 
 
 # SHARED VARIABLES ======================================================================================================
@@ -173,13 +173,13 @@ rasterInputLayers = 0
 rasterInputLayersCategory = 0
 rasterInputData = 0
 
-observedLEFlowFrom = 0
-observedLECategory = 0
-observedLEValidCategories = 0
-observedLEBehaviour = 0
-observedLEValidBehaviours = 0
-observedLEDescription = 0
-observedLEFlowTo = 0
+fieldObservationFlowFrom = 0
+fieldObservationCategory = 0
+fieldObservationValidCategories = 0
+fieldObservationBehaviour = 0
+fieldObservationValidBehaviours = 0
+fieldObservationDescription = 0
+fieldObservationFlowTo = 0
 
 rasterPathCodes = 0
 

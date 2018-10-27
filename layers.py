@@ -4,7 +4,7 @@ from PyQt4.QtCore import QFileInfo, QVariant
 
 import shared
 from shared import *
-from utils import toSentenceCase
+from utils import toSentenceCase #, displayOS
 
 
 #======================================================================================================================
@@ -341,7 +341,8 @@ def writeVector(layer, fileName, CRS):
 # Adds a point to the flow marker points vector layer
 #
 #======================================================================================================================
-def addFlowMarkerPoint(thisPoint, desc, fieldCode, elev):   
+def addFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
+   # print("addFlowMarkerPoint " + desc + " " + displayOS(thisPoint.x(), thisPoint.y()))
    feature = QgsFeature()
    feature.setGeometry(QgsGeometry.fromPoint(thisPoint))
    

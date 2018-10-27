@@ -112,8 +112,9 @@ class SimulationThread(QThread):
                   shared.flowStartPoints.append([xFlowStart, yFlowStart, flowStartElev, fieldCode])
                   fieldCodes.append(fieldCode)
                   
-                  # And show it on the map
-                  addFlowMarkerPoint(QgsPoint(xFlowStart, yFlowStart), fieldCode + MARKER_FLOW_START_POINT, fieldCode, flowStartElev)
+                  # And show it on the map, if we are not considering field observations
+                  if not shared.considerFieldObservations:
+                     addFlowMarkerPoint(QgsPoint(xFlowStart, yFlowStart), fieldCode + MARKER_FLOW_START_POINT, fieldCode, flowStartElev)
                   #shared.fpOut.write("Flow from field " + fieldCode + " begins at " + displayOS(xFlowStart, yFlowStart) + "\n")
 
                   # Refresh the display
@@ -277,6 +278,7 @@ class SimulationThread(QThread):
                   
                   elif rtn == 1:
                      # Flow has passed through the LE and then hit a blind pit, so we need another field observation. Set a switch and go round the loop once more, since we may have a field observation which relates to this
+                     addFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
                      viaLEAndHitBlindPit = True                     
                   
                   elif rtn == 2:
@@ -289,19 +291,19 @@ class SimulationThread(QThread):
                      break
                      
                   # Turn off some switches
-                  if hitBoundary and shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_BOUNDARY:
+                  if hitBoundary and shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_BOUNDARY:
                      # We passed through the field boundary, so turn off the switch
                      hitBoundary = False
                   
                   if hitRoad:
                      #shared.fpOut.write("YYY")
-                     if shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_ROAD:
+                     if shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_ROAD:
                         # We passed across or along the road, so turn off the switch
                         hitRoad = False
 
                   if hitPath:
                      #shared.fpOut.write("ZZZ")
-                     if shared.observedLECategory[indx] == FIELD_OBS_CATEGORY_PATH:
+                     if shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_PATH:
                         # We passed across or along the path, so turn off the switch
                         hitPath = False
 
@@ -360,7 +362,7 @@ class SimulationThread(QThread):
             #=============================================================================================================                        
             if inBlindPit:
                if shared.fillBlindPits:
-                  addFlowMarkerPoint(thisPoint, "", fieldCode, -1)
+                  addFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
                   
                   newPoint, flowDepth = fillBlindPit(thisPoint, fieldCode)
                   if newPoint == -1:

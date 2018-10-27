@@ -95,13 +95,13 @@ def readInput():
    shared.rasterInputLayersCategory = []
    shared.rasterInputData = []
       
-   shared.observedLEFlowFrom = []
-   shared.observedLECategory = []
-   shared.observedLEValidCategories = [FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_DUMMY]
-   shared.observedLEBehaviour = []
-   shared.observedLEValidBehaviours = [FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_DUMMY]
-   shared.observedLEDescription = []
-   shared.observedLEFlowTo = []
+   shared.fieldObservationFlowFrom = []
+   shared.fieldObservationCategory = []
+   shared.fieldObservationValidCategories = [FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_DUMMY]
+   shared.fieldObservationBehaviour = []
+   shared.fieldObservationValidBehaviours = [FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_DUMMY]
+   shared.fieldObservationDescription = []
+   shared.fieldObservationFlowTo = []
    
    # Now open and read the data file TODO test for file opening
    fpData = open(shared.dataInputFile, "r")
@@ -452,31 +452,31 @@ def readInput():
                   
                   return -1
                
-               shared.observedLEFlowFrom.append(QgsPoint(float(xCoord), float(yCoord)))
+               shared.fieldObservationFlowFrom.append(QgsPoint(float(xCoord), float(yCoord)))
                
             elif obsLine == 1:
                # Category
-               if data not in shared.observedLEValidCategories:
-                  printStr = "ERROR: unknown field observation category '" + str(data) + "' in field observation at " + displayOS(shared.observedLEFlowFrom[-1].x(), shared.observedLEFlowFrom[-1].y()) 
+               if data not in shared.fieldObservationValidCategories:
+                  printStr = "ERROR: unknown field observation category '" + str(data) + "' in field observation at " + displayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y()) 
                   print(printStr)
                   
                   return -1
                
-               shared.observedLECategory.append(data)
+               shared.fieldObservationCategory.append(data)
 
             elif obsLine == 2:
                # Behaviour
-               if data not in shared.observedLEValidBehaviours:
-                  printStr = "ERROR: unknown field observation behaviour behaviour '" + str(data) + "' in field observation at " + displayOS(shared.observedLEFlowFrom[-1].x(), shared.observedLEFlowFrom[-1].y())
+               if data not in shared.fieldObservationValidBehaviours:
+                  printStr = "ERROR: unknown field observation behaviour behaviour '" + str(data) + "' in field observation at " + displayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y())
                   print(printStr)
                   
                   return -1
                
-               shared.observedLEBehaviour.append(data)
+               shared.fieldObservationBehaviour.append(data)
                
             elif obsLine == 3:
                # Description
-               shared.observedLEDescription.append(data)                  
+               shared.fieldObservationDescription.append(data)                  
                
             elif obsLine == 4:
                # Outflow location
@@ -501,16 +501,16 @@ def readInput():
                      
                      return -1
 
-                  shared.observedLEFlowTo.append(QgsPoint(float(xCoord), float(yCoord)))
+                  shared.fieldObservationFlowTo.append(QgsPoint(float(xCoord), float(yCoord)))
                else:
                   # We do not have an outflow location. This is only allowable if the category is "along road", "along path", or "boundary blocked"
-                  if not ((shared.observedLECategory[-1] == FIELD_OBS_CATEGORY_ROAD and shared.observedLEBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.observedLECategory[-1] == FIELD_OBS_CATEGORY_PATH and shared.observedLEBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.observedLECategory[-1] == FIELD_OBS_CATEGORY_BOUNDARY and shared.observedLEBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG)):
-                     printStr = "ERROR: for field observation '" + shared.observedLECategory[-1] + "' '" + shared.observedLEBehaviour[-1] + "' '" + shared.observedLEDescription[-1] + "', the outflow location must be specified"                        
+                  if not ((shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_ROAD and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_PATH and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_BOUNDARY and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG)):
+                     printStr = "ERROR: for field observation '" + shared.fieldObservationCategory[-1] + "' '" + shared.fieldObservationBehaviour[-1] + "' '" + shared.fieldObservationDescription[-1] + "', the outflow location must be specified"                        
                      print(printStr)
                      
                      return -1
                   
-                  shared.observedLEFlowTo.append(None)                  
+                  shared.fieldObservationFlowTo.append(None)                  
                
             obsLine += 1
             if obsLine == 5:
