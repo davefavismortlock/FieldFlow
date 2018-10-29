@@ -33,7 +33,7 @@ def getHighestPointOnFieldBoundary(fieldBoundary):
          nextBoundaryPointX = poly[i][j+1][0]
          nextBoundaryPointY = poly[i][j+1][1]
 
-         inBetweenPoints = pointsOnLine(QgsPoint(thisBoundaryPointX, thisBoundaryPointY), QgsPoint(nextBoundaryPointX, nextBoundaryPointY), shared.resElevData)
+         inBetweenPoints = pointsOnLine(QgsPoint(thisBoundaryPointX, thisBoundaryPointY), QgsPoint(nextBoundaryPointX, nextBoundaryPointY), shared.resolutionOfDEM)
          #shared.fpOut.write("From " + displayOS(thisBoundaryPointX, thisBoundaryPointY) + " to " + displayOS(nextBoundaryPointX, nextBoundaryPointY))
          #shared.fpOut.write("in-between points are " + str(inBetweenPoints))
          #shared.fpOut.write("")
@@ -181,7 +181,7 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
    printStr += "\n"
    shared.fpOut.write(printStr)
    
-   shared.thisFieldLEsAlreadyFollowed.append(indx)
+   shared.thisFieldFieldObsAlreadyFollowed.append(indx)
    
    if thisPoint != shared.fieldObservationFlowFrom[indx]:
       addFlowLine(thisPoint, shared.fieldObservationFlowFrom[indx], " near to " + shared.fieldObservationDescription[indx], fieldCode, elev)
@@ -190,8 +190,8 @@ def flowViaLandscapeElement(indx, fieldCode, thisPoint, elev):
    ## TEST add intermediate points to thisFieldFlowLine and thisFieldFlowLineFieldCode, to prevent backtracking
    #tempPoints = []
    #if thisPoint != shared.fieldObservationFlowFrom[indx]:
-      #tempPoints += pointsOnLine(thisPoint, shared.fieldObservationFlowFrom[indx], shared.resElevData)
-   #tempPoints += pointsOnLine(shared.fieldObservationFlowFrom[indx], shared.fieldObservationFlowTo[indx], shared.resElevData)
+      #tempPoints += pointsOnLine(thisPoint, shared.fieldObservationFlowFrom[indx], shared.resolutionOfDEM)
+   #tempPoints += pointsOnLine(shared.fieldObservationFlowFrom[indx], shared.fieldObservationFlowTo[indx], shared.resolutionOfDEM)
    
    #inBetweenPoints = []
    #for point in tempPoints:
@@ -222,7 +222,7 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
    obsBehaviour = shared.fieldObservationBehaviour[indx]
    obsDesc = shared.fieldObservationDescription[indx]
    
-   shared.thisFieldLEsAlreadyFollowed.append(indx)
+   shared.thisFieldFieldObsAlreadyFollowed.append(indx)
    
    #shared.fpOut.write("Entered flowAlongVectorRoad at point " + displayOS(thisPoint.x(), thisPoint.y()))
    layerNum = -1
@@ -264,7 +264,7 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
          nearPoint = geomSeg.nearestPoint(geomPoint)
          distanceToSeg = geomPoint.distance(nearPoint)
          segID = roadSeg.id()
-         shared.fpOut.write("\troad segID = " + str(segID) + ", distanceToSeg = " + str(distanceToSeg) + "\n")
+         #shared.fpOut.write("\troad segID = " + str(segID) + ", distanceToSeg = " + str(distanceToSeg) + "\n")
          
          if distanceToSeg > shared.searchDist:
             # Too far away, so forget about this road segment
@@ -274,7 +274,7 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
          
          if segID in shared.thisFieldRoadSegIDsTried:
             # Aready travelled, so forget about this road segment
-            shared.fpOut.write("\tAlready travelled for road segID = " + str(segID) + "\n")
+            #shared.fpOut.write("\tAlready travelled for road segID = " + str(segID) + "\n")
             
             continue
 
@@ -288,14 +288,14 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
          return 1, thisPoint
       
       # OK we have some possibly suitable road segments
-      for n in range(len(distToPoint)):
-         shared.fpOut.write("\tBefore " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+      #for n in range(len(distToPoint)):
+         #shared.fpOut.write("\tBefore " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
       # Sort the list of untravelled road segments, shortest distance first         
       distToPoint.sort(key = lambda distPoint: distPoint[2])
 
-      for n in range(len(distToPoint)):
-         shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+      #for n in range(len(distToPoint)):
+         #shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
       
       flowRouted = False
       for n in range(len(distToPoint)):
@@ -403,7 +403,7 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
                   
                else:
                   # Last point is lower than near point, so flow goes to last point                  
-                  shared.fpOut.write("Flow to last point a\n")
+                  #shared.fpOut.write("Flow to last point a\n")
                   flowToLastPoint = True
                   
             else:
@@ -415,7 +415,7 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
 
                if flowToLast:
                   flowToLastPoint = True
-                  shared.fpOut.write("Flow to last point b\n")
+                  #shared.fpOut.write("Flow to last point b\n")
                else:
                   flowToFirstPoint = True
                   shared.fpOut.write("Flow to first point c\n")
@@ -551,7 +551,7 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
    obsBehaviour = shared.fieldObservationBehaviour[indx]
    obsDesc = shared.fieldObservationDescription[indx]
    
-   shared.thisFieldLEsAlreadyFollowed.append(indx)
+   shared.thisFieldFieldObsAlreadyFollowed.append(indx)
    
    #shared.fpOut.write("Entered flowAlongVectorPath at point " + displayOS(thisPoint.x(), thisPoint.y()))
    layerNum = -1
@@ -633,12 +633,9 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
          nearPoint = distToPoint[n][1]
          distToNearPoint = distToPoint[n][2]
          featID = feature.id()
-         #shared.fpOut.write("\tTrying path seg ID " + str(featID) + "\n")
+         shared.fpOut.write("\tTrying path seg ID " + str(featID) + "\n")
          
-         featCode = feature[OS_VECTORMAP_FEAT_CODE]
-         featDesc = feature[OS_VECTORMAP_FEAT_DESC]
-         pathName = feature[PATH_NAME]
-         pathNumber = feature[PATH_NUMBER]
+         featDesc = feature[PATH_DESC]
          
          geomFeat = feature.geometry()
          linePoints = geomFeat.asPolyline()
@@ -647,7 +644,7 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
          firstPoint = linePoints[0]         
          lastPoint = linePoints[-1]
          
-         shared.fpOut.write("\tAt " + displayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled path segment " + str(featID) + " '" + str(featDesc) + "' '" + str(pathName) + "' '" + str(pathNumber) + "', which has nearest point " + "{:0.1f}".format(distToNearPoint) + " m away at " + displayOS(nearPoint.x(), nearPoint.y()) + "\n")
+         shared.fpOut.write("\tAt " + displayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled path segment " + str(featID) + " '" + str(featDesc) + "', which has nearest point " + "{:0.1f}".format(distToNearPoint) + " m away at " + displayOS(nearPoint.x(), nearPoint.y()) + "\n")
          
          #shared.fpOut.write("\tFirst point of path segment is " + displayOS(firstPoint.x(), firstPoint.y()) + "\n")
          #shared.fpOut.write("\tNearest point of path segment is " + displayOS(nearPoint.x(), nearPoint.y()) + "\n")
@@ -801,16 +798,16 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
          if flowToLastPoint:
             # Flow is towards the last point of this path segment
             flowRouted = True
-            shared.thisFieldRoadSegIDsTried.append(featID)
+            shared.thisFieldPathSegIDsTried.append(featID)
             
-            printStr = "Flow from field " + fieldCode + " enters the path segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(pathName) + "' '" + str(pathNumber) + "' at " + displayOS(thisPoint.x(), thisPoint.y()) + " "
+            printStr = "Flow from field " + fieldCode + " enters the path segment '" + str(featDesc) + "' at " + displayOS(thisPoint.x(), thisPoint.y()) + " "
          
             for m in range(numNearPoint, len(linePoints)-1):
                if not firstTime:
                   thisPoint = linePoints[m]
                nextPoint = linePoints[m+1]
          
-               addFlowLine(thisPoint, nextPoint, FLOW_VIA_ROAD, fieldCode, -1)
+               addFlowLine(thisPoint, nextPoint, FLOW_VIA_PATH, fieldCode, -1)
                #shared.fpOut.write("addFlowLine 1 " + displayOS(thisPoint.x(), thisPoint.y()))
                
                firstTime = False
@@ -830,9 +827,9 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
          else:
             # Flow is towards the first point of this path segment
             flowRouted = True
-            shared.thisFieldRoadSegIDsTried.append(featID)
+            shared.thisFieldPathSegIDsTried.append(featID)
 
-            printStr = "Flow from field " + fieldCode + " enters the path segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(pathName) + "' '" + str(pathNumber) + "' at " + displayOS(thisPoint.x(), thisPoint.y()) + " "
+            printStr = "Flow from field " + fieldCode + " enters the path segment '" + str(featDesc) + "' at " + displayOS(thisPoint.x(), thisPoint.y()) + " "
             
             for m in range(numNearPoint, 1, -1):
                if not firstTime:
@@ -944,7 +941,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
    obsBehaviour = shared.fieldObservationBehaviour[indx]
    obsDesc = shared.fieldObservationDescription[indx]
    
-   shared.thisFieldLEsAlreadyFollowed.append(indx)
+   shared.thisFieldFieldObsAlreadyFollowed.append(indx)
 
    #print("Entered flowAlongVectorFieldBoundary at point " + displayOS(thisPoint.x(), thisPoint.y()))
    layerNum = -1
@@ -984,7 +981,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
       polyID = boundaryPoly.id()
       #print("polyID = " + str(polyID) + " distanceToPoly = " + str(distanceToPoly))
       
-      if distanceToPoly > shared.searchDist or polyID in shared.thisFieldLEsAlreadyFollowed:
+      if distanceToPoly > shared.searchDist or polyID in shared.thisFieldFieldObsAlreadyFollowed:
          # Too far away or already travelled, so forget about this road segment
          continue
 

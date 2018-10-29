@@ -29,14 +29,14 @@ Output shapefile for flow lines (no extension)                                : 
 Style file (with extension, blank for default style)                          : ff_flow.qml
 Transparency for flow lines (0-100)                                           : 0
 
-Width of window (pixels)                                                      : 900
+Width of window (pixels)                                                      : 1000
 Height of window (pixels)                                                     : 1150
 Initial magnification                                                         : 1.0
    
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
-Coordinates of SW corner of area displayed                                    : 488410, 121500
-Coordinates of NE corner of area displayed                                    : 490500, 124300
+Coordinates of SW corner of area displayed                                    : 488410, 121400
+Coordinates of NE corner of area displayed                                    : 490500, 124400
  
 # Vector layers =======================================================================================================
 

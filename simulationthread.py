@@ -112,10 +112,9 @@ class SimulationThread(QThread):
                   shared.flowStartPoints.append([xFlowStart, yFlowStart, flowStartElev, fieldCode])
                   fieldCodes.append(fieldCode)
                   
-                  # And show it on the map, if we are not considering field observations
-                  if not shared.considerFieldObservations:
-                     addFlowMarkerPoint(QgsPoint(xFlowStart, yFlowStart), fieldCode + MARKER_FLOW_START_POINT, fieldCode, flowStartElev)
-                  #shared.fpOut.write("Flow from field " + fieldCode + " begins at " + displayOS(xFlowStart, yFlowStart) + "\n")
+                  # And show it on the map
+                  addFlowMarkerPoint(QgsPoint(xFlowStart, yFlowStart), fieldCode + MARKER_FLOW_START_POINT, fieldCode, flowStartElev)
+                  shared.fpOut.write("Flow from field " + fieldCode + " begins at " + displayOS(xFlowStart, yFlowStart) + "\n")
 
                   # Refresh the display
                   self.refresh.emit()      
@@ -128,27 +127,34 @@ class SimulationThread(QThread):
       # Initialize ready for the simulation
       shared.allFieldsFlowPath = []
       shared.allFieldsFlowPathFieldCode = []
+      shared.allFieldsFieldObsAlreadyFollowed = []
+      
       shared.thisFieldFlowLine = []
       shared.thisFieldFlowLineFieldCode = []
+      shared.thisFieldFieldObsAlreadyFollowed = []
       
       #===================================================================================================================
       # The main loop, go round this once for every field that generates runoff
       #===================================================================================================================
       for field in range(len(shared.flowStartPoints)):   
-         # Save the last field's flow path
-         if len(shared.thisFieldFlowLine) > 0:
-            shared.allFieldsFlowPath.extend(shared.thisFieldFlowLine)
-            shared.allFieldsFlowPathFieldCode.extend(shared.thisFieldFlowLineFieldCode)
-            
-            for feature in shared.outFlowLineLayer.getFeatures():
-               shared.outFlowLineLayerIndex.insertFeature(feature)
-            
          # Are we simulating flow from this field?
          fieldCode = shared.flowStartPoints[field][3]
          if not doAllFields:
             if fieldCode not in shared.fieldsWithFlow:
                # Nope
                continue                
+
+         # If this isn't the first field simulated, then save the last field's flow path and the last field's list of Field Observations used
+         if len(shared.thisFieldFlowLine) > 0:
+            shared.allFieldsFlowPath.extend(shared.thisFieldFlowLine)
+            shared.allFieldsFlowPathFieldCode.extend(shared.thisFieldFlowLineFieldCode)
+            
+            for feature in shared.outFlowLineLayer.getFeatures():
+               shared.outFlowLineLayerIndex.insertFeature(feature)
+         
+         # If we are considering field observations, and flow for the last field travelled via at least one field observation, then save the last field's list of field observations
+         if shared.considerFieldObservations and len(shared.thisFieldFieldObsAlreadyFollowed) > 0:
+            shared.allFieldsFieldObsAlreadyFollowed.extend(shared.thisFieldFieldObsAlreadyFollowed)         
             
          # OK, do some initialization
          shared.thisFieldFlowLine = []
@@ -156,7 +162,7 @@ class SimulationThread(QThread):
          shared.thisFieldRoadSegIDsTried = []
          shared.thisFieldPathSegIDsTried = []
          thisFieldBoundarySegIDsTried = []
-         shared.thisFieldLEsAlreadyFollowed = []
+         shared.thisFieldFieldObsAlreadyFollowed = []
             
          x = shared.flowStartPoints[field][0]
          y = shared.flowStartPoints[field][1]
@@ -375,11 +381,13 @@ class SimulationThread(QThread):
                      break
                      
                   # We have an overflow point
-                  print("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m")
-                  shared.fpOut.write("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m\n")
+                  #print("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m")
+                  #shared.fpOut.write("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m\n")
                   
-                  if flowDepth > shared.blindPitMaxFill:
-                     shared.blindPitMaxFill = flowDepth
+                  if flowDepth > shared.blindPitFillMaxDepth:
+                     shared.blindPitFillMaxDepth = flowDepth
+                  
+                  shared.blindPitFillArea += 1
                   
                   addFlowLine(thisPoint, newPoint, FLOW_OUT_OF_BLIND_PIT, fieldCode, -1)
                   
@@ -441,6 +449,14 @@ class SimulationThread(QThread):
       # End of main and inner loops
       #===================================================================================================================
       
+      # Deal with the last field simulated
+      for feature in shared.outFlowLineLayer.getFeatures():
+         shared.outFlowLineLayerIndex.insertFeature(feature)
+         
+      # If we are considering field observations, and flow for the last field travelled via at least one field observation, then save the last field's list of field observations
+      if shared.considerFieldObservations and len(shared.thisFieldFieldObsAlreadyFollowed) > 0:
+         shared.allFieldsFieldObsAlreadyFollowed.extend(shared.thisFieldFieldObsAlreadyFollowed)   
+      
       # Simulation finished, so update the extents of the vector output files
       shared.outFlowMarkerPointLayer.updateExtents()
       shared.outFlowLineLayer.updateExtents()
@@ -448,7 +464,22 @@ class SimulationThread(QThread):
       # If we've filled blind pits, show max flow depth to fill any pit
       if shared.fillBlindPits:
          shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-         shared.fpOut.write("Maximum flow depth to fill any blind pit = " + str(shared.blindPitMaxFill) + " m\n")
+         shared.fpOut.write("Area of filled blind pits = " + str(shared.blindPitFillArea * shared.resolutionOfDEM * shared.resolutionOfDEM) + " m2\n")
+         shared.fpOut.write("Maximum flow depth to fill any blind pit = " + str(shared.blindPitFillMaxDepth) + " m\n")
+      
+      # If we are considering field observations, are they any still unused?
+      if shared.considerFieldObservations:
+         shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
+         shared.fpOut.write("UNUSED FIELD OBSERVATIONS\n\n")
+         
+         for i in range(len(shared.fieldObservationFlowFrom)):
+            if not i in shared.allFieldsFieldObsAlreadyFollowed:
+               printStr = str(i) + " " + shared.fieldObservationBehaviour[i] + " " + shared.fieldObservationCategory[i] + " " + shared.fieldObservationDescription[i] + " from " + displayOS(shared.fieldObservationFlowFrom[i].x(), shared.fieldObservationFlowFrom[i].y())
+               if shared.fieldObservationFlowTo[i]:
+                  printStr += " to "
+                  printStr += displayOS(shared.fieldObservationFlowTo[i].x(), shared.fieldObservationFlowTo[i].y())
+               printStr += "\n"
+               shared.fpOut.write(printStr)
       
       # Finally, write the results to shapefiles
       shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")

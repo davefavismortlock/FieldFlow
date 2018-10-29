@@ -102,7 +102,7 @@ MARKER_AT_STREAM              = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "28 October 2018 version"
+progVer = "29 October 2018 version"
 runTitle = ""
 
 considerFieldObservations = ""
@@ -137,7 +137,7 @@ thisStartPoint = 0
 
 extentRect = 0
 
-resElevData = 0
+resolutionOfDEM = 0
 distDiag = 0
 
 searchDist = 0
@@ -147,7 +147,8 @@ cellHeightDEM = 0
 xMinExtentDEM = 0
 yMinExtentDEM = 0
 
-blindPitMaxFill = 0
+blindPitFillMaxDepth = 0
+blindPitFillArea = 0
 
 vectorFileName = 0
 vectorFileTitle = 0
@@ -185,9 +186,11 @@ rasterPathCodes = 0
 
 allFieldsFlowPath = 0
 allFieldsFlowPathFieldCode = 0
+allFieldsFieldObsAlreadyFollowed = 0
+
 thisFieldFlowLine = 0
 thisFieldFlowLineFieldCode = 0
-thisFieldLEsAlreadyFollowed = 0
+thisFieldFieldObsAlreadyFollowed = 0
 thisFieldRoadSegIDsTried = 0
 thisFieldPathSegIDsTried = 0
 thisFieldBoundarySegIDsTried = 0

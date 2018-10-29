@@ -148,49 +148,49 @@ END OF RASTER LAYERS ===========================================================
 Inflow location                                                               : 486406, 123941
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : S edge of 45
+Description                                                                   : at south edge of field 45
 Outflow location                                                              : 486404, 123939
 
 Inflow location                                                               : 486305, 123835
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : S edge of 46
+Description                                                                   : at south edge of field 46
 Outflow location                                                              : 486303, 123833
 
 Inflow location                                                               : 486248, 123645
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : S edge of 47
+Description                                                                   : at south edge of field 47
 Outflow location                                                              : 486246, 123643
 
 Inflow location                                                               : 486082, 123442
 Type                                                                          : dummy
 Behaviour                                                                     : dummy
-Description                                                                   : OUT OF BLIND PIT IN 48
+Description                                                                   : out of blind pit in field 48
 Outflow location                                                              : 486028, 123417
 
 Inflow location                                                               : 486028, 123417
 Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : WSW along Stedham Lane
+Description                                                                   : going WSW along Stedham Lane
 Outflow location                                                              : 
 
-Inflow location                                                               : 486014.0, 123412.0
+Inflow location                                                               : 486014, 123412
 Type                                                                          : dummy
 Behaviour                                                                     : dummy
-Description                                                                   : TO DEAL WITH JUNCTION 1
-Outflow location                                                              : 486004.0, 123393.0
+Description                                                                   : to deal with junction (1)
+Outflow location                                                              : 486004, 123393
 
-Inflow location                                                               : 486004.0, 123393.0
+Inflow location                                                               : 486004, 123393
 Type                                                                          : dummy
 Behaviour                                                                     : dummy
-Description                                                                   : TO DEAL WITH JUNCTION 2
-Outflow location                                                              : 486009.5, 123364.5
+Description                                                                   : to deal with junction (2)
+Outflow location                                                              : 486009, 123364
 
-Inflow location                                                               : 486009.5, 123364.5
+Inflow location                                                               : 486009, 123364
 Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : S along Stedham Lane
+Description                                                                   : going south along Stedham Lane
 Outflow location                                                              : 
 
 
@@ -198,67 +198,70 @@ Outflow location                                                              :
 Inflow location                                                               : 485727, 123557
 Type                                                                          : dummy
 Behaviour                                                                     : dummy
-Description                                                                   : OUT OF BLIND PIT IN 44
-Outflow location                                                              : 485717.0, 123536.5
+Description                                                                   : out of blind pit in field 44
+Outflow location                                                              : 485717, 123536
 
-Inflow location                                                               : 485712.5, 123537.5
+Inflow location                                                               : 485908, 123768
+Type                                                                          : path
+Behaviour                                                                     : along
+Description                                                                   : to east of Talbots building
+Outflow location                                                              : 
+
+Inflow location                                                               : 485712, 123537
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : W edge of 44
-Outflow location                                                              : 485708.5, 123511.0
+Description                                                                   : at west edge of field 44
+Outflow location                                                              : 485708, 123511
 
-Inflow location                                                               : 485708.5, 123511.0
+Inflow location                                                               : 485708, 123511
 Type                                                                          : road 
 Behaviour                                                                     : along
-Description                                                                   : Stanwater Lane 1
+Description                                                                   : Stanwater Lane (1)
 Outflow location                                                              :
 
-Inflow location                                                               : 485688.5, 123533.0
+Inflow location                                                               : 485688, 123533
 Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : Stanwater Lane 2
+Description                                                                   : Stanwater Lane (2)
 Outflow location                                                              :
-
-
-
 
 # FIELD 47
 Inflow location                                                               : 486363, 123569
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : S edge of 47
+Description                                                                   : at south edge of field 47
 Outflow location                                                              : 486361, 123564
 
-Inflow location                                                               : 486312.0, 123387.0
+Inflow location                                                               : 486312, 123387
 Type                                                                          : road
 Behaviour                                                                     : across
 Description                                                                   : Stedham Lane
-Outflow location                                                              : 486312.0, 123377.0
+Outflow location                                                              : 486312, 123377
 
-Inflow location                                                               : 486312.5, 123377.5
+Inflow location                                                               : 486312, 123377
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : N edge of ??
-Outflow location                                                              : 486312.5, 123370
+Description                                                                   : at north edge of field ??
+Outflow location                                                              : 486312, 123370
 
-Inflow location                                                               : 486257.5, 123262.5
+Inflow location                                                               : 486257, 123262
 Type                                                                          : dummy
 Behaviour                                                                     : dummy
-Description                                                                   : OUT OF BLIND PIT
-Outflow location                                                              : 486291.5, 123256.5
+Description                                                                   : out of blind pit in field ??
+Outflow location                                                              : 486291, 123256
 
-Inflow location                                                               : 486297.5, 123252.5
+Inflow location                                                               : 486297, 123252
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : E edge of ??
-Outflow location                                                              : 486300.0, 123251.5
+Description                                                                   : at eastern edge of field ??
+Outflow location                                                              : 486300, 123251
 
 
 # FIELD 52
 Inflow location                                                               : 486518, 123371
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : S edge of 52
+Description                                                                   : at southern edge of field 52
 Outflow location                                                              : 486518, 123369
 
 Inflow location                                                               : 486517, 123367
@@ -269,25 +272,4 @@ Outflow location                                                              : 
 
 
 END OF FIELD OBSERVATIONS =============================================================================================
-
-
-
-
-Inflow location                                                               : 485707.5, 123532.5
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
-Description                                                                   : OUT OF ROAD BLIND PIT 1
-Outflow location                                                              : 485705.0, 123516.5
-
-Inflow location                                                               : 485705.0, 123516.5
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
-Description                                                                   : OUT OF ROAD BLIND PIT 2
-Outflow location                                                              : 485681.5, 123531.5
-
-Inflow location                                                               : 485681.5, 123531.5
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
-Description                                                                   : OUT OF ROAD BLIND PIT 3
-Outflow location                                                              : 485643.5, 123509.5
 

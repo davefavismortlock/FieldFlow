@@ -82,12 +82,12 @@ def setUpSimulation():
       printStr = "Ditches not considered\n"
    shared.fpOut.write(printStr)
 
-   shared.fpOut.write("DEM resolution (metres) : " + str(shared.resElevData) + "\n")
+   shared.fpOut.write("DEM resolution (metres) : " + str(shared.resolutionOfDEM) + "\n")
    shared.fpOut.write("Distance to search (metres) : " + str(shared.searchDist) + "\n\n")
 
 
    # OK, now do some initialization
-   shared.distDiag = hypot(shared.resElevData, shared.resElevData)
+   shared.distDiag = hypot(shared.resolutionOfDEM, shared.resolutionOfDEM)
    
    # May add other landscape elements (e.g. woodland) later
    #shared.rasterPathCodes = OS_MASTERMAP_PATH

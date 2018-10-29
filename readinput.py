@@ -242,8 +242,8 @@ def readInput():
          dataLine += 1        
          
       elif dataLine == 9:
-         # The resolution of the DEM layer or the mean spacing of spot heights (m) 
-         shared.resElevData = float(data)
+         # The resolution of the DEM layer (m) 
+         shared.resolutionOfDEM = float(data)
          dataLine += 1
     
       elif dataLine == 10:

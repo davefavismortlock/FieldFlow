@@ -26,12 +26,12 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
    
    # N
    adjX = thisPoint.x()
-   adjY = thisPoint.y() + shared.resElevData
+   adjY = thisPoint.y() + shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
    
-   gradient = (thisElev - adjElev) / shared.resElevData
+   gradient = (thisElev - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("N " + str(gradient) + "\n")
    
    if gradient > maxGradient:
@@ -45,8 +45,8 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
             #shared.fpOut.write("N maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
       
    # NE
-   adjX = thisPoint.x() + shared.resElevData
-   adjY = thisPoint.y() + shared.resElevData
+   adjX = thisPoint.x() + shared.resolutionOfDEM
+   adjY = thisPoint.y() + shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
@@ -65,13 +65,13 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
             #shared.fpOut.write("NE maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # E
-   adjX = thisPoint.x() + shared.resElevData
+   adjX = thisPoint.x() + shared.resolutionOfDEM
    adjY = thisPoint.y() 
    adjElev = getRasterElev(adjX, adjY)
 
    #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
    
-   gradient = (thisElev  - adjElev) / shared.resElevData
+   gradient = (thisElev  - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("E " + str(gradient) + "\n")
    
    if gradient > maxGradient:
@@ -85,8 +85,8 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
             #shared.fpOut.write("E maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # SE
-   adjX = thisPoint.x() + shared.resElevData
-   adjY = thisPoint.y() - shared.resElevData
+   adjX = thisPoint.x() + shared.resolutionOfDEM
+   adjY = thisPoint.y() - shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
@@ -106,12 +106,12 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
 
    # S
    adjX = thisPoint.x()
-   adjY = thisPoint.y() - shared.resElevData
+   adjY = thisPoint.y() - shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
    
-   gradient = (thisElev  - adjElev) / shared.resElevData
+   gradient = (thisElev  - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("S " + str(gradient) + "\n")
    
    if gradient > maxGradient:
@@ -125,8 +125,8 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
             #shared.fpOut.write("S maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # SW
-   adjX = thisPoint.x() - shared.resElevData
-   adjY = thisPoint.y() - shared.resElevData
+   adjX = thisPoint.x() - shared.resolutionOfDEM
+   adjY = thisPoint.y() - shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
@@ -145,13 +145,13 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
             #shared.fpOut.write("SW maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # W
-   adjX = thisPoint.x() - shared.resElevData
+   adjX = thisPoint.x() - shared.resolutionOfDEM
    adjY = thisPoint.y()
    adjElev = getRasterElev(adjX, adjY)
 
    #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
    
-   gradient = (thisElev  - adjElev) / shared.resElevData
+   gradient = (thisElev  - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("W " + str(gradient) + "\n")
    
    if gradient > maxGradient:
@@ -165,8 +165,8 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
             #shared.fpOut.write("W maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # NW
-   adjX = thisPoint.x() - shared.resElevData
-   adjY = thisPoint.y() + shared.resElevData
+   adjX = thisPoint.x() - shared.resolutionOfDEM
+   adjY = thisPoint.y() + shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
@@ -275,49 +275,49 @@ def FindNearbyFlowLine(thisPoint):
       
    ## N
    #adjX = thisPoint.x()
-   #adjY = thisPoint.y() + shared.resElevData   
+   #adjY = thisPoint.y() + shared.resolutionOfDEM   
    #if QgsPoint(adjX, adjY) in shared.allFieldsFlowPath:
       #return(adjX, adjY)
 
    ## NE
-   #adjX = thisPoint.x() + shared.resElevData
-   #adjY = thisPoint.y() + shared.resElevData
+   #adjX = thisPoint.x() + shared.resolutionOfDEM
+   #adjY = thisPoint.y() + shared.resolutionOfDEM
    #if QgsPoint(adjX, adjY) in shared.allFieldsFlowPath:
       #return(adjX, adjY)
 
    ## E
-   #adjX = thisPoint.x() + shared.resElevData
+   #adjX = thisPoint.x() + shared.resolutionOfDEM
    #adjY = thisPoint.y() 
    #if QgsPoint(adjX, adjY) in shared.allFieldsFlowPath:
       #return(adjX, adjY)
 
    ## SE
-   #adjX = thisPoint.x() + shared.resElevData
-   #adjY = thisPoint.y() - shared.resElevData
+   #adjX = thisPoint.x() + shared.resolutionOfDEM
+   #adjY = thisPoint.y() - shared.resolutionOfDEM
    #if QgsPoint(adjX, adjY) in shared.allFieldsFlowPath:
       #return(adjX, adjY)
 
    ## S
    #adjX = thisPoint.x()
-   #adjY = thisPoint.y() - shared.resElevData
+   #adjY = thisPoint.y() - shared.resolutionOfDEM
    #if QgsPoint(adjX, adjY) in shared.allFieldsFlowPath:
       #return(adjX, adjY)
 
    ## SW
-   #adjX = thisPoint.x() - shared.resElevData
-   #adjY = thisPoint.y() - shared.resElevData
+   #adjX = thisPoint.x() - shared.resolutionOfDEM
+   #adjY = thisPoint.y() - shared.resolutionOfDEM
    #if QgsPoint(adjX, adjY) in shared.allFieldsFlowPath:
       #return(adjX, adjY)
 
    ## W
-   #adjX = thisPoint.x() - shared.resElevData
+   #adjX = thisPoint.x() - shared.resolutionOfDEM
    #adjY = thisPoint.y()
    #if QgsPoint(adjX, adjY) in shared.allFieldsFlowPath:
       #return(adjX, adjY)
 
    ## NW
-   #adjX = thisPoint.x() - shared.resElevData
-   #adjY = thisPoint.y() + shared.resElevData
+   #adjX = thisPoint.x() - shared.resolutionOfDEM
+   #adjY = thisPoint.y() + shared.resolutionOfDEM
    #if QgsPoint(adjX, adjY) in shared.allFieldsFlowPath:
       #return(adjX, adjY)
       
@@ -441,7 +441,7 @@ def FindNearbyFieldObservation(foundPoint):
    #shared.fpOut.write("Searching for field observations between " + displayOS(xMin, yMin) + " and " + displayOS(xMax, yMax))
                  
    for indx in range(numObs):
-      if indx in shared.thisFieldLEsAlreadyFollowed:
+      if indx in shared.thisFieldFieldObsAlreadyFollowed:
          continue
       
       xObs = shared.fieldObservationFlowFrom[indx].x()
@@ -566,11 +566,11 @@ def FindSteepestAdjacentRoadOrPath(thisPoint, thisElev):
 
    # N
    adjX = thisPoint.x()
-   adjY = thisPoint.y() + shared.resElevData
+   adjY = thisPoint.y() + shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
    #shared.fpOut.write(adjX, adjY, adjElev)
    
-   gradient = (thisElev - adjElev) / shared.resElevData
+   gradient = (thisElev - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("N", gradient)
    
    if gradient > maxGradient and QgsPoint(adjX, adjY) not in shared.thisFieldFlowLine:
@@ -583,8 +583,8 @@ def FindSteepestAdjacentRoadOrPath(thisPoint, thisElev):
          #shared.fpOut.write("N maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
       
    # NE
-   adjX = thisPoint.x() + shared.resElevData
-   adjY = thisPoint.y() + shared.resElevData
+   adjX = thisPoint.x() + shared.resolutionOfDEM
+   adjY = thisPoint.y() + shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
    #shared.fpOut.write(adjX, adjY, adjElev)
    
@@ -601,12 +601,12 @@ def FindSteepestAdjacentRoadOrPath(thisPoint, thisElev):
          #shared.fpOut.write("NE maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # E
-   adjX = thisPoint.x() + shared.resElevData
+   adjX = thisPoint.x() + shared.resolutionOfDEM
    adjY = thisPoint.y() 
    adjElev = getRasterElev(adjX, adjY)
    #shared.fpOut.write(adjX, adjY, adjElev)
    
-   gradient = (thisElev - adjElev) / shared.resElevData
+   gradient = (thisElev - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("E", gradient)
    
    if gradient > maxGradient and QgsPoint(adjX, adjY) not in shared.thisFieldFlowLine:
@@ -619,8 +619,8 @@ def FindSteepestAdjacentRoadOrPath(thisPoint, thisElev):
          #shared.fpOut.write("E maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # SE
-   adjX = thisPoint.x() + shared.resElevData
-   adjY = thisPoint.y() - shared.resElevData
+   adjX = thisPoint.x() + shared.resolutionOfDEM
+   adjY = thisPoint.y() - shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
    #shared.fpOut.write(adjX, adjY, adjElev)
    
@@ -638,11 +638,11 @@ def FindSteepestAdjacentRoadOrPath(thisPoint, thisElev):
 
    # S
    adjX = thisPoint.x()
-   adjY = thisPoint.y() - shared.resElevData
+   adjY = thisPoint.y() - shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
    #shared.fpOut.write(adjX, adjY, adjElev)
    
-   gradient = (thisElev - adjElev) / shared.resElevData
+   gradient = (thisElev - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("S", gradient)
    
    if gradient > maxGradient and QgsPoint(adjX, adjY) not in shared.thisFieldFlowLine:
@@ -655,8 +655,8 @@ def FindSteepestAdjacentRoadOrPath(thisPoint, thisElev):
          #shared.fpOut.write("S maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # SW
-   adjX = thisPoint.x() - shared.resElevData
-   adjY = thisPoint.y() - shared.resElevData
+   adjX = thisPoint.x() - shared.resolutionOfDEM
+   adjY = thisPoint.y() - shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
    #shared.fpOut.write(adjX, adjY, adjElev)
    
@@ -673,12 +673,12 @@ def FindSteepestAdjacentRoadOrPath(thisPoint, thisElev):
          #shared.fpOut.write("SW maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # W
-   adjX = thisPoint.x() - shared.resElevData
+   adjX = thisPoint.x() - shared.resolutionOfDEM
    adjY = thisPoint.y()
    adjElev = getRasterElev(adjX, adjY)
    #shared.fpOut.write(adjX, adjY, adjElev)
    
-   gradient = (thisElev - adjElev) / shared.resElevData
+   gradient = (thisElev - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("W", gradient)
    
    if gradient > maxGradient and QgsPoint(adjX, adjY) not in shared.thisFieldFlowLine:
@@ -691,8 +691,8 @@ def FindSteepestAdjacentRoadOrPath(thisPoint, thisElev):
          #shared.fpOut.write("W maxGradient = ", maxGradient, " to {", newAdjX, ", ", newAdjY, "}")
 
    # NW
-   adjX = thisPoint.x() - shared.resElevData
-   adjY = thisPoint.y() + shared.resElevData
+   adjX = thisPoint.x() - shared.resolutionOfDEM
+   adjY = thisPoint.y() + shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
    #shared.fpOut.write(adjX, adjY, adjElev)
    
@@ -987,7 +987,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
    
    # N
    adjX = thisPoint.x()
-   adjY = thisPoint.y() + shared.resElevData
+   adjY = thisPoint.y() + shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
    
    if adjElev <= topElev:
@@ -996,8 +996,8 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
          newOverflowCells.append(newPoint)
       
    # NE
-   adjX = thisPoint.x() + shared.resElevData
-   adjY = thisPoint.y() + shared.resElevData
+   adjX = thisPoint.x() + shared.resolutionOfDEM
+   adjY = thisPoint.y() + shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
@@ -1006,7 +1006,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
          newOverflowCells.append(newPoint)
 
    # E
-   adjX = thisPoint.x() + shared.resElevData
+   adjX = thisPoint.x() + shared.resolutionOfDEM
    adjY = thisPoint.y() 
    adjElev = getRasterElev(adjX, adjY)
 
@@ -1016,8 +1016,8 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
          newOverflowCells.append(newPoint)
 
    # SE
-   adjX = thisPoint.x() + shared.resElevData
-   adjY = thisPoint.y() - shared.resElevData
+   adjX = thisPoint.x() + shared.resolutionOfDEM
+   adjY = thisPoint.y() - shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
@@ -1027,7 +1027,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
 
    # S
    adjX = thisPoint.x()
-   adjY = thisPoint.y() - shared.resElevData
+   adjY = thisPoint.y() - shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
@@ -1036,8 +1036,8 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
          newOverflowCells.append(newPoint)
 
    # SW
-   adjX = thisPoint.x() - shared.resElevData
-   adjY = thisPoint.y() - shared.resElevData
+   adjX = thisPoint.x() - shared.resolutionOfDEM
+   adjY = thisPoint.y() - shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
@@ -1046,7 +1046,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
          newOverflowCells.append(newPoint)
 
    # W
-   adjX = thisPoint.x() - shared.resElevData
+   adjX = thisPoint.x() - shared.resolutionOfDEM
    adjY = thisPoint.y()
    adjElev = getRasterElev(adjX, adjY)
 
@@ -1056,8 +1056,8 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
          newOverflowCells.append(newPoint)
 
    # NW
-   adjX = thisPoint.x() - shared.resElevData
-   adjY = thisPoint.y() + shared.resElevData
+   adjX = thisPoint.x() - shared.resolutionOfDEM
+   adjY = thisPoint.y() + shared.resolutionOfDEM
    adjElev = getRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
