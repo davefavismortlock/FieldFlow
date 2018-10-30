@@ -76,8 +76,8 @@ def setUpSimulation():
       printStr = "Paths/tracks not considered\n"
    shared.fpOut.write(printStr)
 
-   shared.fpOut.write("DEM resolution (metres) : " + str(shared.resolutionOfDEM) + "\n")
-   shared.fpOut.write("Distance to search (metres) : " + str(shared.searchDist) + "\n\n")
+   shared.fpOut.write("DEM resolution = " + str(shared.resolutionOfDEM) + " m\n")
+   shared.fpOut.write("Distance to search = " + str(shared.searchDist) + " m\n\n")
 
 
    # OK, now do some initialization
@@ -107,7 +107,6 @@ def setUpSimulation():
    # Create an empty spatial index for this layer
    shared.outFlowLineLayerIndex = QgsSpatialIndex()
      
-   
    # Now go through all input vector files: is there more than one with the same category? If so, we need to merge these
    vectorLayersToMerge = []
    vectorLayersUnmerged = []
@@ -314,8 +313,7 @@ def setUpSimulation():
          
          break         
       
-   shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-   
+   shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")   
    shared.fpOut.write("FIELD OBSERVATIONS\n\n")
    
    if shared.considerFieldObservations:
@@ -375,7 +373,7 @@ def setUpSimulation():
       shared.fpOut.write("\nREVISED FIELD OBSERVATIONS\n\n")
       
       for obs in range(len(shared.fieldObservationFlowTo)):
-         printStr = str(obs) + ": '" + shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "' from " + displayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y(), False)
+         printStr = str(obs+1) + ": '" + shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "' from " + displayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y(), False)
          
          if shared.fieldObservationFlowTo[obs]:
             printStr += (" to " + displayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y(), False)) 

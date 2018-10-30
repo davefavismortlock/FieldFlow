@@ -47,6 +47,9 @@ class SimulationThread(QThread):
       #===================================================================================================================
       # OK, off we go. First determine the flow start points
       #===================================================================================================================
+      shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")   
+      shared.fpOut.write("FLOW START POINTS\n\n")
+
       fieldCodes = []
       for layerNum in range(len(shared.vectorInputLayersCategory)):
          #fields = shared.vectorInputLayers[layerNum].fields().toList()
@@ -474,7 +477,7 @@ class SimulationThread(QThread):
          
          for i in range(len(shared.fieldObservationFlowFrom)):
             if not i in shared.allFieldsFieldObsAlreadyFollowed:
-               printStr = str(i) + " " + shared.fieldObservationBehaviour[i] + " " + shared.fieldObservationCategory[i] + " " + shared.fieldObservationDescription[i] + " from " + displayOS(shared.fieldObservationFlowFrom[i].x(), shared.fieldObservationFlowFrom[i].y())
+               printStr = str(i+1) + " " + shared.fieldObservationBehaviour[i] + " " + shared.fieldObservationCategory[i] + " " + shared.fieldObservationDescription[i] + " from " + displayOS(shared.fieldObservationFlowFrom[i].x(), shared.fieldObservationFlowFrom[i].y())
                if shared.fieldObservationFlowTo[i]:
                   printStr += " to "
                   printStr += displayOS(shared.fieldObservationFlowTo[i].x(), shared.fieldObservationFlowTo[i].y())
@@ -490,7 +493,7 @@ class SimulationThread(QThread):
       
       shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
 
-      printStr = "Simulation finished"
+      printStr = "Simulation finished\n"
       shared.fpOut.write(printStr)
       
       print(printStr)
