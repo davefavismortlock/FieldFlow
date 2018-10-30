@@ -58,28 +58,22 @@ def setUpSimulation():
       printStr = "Blind pits not filled\n"
    shared.fpOut.write(printStr)      
    
-   if shared.considerDitches:
-      printStr = "Ditches considered\n"
+   if shared.considerFieldBoundaries:
+      printStr = "Field boundaries considered\n"
    else:
-      printStr = "Ditches not considered\n"
+      printStr = "Field boundaries not considered\n"
    shared.fpOut.write(printStr)
 
-   if shared.considerDitches:
-      printStr = "Ditches considered\n"
+   if shared.considerRoads:
+      printStr = "Roads considered\n"
    else:
-      printStr = "Ditches not considered\n"
+      printStr = "Roads not considered\n"
    shared.fpOut.write(printStr)
 
-   if shared.considerDitches:
-      printStr = "Ditches considered\n"
+   if shared.considerTracks:
+      printStr = "Paths/tracks considered\n"
    else:
-      printStr = "Ditches not considered\n"
-   shared.fpOut.write(printStr)
-
-   if shared.considerDitches:
-      printStr = "Ditches considered\n"
-   else:
-      printStr = "Ditches not considered\n"
+      printStr = "Paths/tracks not considered\n"
    shared.fpOut.write(printStr)
 
    shared.fpOut.write("DEM resolution (metres) : " + str(shared.resolutionOfDEM) + "\n")
