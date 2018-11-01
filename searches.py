@@ -421,7 +421,7 @@ def FindNearbyPath(point, flowFieldCode):
 
 #======================================================================================================================
 #
-# Searches for a field observation near to a given location
+# Searches for a field observation near to a given location, if found then returns the number of the field observation
 #
 #======================================================================================================================
 def FindNearbyFieldObservation(foundPoint):
@@ -950,7 +950,6 @@ def FindNearbyStream(point, flowFieldCode):
       
    return 0
 #======================================================================================================================
-
 
 
 #======================================================================================================================

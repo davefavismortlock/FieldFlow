@@ -14,6 +14,10 @@ NEAR_POINT                    = 0
 FIRST_POINT                   = 1
 LAST_POINT                    = 2
 
+PREV_POINT                    = 0
+THIS_POINT                    = 1
+POST_POINT                    = 2
+
 # Input datasets ======================================================================================================
 INPUT_OBSERVED_FLOW_LINES     = 1
 INPUT_FIELD_BOUNDARIES        = 2
@@ -57,6 +61,7 @@ FIELD_OBS_BEHAVIOUR_UNDER    = "under"
 FIELD_OBS_BEHAVIOUR_ACROSS   = "across"
 FIELD_OBS_BEHAVIOUR_THROUGH  = "through"
 FIELD_OBS_BEHAVIOUR_ENTER    = "enter"
+FIELD_OBS_BEHAVIOUR_LEAVE    = "leave"
 FIELD_OBS_BEHAVIOUR_DUMMY    = "dummy"
 
 # Output datasets =====================================================================================================
@@ -102,7 +107,7 @@ MARKER_AT_STREAM              = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "30 October 2018 version"
+progVer = "1 November 2018 version"
 runTitle = ""
 
 considerFieldObservations = ""

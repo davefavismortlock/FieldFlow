@@ -5,7 +5,7 @@ from qgis.core import QgsPoint, QgsFeatureRequest
 import shared
 from shared import *
 from layers import addFlowMarkerPoint, addFlowLine, writeVector
-from simulate import getHighestPointOnFieldBoundary, flowViaLandscapeElement, flowHitFieldBoundary, fillBlindPit
+from simulate import getHighestPointOnFieldBoundary, flowViaFieldObservation, flowHitFieldBoundary, fillBlindPit
 from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
 from utils import getRasterElev, centroidOfContainingDEMCell, displayOS
 
@@ -279,15 +279,16 @@ class SimulationThread(QThread):
                
                else:
                   # We have found a field observation near this point, so route flow accordingly
-                  rtn, adjPoint = flowViaLandscapeElement(indx, fieldCode, thisPoint, elev)
+                  rtn, adjPoint = flowViaFieldObservation(indx, fieldCode, thisPoint, elev)
                   if rtn == -1:
                      # Could not determine the outflow location, so move on to the next field's flow
                      self.refresh.emit() 
                      break
                   
                   elif rtn == 1:
-                     # Flow has passed through the LE and then hit a blind pit, so we need another field observation. Set a switch and go round the loop once more, since we may have a field observation which relates to this
-                     addFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
+                     # Flow has passed through the field observation and then hit a blind pit, so we need another field observation. Set a switch and go round the loop once more, since we may have a field observation which relates to this
+                     #addFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
+                     #shared.fpOut.write("XXXX " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
                      viaLEAndHitBlindPit = True                     
                   
                   elif rtn == 2:
