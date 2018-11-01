@@ -280,6 +280,7 @@ class SimulationThread(QThread):
                else:
                   # We have found a field observation near this point, so route flow accordingly
                   rtn, adjPoint = flowViaFieldObservation(indx, fieldCode, thisPoint, elev)
+                  #shared.fpOut.write("Left flowViaFieldObservation() called in run(), rtn = " + str(rtn) + "\n")
                   if rtn == -1:
                      # Could not determine the outflow location, so move on to the next field's flow
                      self.refresh.emit() 

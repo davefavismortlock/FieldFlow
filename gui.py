@@ -142,6 +142,9 @@ class MainWindow(QMainWindow):
       self.toolbar.setFloatable(True)
       
       self.toolbar.addAction(self.actionRun)
+      self.toolbar.addAction(self.actionZoomIn)
+      self.toolbar.addAction(self.actionZoomOut)
+      self.toolbar.addAction(self.actionPan)
       self.toolbar.addAction(self.actionCoords)
 
       # Create some map tools

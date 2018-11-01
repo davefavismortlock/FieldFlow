@@ -195,24 +195,24 @@ Behaviour                                                                     : 
 Description                                                                   : south of Talbots building
 Outflow location                                                              : 485780, 123617
 
+Inflow location                                                               : 485728, 123558
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : to get out of blind pit in SW corner of field 44
+Outflow location                                                              : 485715, 123534
 
-#Inflow location                                                               : 485712, 123537
-#Type                                                                          : boundary
-#Behaviour                                                                     : across
-#Description                                                                   : at west edge of field 44
-#Outflow location                                                              : 485708, 123511
+Inflow location                                                               : 485712, 123532
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : at west edge of field 44
+Outflow location                                                              : 485710, 123509
 
-#Inflow location                                                               : 485708, 123511
-#Type                                                                          : road 
-#Behaviour                                                                     : along
-#Description                                                                   : Stanwater Lane (1)
-#Outflow location                                                              :
+Inflow location                                                               : 485710, 123509
+Type                                                                          : road 
+Behaviour                                                                     : along
+Description                                                                   : Stanwater Lane
+Outflow location                                                              :
 
-#Inflow location                                                               : 485688, 123533
-#Type                                                                          : road
-#Behaviour                                                                     : along
-#Description                                                                   : Stanwater Lane (2)
-#Outflow location                                                              :
 
 # FIELD 47
 Inflow location                                                               : 486363, 123569
