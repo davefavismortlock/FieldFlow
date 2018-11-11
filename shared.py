@@ -1,4 +1,4 @@
-from qgis.core import QgsRectangle, QgsPoint, QgsVector
+#from qgis.core import QgsRectangle, QgsPoint, QgsVector
 
 # SHARED CONSTANTS ====================================================================================================
 COMMENT1                      = '#'
@@ -107,7 +107,7 @@ MARKER_AT_STREAM              = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "1 November 2018 version"
+progVer = "11 November 2018 version"
 runTitle = ""
 
 considerFieldObservations = ""
@@ -160,14 +160,14 @@ vectorFileTitle = 0
 vectorFileType = 0
 vectorFileStyle = 0
 vectorFileTransparency = 0
-vectorFileCategory = 0 
+vectorFileCategory = 0
 
 rasterFileName = 0
 rasterFileTitle = 0
 rasterFileStyle = 0
 rasterFileTransparency = 0
 rasterFileCategory = 0
-   
+
 outFlowMarkerPointLayer = 0
 outFlowLineLayer = 0
 outFlowLineLayerIndex = 0

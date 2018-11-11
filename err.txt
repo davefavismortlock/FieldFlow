@@ -1,0 +1,212 @@
+************* Module ff
+W:  3, 0: TODO flow along road segments does not look for nearby pre-existing flow (fixme)
+************* Module readinput
+W: 58, 0: TODO test for file opening (fixme)
+W:  6, 0: Unused INPUT_FIELD_BOUNDARIES imported from shared (unused-import)
+W:  6, 0: Unused INPUT_OBSERVED_FLOW_LINES imported from shared (unused-import)
+W:  6, 0: Unused INPUT_ROAD_NETWORK imported from shared (unused-import)
+W:  6, 0: Unused INPUT_WATER_NETWORK imported from shared (unused-import)
+W:  6, 0: Unused INPUT_DIGITAL_ELEVATION_MODEL imported from shared (unused-import)
+W:  6, 0: Unused INPUT_RASTER_BACKGROUND imported from shared (unused-import)
+W:  6, 0: Unused INPUT_PATH_NETWORK imported from shared (unused-import)
+************* Module searches
+W:209, 0: TODO make this a user setting (fixme)
+W:365, 0: TODO make this a user setting (fixme)
+W:496, 0: TODO make this a user setting (fixme)
+W:649, 0: TODO make this a user setting (fixme)
+C:260, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+W:274,20: Unused variable 'numNearpoint' (unused-variable)
+W:271, 9: Unused variable 'nPoints' (unused-variable)
+W:237, 6: Unused variable 'flowLineSegID' (unused-variable)
+W:274,34: Unused variable 'beforeNearpoint' (unused-variable)
+W:274,51: Unused variable 'afterNearpoint' (unused-variable)
+W:226, 6: Unused variable 'geom' (unused-variable)
+C:405, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+W:343,26: Unused argument 'flowFieldCode' (unused-argument)
+W:418, 9: Unused variable 'nPoints' (unused-variable)
+C:536, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+W:474,26: Unused argument 'flowFieldCode' (unused-argument)
+W:552, 9: Unused variable 'nPoints' (unused-variable)
+W:545, 9: Unused variable 'featCode' (unused-variable)
+C:696, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+W:728,51: Unused variable 'afterNearpoint' (unused-variable)
+W:782,12: Unused variable 'typeName' (unused-variable)
+W:653, 3: Unused variable 'inStream' (unused-variable)
+W:728,67: Unused variable 'sqrDist' (unused-variable)
+W:722, 9: Unused variable 'nPoints' (unused-variable)
+W:728,34: Unused variable 'beforeNearpoint' (unused-variable)
+************* Module simulate
+W:272, 0: TODO make this a user setting (fixme)
+W:607, 0: TODO make this a user setting (fixme)
+W:1106, 0: TODO make this a user setting (fixme)
+W:1293, 0: TODO make a user option (fixme)
+C: 35, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:327, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+W:391,12: Unused variable 'dist' (unused-variable)
+W:492,50: Unused variable 'beforeIntersectpoint' (unused-variable)
+W:248, 3: Unused variable 'obsBehaviour' (unused-variable)
+W:354, 9: Unused variable 'flowToFirstPoint' (unused-variable)
+W:247, 3: Unused variable 'obsCategory' (unused-variable)
+W:342, 9: Unused variable 'nPoints' (unused-variable)
+W:391,18: Unused variable 'p2' (unused-variable)
+W:331, 9: Unused variable 'distToNearPoint' (unused-variable)
+W:273, 3: Unused variable 'numberToSearchFor' (unused-variable)
+W:492,72: Unused variable 'afterIntersectpoint' (unused-variable)
+W:490,15: Unused variable 'afterIntersectPoint' (unused-variable)
+W:488,15: Unused variable 'numIntersectPoint' (unused-variable)
+W:491,15: Unused variable 'sqrDist' (unused-variable)
+W:489,15: Unused variable 'beforeIntersectPoint' (unused-variable)
+W:487,15: Unused variable 'intersectPoint' (unused-variable)
+W:249, 3: Unused variable 'obsDesc' (unused-variable)
+C:660, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+R:776,15: The if statement can be replaced with 'var = bool(test)' (simplifiable-if-statement)
+R:792,15: The if statement can be replaced with 'var = bool(test)' (simplifiable-if-statement)
+W:738,12: Unused variable 'dist' (unused-variable)
+W:608, 3: Unused variable 'numberToSearchFor' (unused-variable)
+W:583, 3: Unused variable 'obsBehaviour' (unused-variable)
+W:684, 9: Unused variable 'flowTowardsFirstPoint' (unused-variable)
+W:582, 3: Unused variable 'obsCategory' (unused-variable)
+W:672, 9: Unused variable 'nPoints' (unused-variable)
+W:738,18: Unused variable 'p2' (unused-variable)
+W:664, 9: Unused variable 'distToNearPoint' (unused-variable)
+W:584, 3: Unused variable 'obsDesc' (unused-variable)
+C:1044,12: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:1149, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+W:1152, 6: Unused variable 'featID' (unused-variable)
+W:1082, 3: Unused variable 'obsBehaviour' (unused-variable)
+W:1254, 9: Unused variable 'streamIntersectFound' (unused-variable)
+W:1107, 3: Unused variable 'numberToSearchFor' (unused-variable)
+W:1163,31: Unused variable 'beforeNearPoint' (unused-variable)
+W:1306,28: Unused variable 'adjElev' (unused-variable)
+W:1081, 3: Unused variable 'obsCategory' (unused-variable)
+W:1083, 3: Unused variable 'obsDesc' (unused-variable)
+W:1163,48: Unused variable 'afterNearPoint' (unused-variable)
+W:1395,19: Unused variable 'adjElev' (unused-variable)
+************* Module simulationthread
+W: 92,40: Unused variable 'boundaryElev' (unused-variable)
+W:431,22: Unused variable 'adjElev' (unused-variable)
+W:174, 9: Unused variable 'thisFieldBoundarySegIDsTried' (unused-variable)
+W:109,18: Unused variable 'centroidElev' (unused-variable)
+************* Module utils
+W:122, 7: Unused variable 'p' (unused-variable)
+W:149, 9: Unused variable 'cellWidth' (unused-variable)
+W:150, 9: Unused variable 'cellHeight' (unused-variable)
+R:  1, 0: Similar lines in 2 files
+==simulate:64
+==utils:156
+         error = result.error()
+         if not error.isEmpty() or not result.isValid():
+            shared.fpOut.write(error.summary())
+            return -1, -1, -1
+
+         # We have a valid result, so get the elevation (is the first in the list, since we have only a single band)
+         value = result.results()
+         elevPair = value.items()
+         elev = elevPair[0][1]
+
+         # However some results are from a 'wrong' sheet (i.e. a sheet which does not contain this point), so ignore these results
+         if elev != None: (duplicate-code)
+R:  1, 0: Similar lines in 2 files
+==searches:689
+==simulate:1142
+   distToPoint.sort(key = lambda distPoint: distPoint[2])
+
+   #for n in range(len(distToPoint)):
+      #print"After " + (str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
+
+   flowRouted = False
+   for n in range(len(distToPoint)):
+      # Go through this list of untravelled boundary polygons till we find a suitable one
+      feature = distToPoint[n][0]
+      featID = feature.id()
+      #print("Trying feature ID " + str(featID))
+ (duplicate-code)
+R:  1, 0: Similar lines in 2 files
+==searches:481
+==simulate:257
+   roadLayerFound = False
+   for layerNum in range(len(shared.vectorInputLayersCategory)):
+      if shared.vectorInputLayersCategory[layerNum] == INPUT_ROAD_NETWORK:
+         roadLayerFound = True
+         break
+
+   # Safety check
+   if not roadLayerFound:
+      printStr = "ERROR: opening road network layer\n"
+      shared.fpOut.write(printStr)
+      print(printStr)
+ (duplicate-code)
+R:  1, 0: Similar lines in 2 files
+==searches:350
+==simulate:592
+   pathLayerFound = False
+   for layerNum in range(len(shared.vectorInputLayersCategory)):
+      if shared.vectorInputLayersCategory[layerNum] == INPUT_PATH_NETWORK:
+         pathLayerFound = True
+         break
+
+   # Safety check
+   if not pathLayerFound:
+      printStr = "ERROR: opening path network layer\n"
+      shared.fpOut.write(printStr)
+      print(printStr)
+ (duplicate-code)
+R:  1, 0: Similar lines in 2 files
+==searches:544
+==simulate:334
+         featCode = feature[OS_VECTORMAP_FEAT_CODE]
+         featDesc = feature[OS_VECTORMAP_FEAT_DESC]
+         roadName = feature[OS_VECTORMAP_ROAD_NAME]
+         roadNumber = feature[OS_VECTORMAP_ROAD_NUMBER]
+
+         geomFeat = feature.geometry()
+         linePoints = geomFeat.asPolyline()
+         nPoints = len(linePoints)
+ (duplicate-code)
+R:  1, 0: Similar lines in 3 files
+==searches:719
+==simulate:339
+==simulate:669
+         geomFeat = feature.geometry()
+         linePoints = geomFeat.asPolyline()
+         nPoints = len(linePoints)
+
+         firstPoint = linePoints[0]
+         lastPoint = linePoints[-1]
+
+         # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest (duplicate-code)
+R:  1, 0: Similar lines in 2 files
+==searches:506
+==simulate:286
+   for roadSeg in features:
+      # Is this road segment both close enough, and has not already been followed?
+      geomSeg = roadSeg.geometry()
+      nearPoint = geomSeg.nearestPoint(geomPoint)
+      distanceToSeg = geomPoint.distance(nearPoint)
+      segID = roadSeg.id()
+      #shared.fpOut.write("segID = " + str(segID) + " distanceToSeg = " + str(distanceToSeg) + "\n")
+ (duplicate-code)
+R:  1, 0: Similar lines in 2 files
+==searches:375
+==simulate:619
+   for pathSeg in features:
+      # Is this path segment both close enough, and has not already been followed?
+      geomSeg = pathSeg.geometry()
+      nearPoint = geomSeg.nearestPoint(geomPoint)
+      distanceToSeg = geomPoint.distance(nearPoint)
+      segID = pathSeg.id()
+      #shared.fpOut.write("segID = " + str(segID) + " distanceToSeg = " + str(distanceToSeg) + "\n")
+ (duplicate-code)
+R:  1, 0: Similar lines in 2 files
+==simulate:49
+==utils:142
+   for layerNum in range(len(shared.rasterInputLayersCategory)):
+      if shared.rasterInputLayersCategory[layerNum] == INPUT_DIGITAL_ELEVATION_MODEL:
+         # OK, this is our raster elevation data
+         provider = shared.rasterInputData[layerNum][1][0]
+         xSize = shared.rasterInputData[layerNum][1][1]
+         ySize = shared.rasterInputData[layerNum][1][2] (duplicate-code)
+
+------------------------------------------------------------------
+Your code has been rated at 9.62/10 (previous run: 9.59/10, +0.03)
+
