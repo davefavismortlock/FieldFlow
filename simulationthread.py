@@ -54,8 +54,8 @@ class SimulationThread(QThread):
       #===================================================================================================================
       # OK, off we go. First determine the flow start points
       #===================================================================================================================
-      shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-      shared.fpOut.write("FLOW START POINTS\n\n")
+      #shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
+      #shared.fpOut.write("FLOW START POINTS\n\n")
 
       fieldCodes = []
       for layerNum in range(len(shared.vectorInputLayersCategory)):
@@ -89,7 +89,7 @@ class SimulationThread(QThread):
                   #shared.fpOut.write(str(fieldCode) + "\n")
 
                   # Get the coords of the centroid of the pixel which contains the highest point on the boundary of this field (including in-between points), and also the elevation of this point
-                  xBoundary, yBoundary, boundaryElev = getHighestPointOnFieldBoundary(fieldBoundary)
+                  xBoundary, yBoundary, _boundaryElev = getHighestPointOnFieldBoundary(fieldBoundary)
 
                   # Is it valid?
                   if (xBoundary == -1) and (yBoundary == -1):
@@ -106,7 +106,7 @@ class SimulationThread(QThread):
                   # OK, get the elevation of the field's centroid
                   xCentroid = centroidPoint.x()
                   yCentroid = centroidPoint.y()
-                  centroidElev = getRasterElev(xCentroid, yCentroid)
+                  #centroidElev = getRasterElev(xCentroid, yCentroid)
 
                   # Show the centroid on the map
                   #addFlowMarkerPoint(centroidPoint, MARKER_CENTROID, fieldCode, centroidElev)
@@ -124,7 +124,7 @@ class SimulationThread(QThread):
 
                   # And show it on the map
                   addFlowMarkerPoint(QgsPoint(xFlowStart, yFlowStart), fieldCode + MARKER_FLOW_START_POINT, fieldCode, flowStartElev)
-                  shared.fpOut.write("Flow from field " + fieldCode + " begins at " + displayOS(xFlowStart, yFlowStart) + "\n")
+                  #shared.fpOut.write("Flow from field " + fieldCode + " begins at " + displayOS(xFlowStart, yFlowStart) + "\n")
 
                   # Refresh the display
                   self.refresh.emit()
@@ -171,7 +171,7 @@ class SimulationThread(QThread):
          shared.thisFieldFlowLineFieldCode = []
          shared.thisFieldRoadSegIDsTried = []
          shared.thisFieldPathSegIDsTried = []
-         thisFieldBoundarySegIDsTried = []
+         shared.thisFieldBoundarySegIDsTried = []
          shared.thisFieldFieldObsAlreadyFollowed = []
 
          x = shared.flowStartPoints[field][0]
@@ -184,7 +184,7 @@ class SimulationThread(QThread):
          viaLEAndHitStream = False
 
          shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-         shared.fpOut.write("SIMULATING FLOW FROM FIELD " + str(fieldCode) + "\n\n")
+         shared.fpOut.write("SIMULATED FLOW FROM FIELD " + str(fieldCode) + "\n\n")
          shared.fpOut.write("Flow from field " + str(fieldCode) + " starts at " + displayOS(x, y) + "\n")
          shared.thisStartPoint += 1
 
@@ -428,7 +428,7 @@ class SimulationThread(QThread):
             elev = getRasterElev(thisPoint.x(), thisPoint.y())
 
             # Search for the adjacent raster cell with the steepest here-to-there slope, and get its centroid
-            adjPoint, adjElev = FindSteepestAdjacent(thisPoint, elev)
+            adjPoint, _adjElev = FindSteepestAdjacent(thisPoint, elev)
             #shared.fpOut.write("Steepest adjacent is " + displayOS(adjPoint.x(), adjPoint.y()) + "\n")
 
             # Is this adjacent point in a blind pit?

@@ -6,10 +6,6 @@ from __future__ import print_function
 
 from qgis.core import QgsApplication
 
-#from PyQt4.QtGui import QApplication
-
-#import shared
-#from shared import *
 from readinput import readInput
 from gui import MainWindow
 from initialize import setUpSimulation

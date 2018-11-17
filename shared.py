@@ -1,5 +1,3 @@
-#from qgis.core import QgsRectangle, QgsPoint, QgsVector
-
 # SHARED CONSTANTS ====================================================================================================
 COMMENT1                      = '#'
 COMMENT2                      = ';'
@@ -107,7 +105,7 @@ MARKER_AT_STREAM              = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "11 November 2018 version"
+progVer = "17 November 2018 version"
 runTitle = ""
 
 considerFieldObservations = ""

@@ -119,7 +119,7 @@ def pointsOnLine(startPoint, endPoint, spacing):
 
    points = []
    # Process each interpolated point
-   for p in range(0, int(length), int(spacing)):
+   for _ in range(0, int(length), int(spacing)):
       points.append(QgsPoint(x, y))
 
       x += XInc
@@ -146,8 +146,8 @@ def getRasterElev(x, y):
          provider = shared.rasterInputData[layerNum][1][0]
          xSize = shared.rasterInputData[layerNum][1][1]
          ySize = shared.rasterInputData[layerNum][1][2]
-         cellWidth = shared.rasterInputData[layerNum][1][3]
-         cellHeight = shared.rasterInputData[layerNum][1][4]
+         #cellWidth = shared.rasterInputData[layerNum][1][3]
+         #cellHeight = shared.rasterInputData[layerNum][1][4]
          extent = shared.rasterInputData[layerNum][1][5]
          dpi = shared.rasterInputData[layerNum][1][6]
 

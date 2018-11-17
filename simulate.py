@@ -244,9 +244,9 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
    # pylint: disable=too-many-branches
    # pylint: disable=too-many-statements
 
-   obsCategory = shared.fieldObservationCategory[indx]
-   obsBehaviour = shared.fieldObservationBehaviour[indx]
-   obsDesc = shared.fieldObservationDescription[indx]
+   #obsCategory = shared.fieldObservationCategory[indx]
+   #obsBehaviour = shared.fieldObservationBehaviour[indx]
+   #obsDesc = shared.fieldObservationDescription[indx]
 
    shared.thisFieldFieldObsAlreadyFollowed.append(indx)
 
@@ -269,8 +269,7 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
 
       return -1, -1
 
-   # TODO make this a user setting
-   numberToSearchFor = 4
+   #numberToSearchFor = 4
 
    while True:
       # Find the nearest road segments
@@ -328,7 +327,7 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
          # Go through this list of untravelled road segments till we find a suitable one
          feature = distToPoint[n][0]
          nearPoint = distToPoint[n][1]
-         distToNearPoint = distToPoint[n][2]
+         #distToNearPoint = distToPoint[n][2]
          featID = feature.id()
          #shared.fpOut.write("\tTrying road seg ID " + str(featID) + "\n")
 
@@ -339,7 +338,7 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
 
          geomFeat = feature.geometry()
          linePoints = geomFeat.asPolyline()
-         nPoints = len(linePoints)
+         #nPoints = len(linePoints)
 
          firstPoint = linePoints[0]
          lastPoint = linePoints[-1]
@@ -351,7 +350,6 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
          #shared.fpOut.write("\tLast point of road segment is " + displayOS(lastPoint.x(), lastPoint.y()) + "\n")
 
          # If there is a choice, then find out which direction along the road has the steepest downhill slope
-         flowToFirstPoint = False
          flowToLastPoint = False
          if nearPoint == firstPoint:
             # The nearest point is the same as the first point
@@ -378,23 +376,23 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
 
             if elevLastPoint > elevFirstPoint:
                # Flow to first point
-               flowToFirstPoint = True
+               flowToLastPoint = False
                #shared.fpOut.write("Flow to first point\n")
          else:
             # The nearest point is not a point in the line, so we need to insert it. First get the closest vertex
             linePoints = geomFeat.asPolyline()
-            nPoints = len(linePoints)
+            #nPoints = len(linePoints)
             #for n in range(nPoints):
                #shared.fpOut.write(str(n) + " " + displayOS(linePoints[n].x(), linePoints[n].y()) + "\n")
             #shared.fpOut.write("\n")
 
-            dist, p2, numPt = geomFeat.closestSegmentWithContext(nearPoint)
+            _dist, _p2, numPt = geomFeat.closestSegmentWithContext(nearPoint)
             if not geomFeat.insertVertex(nearPoint.x(), nearPoint.y(), numPt):
                # Error, could not insert vertex
                return -1, -1
 
             linePoints = geomFeat.asPolyline()
-            nPoints = len(linePoints)
+            #nPoints = len(linePoints)
             #for n in range(nPoints):
                #shared.fpOut.write(str(n) + " " + displayOS(linePoints[n].x(), linePoints[n].y()) + "\n")
             #shared.fpOut.write("\n")
@@ -425,11 +423,11 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
                if pts[0][0] == FIRST_POINT:
                   # First point is lower than near point, so flow goes to first point
                   shared.fpOut.write("Flow to first point d\n")
-                  flowToFirstPoint = True
+                  flowToLastPoint = False
 
                else:
                   # Last point is lower than near point, so flow goes to last point
-                  #shared.fpOut.write("Flow to last point a\n")
+                  shared.fpOut.write("Flow to last point a\n")
                   flowToLastPoint = True
 
             else:
@@ -441,9 +439,9 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
 
                if flowToLast:
                   flowToLastPoint = True
-                  #shared.fpOut.write("Flow to last point b\n")
+                  shared.fpOut.write("Flow to last point b\n")
                else:
-                  flowToFirstPoint = True
+                  flowToLastPoint = False
                   shared.fpOut.write("Flow to first point c\n")
 
 
@@ -484,12 +482,12 @@ def flowAlongVectorRoad(indx, fieldCode, thisPoint):
                #shared.fpOut.write("This road segment intersects a stream segment at " + displayOS(point.x(), point.y()))
 
                # The intersection point is not necessarily a point in the line. So get the actual point in the line which is closest
-               intersectPoint = -1
-               numIntersectPoint = -1
-               beforeIntersectPoint = -1
-               afterIntersectPoint = -1
-               sqrDist = -1
-               intersectPoint, numIntersectpoint, beforeIntersectpoint, afterIntersectpoint, sqrDist = geomFeat.closestVertex(point)
+               #intersectPoint = -1
+               #numIntersectPoint = -1
+               #beforeIntersectPoint = -1
+               #afterIntersectPoint = -1
+               #sqrDist = -1
+               _intersectPoint, numIntersectpoint, _beforeIntersectpoint, _afterIntersectpoint, _sqrDist = geomFeat.closestVertex(point)
 
                # And insert the intersection point in the road polyline
                linePoints.insert(numIntersectpoint, point)
@@ -579,9 +577,9 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
    # pylint: disable=too-many-branches
    # pylint: disable=too-many-statements
 
-   obsCategory = shared.fieldObservationCategory[indx]
-   obsBehaviour = shared.fieldObservationBehaviour[indx]
-   obsDesc = shared.fieldObservationDescription[indx]
+   #obsCategory = shared.fieldObservationCategory[indx]
+   #obsBehaviour = shared.fieldObservationBehaviour[indx]
+   #obsDesc = shared.fieldObservationDescription[indx]
 
    shared.thisFieldFieldObsAlreadyFollowed.append(indx)
 
@@ -604,8 +602,7 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
 
       return -1, -1
 
-   # TODO make this a user setting
-   numberToSearchFor = 4
+   #numberToSearchFor = 4
 
    while True:
       # Find the nearest path segments
@@ -661,7 +658,7 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
          # Go through this list of untravelled path segments till we find a suitable one
          feature = distToPoint[n][0]
          nearPoint = distToPoint[n][1]
-         distToNearPoint = distToPoint[n][2]
+         #distToNearPoint = distToPoint[n][2]
          featID = feature.id()
          #shared.fpOut.write("\tTrying path seg ID " + str(featID) + "\n")
 
@@ -669,7 +666,7 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
 
          geomFeat = feature.geometry()
          linePoints = geomFeat.asPolyline()
-         nPoints = len(linePoints)
+         #nPoints = len(linePoints)
 
          firstPoint = linePoints[0]
          lastPoint = linePoints[-1]
@@ -681,7 +678,7 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
          #shared.fpOut.write("\tLast point of path segment is " + displayOS(lastPoint.x(), lastPoint.y()) + "\n")
 
          # If there is a choice, then find out which direction along the path has the steepest downhill slope
-         flowTowardsFirstPoint = False
+         #flowTowardsFirstPoint = False
          flowTowardsLastPoint = False
          if nearPoint == firstPoint:
             # The nearest point is the same as the first point
@@ -718,7 +715,7 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
 
             if elevThisPoint >= elevNextPoint:
                # Flow towards first point of path segment
-               flowTowardsFirstPoint = True
+               flowTowardsLastPoint = False
                #shared.fpOut.write("Flow is towards first point of path segment\n")
             else:
                # This point is lower: we are in a blind pit, so try the next path segment
@@ -730,18 +727,18 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
          else:
             # The nearest point is not a point in the line, so we need to insert it. First get the closest vertex
             linePoints = geomFeat.asPolyline()
-            nPoints = len(linePoints)
+            #nPoints = len(linePoints)
             #for n in range(nPoints):
                #shared.fpOut.write(str(n) + " " + displayOS(linePoints[n].x(), linePoints[n].y()) + "\n")
             #shared.fpOut.write("\n")
 
-            dist, p2, numPt = geomFeat.closestSegmentWithContext(nearPoint)
+            _dist, _p2, numPt = geomFeat.closestSegmentWithContext(nearPoint)
             if not geomFeat.insertVertex(nearPoint.x(), nearPoint.y(), numPt):
                # Error, could not insert vertex
                return -1, -1
 
             linePoints = geomFeat.asPolyline()
-            nPoints = len(linePoints)
+            #nPoints = len(linePoints)
             #for n in range(nPoints):
                #shared.fpOut.write(str(n) + " " + displayOS(linePoints[n].x(), linePoints[n].y()) + "\n")
             #shared.fpOut.write("\n")
@@ -776,7 +773,7 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
                if pts[0][0] == PREV_POINT:
                   # The previous point is lower than this point, so flow goes towards the first point of the path segment
                   #shared.fpOut.write("Flow towards first point of path segment a1\n")
-                  flowTowardsFirstPoint = True
+                  flowTowardsLastPoint = False
 
                else:
                   # The post point is lower than this point, so flow goes towards the last point of the path segment
@@ -787,13 +784,11 @@ def flowAlongVectorPath(indx, fieldCode, thisPoint):
                # Both previous and post points are lower than this , so we need to compare gradients
                #shared.fpOut.write("prevPoint = " + displayOS(prevPoint.x(), prevPoint.y()) + " thisPoint = " + displayOS(thisPoint.x(), thisPoint.y()) + " postPoint = " + displayOS(postPoint.x(), postPoint.y()) + "\n")
 
-               flowLastwards = FindSteepestSegment(prevPoint, thisPoint, postPoint, elevThisPoint - elevPrevPoint, elevThisPoint - elevPostPoint)
+               flowTowardsLastPoint = FindSteepestSegment(prevPoint, thisPoint, postPoint, elevThisPoint - elevPrevPoint, elevThisPoint - elevPostPoint)
 
-               if flowLastwards:
-                  flowTowardsLastPoint = True
+               #if flowTowardsLastPoint:
                   #shared.fpOut.write("Flow towards last point of path segment b\n")
-               else:
-                  flowTowardsFirstPoint = True
+               #else:
                   #shared.fpOut.write("Flow towards first point of path segment c\n")
 
          # OK we know the initial direction of flow along this path/track, so keep going till we reach a pre-existing flow line, a ditch/stream, a blind pit, or the end of the path/track
@@ -1078,9 +1073,9 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
    # pylint: disable=too-many-branches
    # pylint: disable=too-many-statements
 
-   obsCategory = shared.fieldObservationCategory[indx]
-   obsBehaviour = shared.fieldObservationBehaviour[indx]
-   obsDesc = shared.fieldObservationDescription[indx]
+   #obsCategory = shared.fieldObservationCategory[indx]
+   #obsBehaviour = shared.fieldObservationBehaviour[indx]
+   #obsDesc = shared.fieldObservationDescription[indx]
 
    shared.thisFieldFieldObsAlreadyFollowed.append(indx)
 
@@ -1103,8 +1098,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
       return -1, -1
 
-   # TODO make this a user setting
-   numberToSearchFor = 3
+   #numberToSearchFor = 3
 
    # Find the nearest field boundary polygon TODO could this be passed in as a parameter?
    nearestIDs = shared.vectorInputIndex[layerNum].nearestNeighbor(thisPoint, 3)
@@ -1149,7 +1143,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
    for n in range(len(distToPoint)):
       # Go through this list of untravelled boundary polygons till we find a suitable one
       feature = distToPoint[n][0]
-      featID = feature.id()
+      #featID = feature.id()
       #print("Trying feature ID " + str(featID))
 
       boundaryFieldCode = feature[CONNECTED_FIELD_ID]
@@ -1160,7 +1154,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
       nPointsInPoly = len(points)
 
       # OK, the nearest point is an approximation: it is not necessarily a point in the polygon's boundary. So get the actual point in the bopundary which is closest
-      nearPoint, numNearPoint, beforeNearPoint, afterNearPoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
+      nearPoint, numNearPoint, _beforeNearPoint, _afterNearPoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
       #print(nearPoint, numNearPoint, beforeNearPoint, afterNearPoint, sqrDist)
       #print(nearPoint, points[numNearPoint])
 
@@ -1251,7 +1245,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
          geomLine = QgsGeometry.fromPolyline([thisPoint, flowToPoint])
          rtn = -1
          streamIntersectPoints = []
-         streamIntersectFound = False
+         #streamIntersectFound = False
          rtn, streamIntersectPoints = FindSegmentIntersectionWithStream(geomLine)
          if rtn == -1:
             # Error
@@ -1259,7 +1253,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
          elif rtn == 1:
             # We have at least one intersection
-            streamIntersectFound = True
+            #streamIntersectFound = True
             for intPoint in streamIntersectPoints:
                shared.fpOut.write("The boundary of field " + str(boundaryFieldCode) + " intersects a stream at " + displayOS(intPoint.x(), intPoint.y()) + "\n*** Does flow enter the stream here?\n")
 
@@ -1303,7 +1297,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
                   # Search for the adjacent raster cell with the steepest here-to-there slope, and get its centroid
                   geomPoint1 = QgsGeometry.fromPoint(point1)
-                  adjPoint, adjElev = FindSteepestAdjacent(point1, elev, geomPoint1)
+                  adjPoint, _adjElev = FindSteepestAdjacent(point1, elev, geomPoint1)
                   #print(adjPoint, adjElev)
                   if adjPoint.x() != -1:
                      # There is a within-polygon cell with a steeper gradient
@@ -1392,7 +1386,7 @@ def fillBlindPit(thisPoint, fieldCode):
 
       newOverflowCells = []
       for point in pondedCells:
-         adjPoint, adjElev = FindSteepestAdjacent(point, topElev)
+         adjPoint, _adjElev = FindSteepestAdjacent(point, topElev)
 
          if adjPoint.x() != -1:
             # We have found a new overflow point to which we have not travelled before

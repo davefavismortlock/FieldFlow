@@ -1,11 +1,9 @@
 from __future__ import print_function
-#import sys
 
-from PyQt4.QtGui import QAction, QMainWindow, QStatusBar, QProgressBar #, QSizePolicy, QGridLayout             # , QMessageBox
-from PyQt4.QtCore import Qt      #, QObject #, pyqtSignal, QEvent #, QSize
+from PyQt4.QtGui import QAction, QMainWindow, QStatusBar, QProgressBar
+from PyQt4.QtCore import Qt
 
-#from qgis.core import *
-from qgis.gui import QgsMapCanvas, QgsMapToolPan, QgsMapToolZoom, QgsMapToolEmitPoint  # QgsMapCanvasLayer,
+from qgis.gui import QgsMapCanvas, QgsMapToolPan, QgsMapToolZoom, QgsMapToolEmitPoint
 
 import pyperclip
 
