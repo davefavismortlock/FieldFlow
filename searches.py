@@ -7,9 +7,9 @@ from qgis.core import NULL, QgsGeometry, QgsFeatureRequest, QgsPoint
 #from qgis.gui import QgsMapCanvasLayer    #, QgsMapToolPan, QgsMapToolZoom
 
 import shared
-from shared import INPUT_PATH_NETWORK, PATH_DESC, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, INPUT_WATER_NETWORK, OS_WATER_NETWORK_LOCAL_ID, OS_WATER_NETWORK_NAME, TARGET_RIVER, MARKER_ENTER_RIVER, FLOW_VIA_STREAM, OS_WATER_NETWORK_LEVEL, MARKER_ENTER_CULVERT, MARKER_ENTER_STREAM
+from shared import INPUT_PATH_NETWORK, PATH_DESC, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, INPUT_WATER_NETWORK, OS_WATER_NETWORK_LOCAL_ID, OS_WATER_NETWORK_NAME, TARGET_RIVER, MARKER_ENTER_RIVER, FLOW_VIA_STREAM, OS_WATER_NETWORK_LEVEL, MARKER_ENTER_CULVERT, MARKER_ENTER_STREAM, OUTPUT_FIELD_CODE
 from utils import getRasterElev, displayOS
-from layers import addFlowMarkerPoint, addFlowLine
+from layers import AddFlowMarkerPoint, AddFlowLine
 
 
 #======================================================================================================================
@@ -215,7 +215,7 @@ def FindNearbyFlowLine(thisPoint):
    # For the first flowline, there are no pre-existing flowlines
    if not nearestIDs:
       #print("No flowlines")
-      return -1, -1
+      return -1, -1, -1
 
    # OK we have some flowlines
    request = QgsFeatureRequest().setFilterFids(nearestIDs)
@@ -236,19 +236,20 @@ def FindNearbyFlowLine(thisPoint):
       distanceToSeg = geomThisPoint.distance(nearPoint)
       #flowLineSegID = flowLineSeg.id()
       #shared.fpOut.write("flowLineSegID = " + str(flowLineSegID) + " distanceToSeg = " + str(distanceToSeg) + "\n")
+      fieldCode = flowLineSeg[OUTPUT_FIELD_CODE]
 
       if distanceToSeg > shared.searchDist:
          # Too far away so forget about this flow line segment
          continue
 
-      # Is OK, so save the flow line segment feature, the nearest point, and the distance
-      distToPoint.append([flowLineSeg, nearPoint.asPoint(), distanceToSeg])
+      # Is OK, so save the flow line segment feature, the nearest point, the distance, and the field code
+      distToPoint.append([flowLineSeg, nearPoint.asPoint(), distanceToSeg, fieldCode])
 
    # Did we any find suitable flow line segments?
    if not distToPoint:
       # Nope
       #print("Leaving loop")
-      return -1, -1
+      return -1, -1, -1
 
    # OK we have some suitable flow line segments, sort the list of stream segments, shortest distance first
    distToPoint.sort(key = lambda distPoint: distPoint[2])
@@ -257,25 +258,22 @@ def FindNearbyFlowLine(thisPoint):
       #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
 
    featIDTried = []
-   for n in range(len(distToPoint)):
+   for flowLineSeg in distToPoint:
       # Go through this list of flow line segments
-      feature = distToPoint[n][0]
+      feature = flowLineSeg[0]
       featID = feature.id()
 
       if featID not in featIDTried:
          #shared.fpOut.write("Trying feature ID " + str(featID) + "\n")
          featIDTried.append(featID)
-
          geomFeat = feature.geometry()
-         #linePoints = geomFeat.asPolyline()
-         #nPoints = len(linePoints)
 
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
-         nearPoint, _numNearpoint, _beforeNearpoint, _afterNearpoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
+         nearPoint, _numNearpoint, _beforeNearpoint, _afterNearpoint, sqrDist = geomFeat.closestVertex(flowLineSeg[1])
 
-         shared.fpOut.write("At " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + ", flow line stream segment '" + str(featID) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
+         shared.fpOut.write("At " + displayOS(flowLineSeg[1].x(), flowLineSeg[1].y()) + ", flow line stream segment '" + str(featID) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
 
-         return nearPoint.x(), nearPoint.y()
+         return nearPoint.x(), nearPoint.y(), flowLineSeg[3]
 
 
    #if len(shared.allFieldsFlowPath) == 0:
@@ -331,7 +329,7 @@ def FindNearbyFlowLine(thisPoint):
 
    #print("At end of FindNearbyFlowLine()")
 
-   return -1, -1
+   return -1, -1, -1
 #======================================================================================================================
 
 
@@ -340,7 +338,7 @@ def FindNearbyFlowLine(thisPoint):
 # Is there a path near here?
 #
 #======================================================================================================================
-def FindNearbyPath(point, flowFieldCode):
+def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
    # pylint: disable=too-many-locals
 
    #shared.fpOut.write("\tEntered FindNearbyPath at point " + displayOS(point.x(), point.y()))
@@ -395,7 +393,7 @@ def FindNearbyPath(point, flowFieldCode):
       #shared.fpOut.write("Leaving loop")
       return 0
 
-   # OK we have some suitable path segments, sort the list of untravelled path segments, shortest distance first
+   # OK we have some suitable path segments, sort the list of untravelled road segments, shortest distance first
    distToPoint.sort(key = lambda distPoint: distPoint[2])
 
    #for n in range(len(distToPoint)):
@@ -422,8 +420,8 @@ def FindNearbyPath(point, flowFieldCode):
 
          #shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this path? Please add a field observation\n")
 
-         shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path? Please add a field observation\n")
-
+         if not alreadyAlongPath:
+            shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled path/track segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path/track? Please add a field observation\n")
 
    return 1
 #======================================================================================================================
@@ -458,7 +456,6 @@ def FindNearbyFieldObservation(foundPoint):
       yObs = shared.fieldObservationFlowFrom[indx].y()
 
       if xMin < xObs < xMax and yMin < yObs < yMax:
-         #shared.fpOut.write("Found " + str(indx))
          shared.fpOut.write("Field observation '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' found at " + displayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()) + "\n")
 
          return indx
@@ -471,7 +468,7 @@ def FindNearbyFieldObservation(foundPoint):
 # Is there a road near here?
 #
 #======================================================================================================================
-def FindNearbyRoad(point, flowFieldCode):
+def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
    # pylint: disable=too-many-locals
 
    #shared.fpOut.write("\tEntered FindNearbyRoad at point " + displayOS(point.x(), point.y()))
@@ -556,8 +553,8 @@ def FindNearbyRoad(point, flowFieldCode):
 
          #shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
 
-         shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
-
+         if not alreadyAlongRoad:
+            shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
 
    return 1
 #======================================================================================================================
@@ -706,7 +703,7 @@ def FindNearbyStream(point, flowFieldCode):
          if streamName != NULL and streamName.upper().find(TARGET_RIVER) >= 0:
             # Yes, flow has entered the Rother
             shared.fpOut.write("Flow from field " + flowFieldCode + " enters the River Rother at " + displayOS(point.x(), point.y()) + "\n")
-            addFlowMarkerPoint(point, MARKER_ENTER_RIVER, flowFieldCode, -1)
+            AddFlowMarkerPoint(point, MARKER_ENTER_RIVER, flowFieldCode, -1)
 
             # We are done here
             return 1
@@ -755,15 +752,15 @@ def FindNearbyStream(point, flowFieldCode):
                thisPoint = linePoints[m]
                nextPoint = linePoints[m+1]
 
-               addFlowLine(thisPoint, nextPoint, FLOW_VIA_STREAM, flowFieldCode, -1)
-               #shared.fpOut.write("addFlowLine 1", thisPoint.x(), thisPoint.y())
+               AddFlowLine(thisPoint, nextPoint, FLOW_VIA_STREAM, flowFieldCode, -1)
+               #shared.fpOut.write("AddFlowLine 1", thisPoint.x(), thisPoint.y())
          else:
             for m in range(numNearpoint, 1, -1):
                thisPoint = linePoints[m]
                nextPoint = linePoints[m-1]
 
-               addFlowLine(thisPoint, nextPoint, FLOW_VIA_STREAM, flowFieldCode, -1)
-               #shared.fpOut.write("addFlowLine 2", thisPoint.x(), thisPoint.y())
+               AddFlowLine(thisPoint, nextPoint, FLOW_VIA_STREAM, flowFieldCode, -1)
+               #shared.fpOut.write("AddFlowLine 2", thisPoint.x(), thisPoint.y())
 
          # OK we have flow routed along this stream segment
          streamSegIDsFollowed.append(featID)
@@ -790,7 +787,7 @@ def FindNearbyStream(point, flowFieldCode):
          shared.fpOut.write("Flow from field " + flowFieldCode + " enters the OS " + streamName + " segment " + str(localID) + " at " + displayOS(point.x(), point.y()) + " and leaves it at " + displayOS(lastPoint.x(), lastPoint.y()) + "\n")
          #shared.fpOut.write("======")
 
-         addFlowMarkerPoint(point, typeName, flowFieldCode, -1)
+         AddFlowMarkerPoint(point, typeName, flowFieldCode, -1)
 
          # Set the end point of this stream segment to be the start point, ready for next time round the loop
          point = lastPoint

@@ -14,7 +14,6 @@ W:209, 0: TODO make this a user setting (fixme)
 W:365, 0: TODO make this a user setting (fixme)
 W:496, 0: TODO make this a user setting (fixme)
 W:649, 0: TODO make this a user setting (fixme)
-C:260, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
 C:405, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
 C:536, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
 C:696, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
@@ -26,8 +25,6 @@ C:657, 6: Consider using enumerate instead of iterating with range and len (cons
 C:1039,12: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
 C:1143, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
 ************* Module FieldFlow_model.utils
-W:149, 9: Unused variable 'cellWidth' (unused-variable)
-W:150, 9: Unused variable 'cellHeight' (unused-variable)
 R:  1, 0: Similar lines in 2 files
 ==FieldFlow_model.simulate:64
 ==FieldFlow_model.utils:156
@@ -106,5 +103,5 @@ R:  1, 0: Similar lines in 2 files
          ySize = shared.rasterInputData[layerNum][1][2] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.87/10 (previous run: 9.87/10, +0.00)
+Your code has been rated at 9.89/10 (previous run: 9.87/10, +0.01)
 

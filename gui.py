@@ -36,7 +36,8 @@ class PointTool(QgsMapToolEmitPoint):
       # Copy to clipboard
       x = round(point.x() * 2) / 2
       y = round(point.y() * 2) / 2
-      pyperclip.copy("{:08.1f}, {:08.1f}".format(x, y))
+      #pyperclip.copy("{:08.1f}, {:08.1f}".format(x, y))
+      pyperclip.copy("{:06.0f}, {:06.0f}".format(x, y))
 #======================================================================================================================
 
 
@@ -51,6 +52,7 @@ class MainWindow(QMainWindow):
    def __init__(self, app, canvasLayers, canvasLayersCategory):
       QMainWindow.__init__(self)
       self.app = app
+
       self.canvasLayers = canvasLayers
       self.canvasLayersCategory = canvasLayersCategory
 
@@ -96,9 +98,10 @@ class MainWindow(QMainWindow):
       self.actionPan.setCheckable(True)
       self.actionPan.setStatusTip("Move the map laterally")
 
-      if shared.haveRasterBackground:
-         self.actionChangeBackground = QAction("Change background", self)
-         self.actionChangeBackground.setStatusTip("Change the raster background")
+      self.actionChangeBackground = QAction("Change background", self)
+      self.actionChangeBackground.setStatusTip("Change the raster background")
+      if not shared.haveRasterBackground:
+         self.actionChangeBackground.setEnabled(False)
 
       self.actionCoords = QAction("Show coordinates", self)
       self.actionCoords.setCheckable(True)
@@ -112,8 +115,7 @@ class MainWindow(QMainWindow):
       self.actionZoomIn.triggered.connect(self.zoomIn)
       self.actionZoomOut.triggered.connect(self.zoomOut)
       self.actionPan.triggered.connect(self.pan)
-      if shared.haveRasterBackground:
-         self.actionChangeBackground.triggered.connect(self.changeBackground)
+      self.actionChangeBackground.triggered.connect(self.changeBackground)
       self.actionCoords.triggered.connect(self.showCoords)
       self.actionRun.triggered.connect(self.doRun)
 
@@ -131,8 +133,7 @@ class MainWindow(QMainWindow):
       self.viewMenu.addAction(self.actionZoomIn)
       self.viewMenu.addAction(self.actionZoomOut)
       self.viewMenu.addAction(self.actionPan)
-      if shared.haveRasterBackground:
-         self.viewMenu.addAction(self.actionChangeBackground)
+      self.viewMenu.addAction(self.actionChangeBackground)
       self.viewMenu.addAction(self.actionCoords)
 
       self.runMenu = self.menubar.addMenu("&Run")
@@ -195,6 +196,7 @@ class MainWindow(QMainWindow):
 
       self.canvas.repaint()
       self.statusBar.progress.setValue(0)
+      self.actionRun.setEnabled(False)
 
       # All is now ready, so run the simulation as a separate thread
       self.myThread = SimulationThread(self.app, self)
@@ -270,8 +272,6 @@ class MainWindow(QMainWindow):
       if self.myThread:
          self.myThread.terminate()
 
-      #self.app.quit
-
       return
 #======================================================================================================================
 
@@ -292,7 +292,7 @@ class MainWindow(QMainWindow):
       self.statusBar.showMessage("End of run: flow routed", shared.defaultMessageDisplayTime)
 
       # To prevent subsequent re-runs
-      self.actionRun.setEnabled(False)
+#      self.actionRun.setEnabled(False)
 
       return
 #======================================================================================================================

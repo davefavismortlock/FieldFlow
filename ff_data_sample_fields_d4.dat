@@ -32,12 +32,12 @@ Transparency for flow lines (0-100)                                           : 
 Width of window (pixels)                                                      : 500
 Height of window (pixels)                                                     : 1150
 Initial magnification                                                         : 1.0
-   
+
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
 Coordinates of SW corner of area displayed                                    : 490880, 120791
 Coordinates of NE corner of area displayed                                    : 492260, 124314
- 
+
 # Vector layers =======================================================================================================
 
 # Field boundaries REQUIRED
@@ -57,7 +57,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Category                                                                      : INPUT_WATER_NETWORK   
+Category                                                                      : INPUT_WATER_NETWORK
 
 # Roads REQUIRED ======================================================================================================
 File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su92sw_Road_Centreline.shp
@@ -66,7 +66,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : OS VectorMap Local/su/roads.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_ROAD_NETWORK   
+Category                                                                      : INPUT_ROAD_NETWORK
 
 # Paths REQUIRED ======================================================================================================
 File for vector path network (with extension)                                 : selected_paths.shp
@@ -75,7 +75,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : paths.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_PATH_NETWORK   
+Category                                                                      : INPUT_PATH_NETWORK
 
 # Observed flow lines OPTIONAL ========================================================================================
 File for observed flow lines (with extension)                                 : Connectivity/flow_lines_d.sqlite
@@ -193,64 +193,100 @@ END OF RASTER LAYERS ===========================================================
 
 # Field observations ==================================================================================================
 
-# FLOW FROM FIELD F
-Inflow location                                                               : 491529.5, 123655.5
+# FLOW FROM FIELD A5
+
+Inflow location                                                               : 491527, 123659
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : between A5 and F
-Outflow location                                                              : 491531.0, 123642.0
+Description                                                                   : S edge of field A5
+Outflow location                                                              : 491527, 123656
 
-Inflow location                                                               : 491504.5, 123334.5
+Inflow location                                                               : 491527, 123656
+Type                                                                          : road
+Behaviour                                                                     : across
+Description                                                                   : unmarked road
+Outflow location                                                              : 491528, 123651
+
+Inflow location                                                               : 491528, 123651
 Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : N edge of field F
+Outflow location                                                              : 491528, 123645
+
+Inflow location                                                               : 491504, 123334
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : S edge of field F
+Outflow location                                                              : 491506, 123330
+
+Inflow location                                                               : 491506, 123330
+Type                                                                          : path
 Behaviour                                                                     : along
-Description                                                                   : S edge of F
-Outflow location                                                              : 
-
-#Inflow location                                                               : 491587.5, 123087.5
-#Type                                                                          : boundary
-#Behaviour                                                                     : across
-#Description                                                                   : SE corner of 85
-#Outflow location                                                              : 491589.5, 123087.5
-
-#Inflow location                                                               : 491632.5, 123062.5
-#Type                                                                          : boundary
-#Behaviour                                                                     : across
-#Description                                                                   : NW corner of 87
-#Outflow location                                                              : 491634.5, 123062.5
+Description                                                                   : to Loves Farm
+Outflow location                                                              :
 
 
 
 # FLOW FROM FIELD 86
-Inflow location                                                               : 491833.0, 123213.0
-Type                                                                          : boundary
-Behaviour                                                                     : across
-Description                                                                   : between 86 and 85
-Outflow location                                                              : 491816.5, 123197.5
 
-Inflow location                                                               : 491747.0, 123087.0
+Inflow location                                                               : 491837, 123217
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : between 85 and 87
-Outflow location                                                              : 491738.0, 123077.0
+Description                                                                   : SW edge of field 86
+Outflow location                                                              : 491832, 123212
 
-Inflow location                                                               : 491710.5, 122929.5
-Type                                                                          : boundary
+Inflow location                                                               : 491832, 123212
+Type                                                                          : path
 Behaviour                                                                     : across
-Description                                                                   : between 87 and 88 1
-Outflow location                                                              : 491714.0, 122924.5
+Description                                                                   : unmarked path
+Outflow location                                                              : 491828, 123208
 
-Inflow location                                                               : 491682.5, 122447.5
+Inflow location                                                               : 491828, 123208
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : between 88 and 88a
-Outflow location                                                              : 491683, 122446
+Description                                                                   : NE edge of field 87
+Outflow location                                                              : 491822, 123198
 
-Inflow location                                                               : 491592.5, 122342.5
+Inflow location                                                               : 491747, 123087
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : S edge of 88a
-Outflow location                                                              : 491592.5, 122341
+Description                                                                   : between field 85 and field 87
+Outflow location                                                              : 491747, 123080
+
+Inflow location                                                               : 491712, 122928
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : between field 87 and field 88
+Outflow location                                                              : 491712, 122922
+
+
+
+# FLOW FROM FIELD F
+
+
+
+# FLOW FROM FIELD 88
+
+Inflow location                                                               : 491722, 122478
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : out of blind pit in field 88
+Outflow location                                                              : 491682, 122460
+
+Inflow location                                                               : 491680, 122450
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : between field 88 and field 88a
+Outflow location                                                              : 491680, 122443
+
+Inflow location                                                               : 491652, 122402
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : out of blind pit in field 88a
+Outflow location                                                              : 491605, 122343
+
 
 
 END OF FIELD OBSERVATIONS =============================================================================================
+
 

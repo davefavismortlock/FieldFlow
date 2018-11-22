@@ -29,15 +29,15 @@ Output shapefile for flow lines (no extension)                                : 
 Style file (with extension, blank for default style)                          : ff_flow.qml
 Transparency for flow lines (0-100)                                           : 0
 
-Width of window (pixels)                                                      : 1000
+Width of window (pixels)                                                      : 850
 Height of window (pixels)                                                     : 1150
 Initial magnification                                                         : 1.0
-   
+
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
-Coordinates of SW corner of area displayed                                    : 488410, 121400
-Coordinates of NE corner of area displayed                                    : 490500, 124400
- 
+Coordinates of SW corner of area displayed                                    : 488410, 120900
+Coordinates of NE corner of area displayed                                    : 490500, 124300
+
 # Vector layers =======================================================================================================
 
 # Field boundaries REQUIRED ===========================================================================================
@@ -57,7 +57,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Category                                                                      : INPUT_WATER_NETWORK   
+Category                                                                      : INPUT_WATER_NETWORK
 
 # OS Mastermap Water Network file
 File for vector water network (with extension)                                : MasterMap Water Network_1718110/su/SU9020.gml|layerid=1
@@ -66,7 +66,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Category                                                                      : INPUT_WATER_NETWORK   
+Category                                                                      : INPUT_WATER_NETWORK
 
 # Roads REQUIRED ======================================================================================================
 File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su82se_Road_Centreline.shp
@@ -75,7 +75,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : OS VectorMap Local/su/roads.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_ROAD_NETWORK   
+Category                                                                      : INPUT_ROAD_NETWORK
 
 # Paths REQUIRED ======================================================================================================
 File for vector path network (with extension)                                 : selected_paths.shp
@@ -84,7 +84,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : paths.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_PATH_NETWORK   
+Category                                                                      : INPUT_PATH_NETWORK
 
 # Observed flow lines OPTIONAL ========================================================================================
 File for observed flow lines (with extension)                                 : Connectivity/flow_lines_c.sqlite
@@ -190,17 +190,17 @@ END OF RASTER LAYERS ===========================================================
 # Field observations ==================================================================================================
 
 # FIELD 69
-Inflow location                                                               : 490107.0, 124067.0
+Inflow location                                                               : 490107, 124067
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : S edge of 69
-Outflow location                                                              : 490107.0, 124064.0
+Outflow location                                                              : 490107, 124064
 
-Inflow location                                                               : 489947.5, 123912.5
+Inflow location                                                               : 489947, 123912
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : S edge of 68
-Outflow location                                                              : 489949.5, 123907.5
+Outflow location                                                              : 489949, 123907
 
 Inflow location                                                               : 489670, 123770
 Type                                                                          : boundary
@@ -220,47 +220,120 @@ Behaviour                                                                     : 
 Description                                                                   : N edge of 72
 Outflow location                                                              : 489663, 123763
 
-Inflow location                                                               : 489552.5, 123672.5
+Inflow location                                                               : 489552, 123672
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : N edge of 73
-Outflow location                                                              : 489552.5, 123672.5
+Outflow location                                                              : 489552, 123672
 
-Inflow location                                                               : 489492.5, 123632.5
+Inflow location                                                               : 489492, 123632
 Type                                                                          : boundary
 Behaviour                                                                     : along
-Description                                                                   : W edge of 73 (1)
-Outflow location                                                              : 
+Description                                                                   : W edge of 73
+Outflow location                                                              :
+
+Inflow location                                                               : 489449, 123566
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : leave W edge of 73
+Outflow location                                                              : 489436, 123545
+
+Inflow location                                                               : 489384, 123460
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : SW edge of field 73
+Outflow location                                                              : 489383, 123459
+
+Inflow location                                                               : 489383, 123459
+Type                                                                          : path
+Behaviour                                                                     : across
+Description                                                                   : Unmetalled track to Winters Lane
+Outflow location                                                              : 489382, 123458
+
+Inflow location                                                               : 489382, 123458
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : NE edge of field 75
+Outflow location                                                              : 489379, 123453
+
+Inflow location                                                               : 489192, 123362
+Type                                                                          : boundary
+Behaviour                                                                     : along
+Description                                                                   : NW edge of field 75
+Outflow location                                                              :
+
+Inflow location                                                               : 489164, 123326
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : out of blind pit on NW edge of field 75
+Outflow location                                                              : 489156, 123306
+
+Inflow location                                                               : 489156, 123306
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : between field 75 and field 76
+Outflow location                                                              : 489117, 123208
+
+Inflow location                                                               : 489117, 123208
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : NW edge of field 76
+Outflow location                                                              : 489100, 123189
+
+Inflow location                                                               : 489100, 123189
+Type                                                                          : road
+Behaviour                                                                     : along
+Description                                                                   : S via Dodsley Lane (north part)
+Outflow location                                                              :
+
+Inflow location                                                               : 488952, 122086
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : into stream
+Outflow location                                                              : 488931, 122066
 
 
 # FIELD 73
-Inflow location                                                               : 489392.5, 123447.5
+Inflow location                                                               : 489398, 123452
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : S edge of 73
-Outflow location                                                              : 489392.0, 123443.0
+Description                                                                   : SW edge of field 73
+Outflow location                                                              : 489397, 123451
+
+Inflow location                                                               : 489397, 123451
+Type                                                                          : path
+Behaviour                                                                     : across
+Description                                                                   : Unmetalled track to Winters Lane
+Outflow location                                                              : 489396, 123450
+
+Inflow location                                                               : 489396, 123450
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : NE edge of field 75
+Outflow location                                                              : 489388, 123444
+
 
 
 # FIELD 77
-Inflow location                                                               : 489617.5, 122812.5
+Inflow location                                                               : 489617, 122812
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : S edge of 77
-Outflow location                                                              : 489617.5, 122803.0
+Outflow location                                                              : 489617, 122803
 
-Inflow location                                                               : 489602.5, 122677.5
-Type                                                                          : road
-Behaviour                                                                     : along
-Description                                                                   : Glaziers Lane
-Outflow location                                                              : 
-
-Inflow location                                                               : 489972.5, 121916.5
+Inflow location                                                               : 489972, 121916
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : SE edge of 79
-Outflow location                                                              : 489972.5, 121898.0
+Outflow location                                                              : 489972, 121898
+
+Inflow location                                                               : 489602, 122682
+Type                                                                          : road
+Behaviour                                                                     : along
+Description                                                                   : Glaziers Lane
+Outflow location                                                              :
+
+
 
 
 END OF FIELD OBSERVATIONS =============================================================================================
-
-

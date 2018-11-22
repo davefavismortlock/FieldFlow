@@ -29,15 +29,15 @@ Output shapefile for flow lines (no extension)                                : 
 Style file (with extension, blank for default style)                          : ff_flow.qml
 Transparency for flow lines (0-100)                                           : 0
 
-Width of window (pixels)                                                      : 1000
+Width of window (pixels)                                                      : 850
 Height of window (pixels)                                                     : 1150
 Initial magnification                                                         : 1.0
-   
+
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
-Coordinates of SW corner of area displayed                                    : 488410, 121400
-Coordinates of NE corner of area displayed                                    : 490500, 124400
- 
+Coordinates of SW corner of area displayed                                    : 488410, 120900
+Coordinates of NE corner of area displayed                                    : 490500, 124300
+
 # Vector layers =======================================================================================================
 
 # Field boundaries REQUIRED ===========================================================================================
@@ -57,7 +57,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Category                                                                      : INPUT_WATER_NETWORK   
+Category                                                                      : INPUT_WATER_NETWORK
 
 # OS Mastermap Water Network file
 File for vector water network (with extension)                                : MasterMap Water Network_1718110/su/SU9020.gml|layerid=1
@@ -66,7 +66,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Category                                                                      : INPUT_WATER_NETWORK   
+Category                                                                      : INPUT_WATER_NETWORK
 
 # Roads REQUIRED ======================================================================================================
 File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su82se_Road_Centreline.shp
@@ -75,7 +75,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : OS VectorMap Local/su/roads.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_ROAD_NETWORK   
+Category                                                                      : INPUT_ROAD_NETWORK
 
 # Paths REQUIRED ======================================================================================================
 File for vector path network (with extension)                                 : selected_paths.shp
@@ -84,7 +84,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : paths.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_PATH_NETWORK   
+Category                                                                      : INPUT_PATH_NETWORK
 
 # Observed flow lines OPTIONAL ========================================================================================
 File for observed flow lines (with extension)                                 : Connectivity/flow_lines_c.sqlite

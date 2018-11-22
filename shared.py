@@ -8,10 +8,6 @@ EOF_VECTOR_DATA               = "END OF VECTOR LAYERS"
 EOF_RASTER_DATA               = "END OF RASTER LAYERS"
 EOF_FIELD_OBSERVATIONS        = "END OF FIELD OBSERVATIONS"
 
-NEAR_POINT                    = 0
-FIRST_POINT                   = 1
-LAST_POINT                    = 2
-
 PREV_POINT                    = 0
 THIS_POINT                    = 1
 POST_POINT                    = 2
@@ -105,7 +101,7 @@ MARKER_AT_STREAM              = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "17 November 2018 version"
+progVer = "22 November 2018 version"
 runTitle = ""
 
 considerFieldObservations = ""

@@ -348,8 +348,8 @@ def writeVector(layer, fileName, CRS):
 # Adds a point to the flow marker points vector layer
 #
 #======================================================================================================================
-def addFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
-   # print("addFlowMarkerPoint " + desc + " " + displayOS(thisPoint.x(), thisPoint.y()))
+def AddFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
+   # print("AddFlowMarkerPoint " + desc + " " + displayOS(thisPoint.x(), thisPoint.y()))
    feature = QgsFeature()
    feature.setGeometry(QgsGeometry.fromPoint(thisPoint))
 
@@ -373,7 +373,7 @@ def addFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
 # Adds a line to the flow lines vector layer
 #
 #======================================================================================================================
-def addFlowLine(lineStartPoint, lineEndPoint, desc, fieldCode, elev):
+def AddFlowLine(lineStartPoint, lineEndPoint, desc, fieldCode, elev):
    feature = QgsFeature()
    feature.setGeometry(QgsGeometry.fromPolyline([lineStartPoint, lineEndPoint]))
 

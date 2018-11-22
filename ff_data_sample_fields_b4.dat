@@ -32,12 +32,12 @@ Transparency for flow lines (0-100)                                           : 
 Width of window (pixels)                                                      : 900
 Height of window (pixels)                                                     : 1150
 Initial magnification                                                         : 1.0
-   
+
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
 Coordinates of SW corner of area displayed                                    : 485300, 122500
 Coordinates of NE corner of area displayed                                    : 486900, 124200
- 
+
 # Vector layers =======================================================================================================
 
 # Field boundaries REQUIRED ===========================================================================================
@@ -57,7 +57,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Category                                                                      : INPUT_WATER_NETWORK   
+Category                                                                      : INPUT_WATER_NETWORK
 
 # Roads REQUIRED ======================================================================================================
 File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su82se_Road_Centreline.shp
@@ -66,7 +66,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : OS VectorMap Local/su/roads.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_ROAD_NETWORK   
+Category                                                                      : INPUT_ROAD_NETWORK
 
 # Paths REQUIRED ======================================================================================================
 File for vector path network (with extension)                                 : selected_paths.shp
@@ -75,7 +75,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : paths.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_PATH_NETWORK   
+Category                                                                      : INPUT_PATH_NETWORK
 
 # Observed flow lines OPTIONAL ========================================================================================
 File for observed flow lines (with extension)                                 : Connectivity/flow_lines_b.sqlite
@@ -167,13 +167,67 @@ Inflow location                                                               : 
 Type                                                                          : dummy
 Behaviour                                                                     : dummy
 Description                                                                   : out of blind pit in field 48
-Outflow location                                                              : 486028, 123417
+Outflow location                                                              : 486021, 123415
 
-Inflow location                                                               : 486028, 123417
+Inflow location                                                               : 486021, 123415
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : negotiate Stedham Lane junction (1)
+Outflow location                                                              : 486009, 123403
+
+Inflow location                                                               : 486009, 123403
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : negotiate Stedham Lane junction (2)
+Outflow location                                                              : 486016, 123339
+
+Inflow location                                                               : 486016, 123339
 Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : going WSW along Stedham Lane
-Outflow location                                                              : 
+Description                                                                   : going WSW along Stedham Lane (1)
+Outflow location                                                              :
+
+Inflow location                                                               : 486104, 123167
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : out of blind pit (1) along Stedham Lane
+Outflow location                                                              : 486119, 123137
+
+Inflow location                                                               : 486119, 123137
+Type                                                                          : road
+Behaviour                                                                     : along
+Description                                                                   : going WSW along Stedham Lane (2)
+Outflow location                                                              :
+
+Inflow location                                                               : 486134, 123101
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : out of blind pit (2) along Stedham Lane
+Outflow location                                                              : 486152, 122968
+
+Inflow location                                                               : 486152, 122968
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : going WSW along Stedham Lane (3)
+Outflow location                                                              : 486160, 122860
+
+Inflow location                                                               : 486160, 122860
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : going WSW along Stedham Lane (4)
+Outflow location                                                              : 486164, 122740
+
+Inflow location                                                               : 486164, 122740
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : going WSW along Stedham Lane (5)
+Outflow location                                                              : 486209, 122656
+
+Inflow location                                                               : 486209, 122656
+Type                                                                          : road
+Behaviour                                                                     : along
+Description                                                                   : going WSW along Stedham Lane (6)
+Outflow location                                                              :
 
 
 # FIELD 44
@@ -187,7 +241,7 @@ Inflow location                                                               : 
 Type                                                                          : path
 Behaviour                                                                     : along
 Description                                                                   : to east of Talbots building
-Outflow location                                                              : 
+Outflow location                                                              :
 
 Inflow location                                                               : 485789, 123617
 Type                                                                          : path
@@ -205,13 +259,20 @@ Inflow location                                                               : 
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : at west edge of field 44
-Outflow location                                                              : 485710, 123509
+Outflow location                                                              : 485707, 123513
 
-Inflow location                                                               : 485710, 123509
-Type                                                                          : road 
+Inflow location                                                               : 485707, 123513
+Type                                                                          : road
 Behaviour                                                                     : along
 Description                                                                   : Stanwater Lane
 Outflow location                                                              :
+
+Inflow location                                                               : 485559,123477
+Type                                                                          : dummy
+Behaviour                                                                     : dummy
+Description                                                                   : From road to stream
+Outflow location                                                              : 485533,123468
+
 
 
 # FIELD 47
