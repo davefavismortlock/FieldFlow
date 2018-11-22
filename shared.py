@@ -105,7 +105,7 @@ progVer = "22 November 2018 version"
 runTitle = ""
 
 considerFieldObservations = ""
-fillBlindPits = ""
+FillBlindPits = ""
 considerDitches = ""
 considerFieldBoundaries = ""
 considerRoads = ""

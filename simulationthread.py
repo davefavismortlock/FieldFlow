@@ -6,10 +6,10 @@ from qgis.core import QgsPoint, QgsFeatureRequest
 
 import shared
 from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_BLIND_PIT, MARKER_AT_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_ROAD, MARKER_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST
-from layers import AddFlowMarkerPoint, AddFlowLine, writeVector
-from simulate import getHighestPointOnFieldBoundary, FlowViaFieldObservation, flowHitFieldBoundary, fillBlindPit, FlowAlongVectorRoad
+from layers import AddFlowMarkerPoint, AddFlowLine, WriteVector
+from simulate import GetHighestPointOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoad, FlowAlongVectorPath
 from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
-from utils import getRasterElev, centroidOfContainingDEMCell, displayOS
+from utils import GetRasterElev, GetCentroidOfContainingDEMCell, DisplayOS
 
 
 #======================================================================================================================
@@ -89,7 +89,7 @@ class SimulationThread(QThread):
                   #shared.fpOut.write(str(fieldCode) + "\n")
 
                   # Get the coords of the centroid of the pixel which contains the highest point on the boundary of this field (including in-between points), and also the elevation of this point
-                  xBoundary, yBoundary, _boundaryElev = getHighestPointOnFieldBoundary(fieldBoundary)
+                  xBoundary, yBoundary, _boundaryElev = GetHighestPointOnFieldBoundary(fieldBoundary)
 
                   # Is it valid?
                   if (xBoundary == -1) and (yBoundary == -1):
@@ -106,7 +106,7 @@ class SimulationThread(QThread):
                   # OK, get the elevation of the field's centroid
                   xCentroid = centroidPoint.x()
                   yCentroid = centroidPoint.y()
-                  #centroidElev = getRasterElev(xCentroid, yCentroid)
+                  #centroidElev = GetRasterElev(xCentroid, yCentroid)
 
                   # Show the centroid on the map
                   #AddFlowMarkerPoint(centroidPoint, MARKER_CENTROID, fieldCode, centroidElev)
@@ -116,7 +116,7 @@ class SimulationThread(QThread):
                   xFlowStart = (xBoundary * shared.weightBoundary) + (xCentroid * weightCentroid)
                   yFlowStart = (yBoundary * shared.weightBoundary) + (yCentroid * weightCentroid)
 
-                  flowStartElev = getRasterElev(xFlowStart, yFlowStart)
+                  flowStartElev = GetRasterElev(xFlowStart, yFlowStart)
 
                   # Save the flow start point for this field
                   shared.flowStartPoints.append([xFlowStart, yFlowStart, flowStartElev, fieldCode])
@@ -124,7 +124,7 @@ class SimulationThread(QThread):
 
                   # And show it on the map
                   AddFlowMarkerPoint(QgsPoint(xFlowStart, yFlowStart), fieldCode + MARKER_FLOW_START_POINT, fieldCode, flowStartElev)
-                  #shared.fpOut.write("Flow from field " + fieldCode + " begins at " + displayOS(xFlowStart, yFlowStart) + "\n")
+                  #shared.fpOut.write("Flow from field " + fieldCode + " begins at " + DisplayOS(xFlowStart, yFlowStart) + "\n")
 
                   # Refresh the display
                   self.refresh.emit()
@@ -189,7 +189,7 @@ class SimulationThread(QThread):
 
          shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
          shared.fpOut.write("SIMULATED FLOW FROM FIELD " + str(fieldCode) + "\n\n")
-         shared.fpOut.write("Flow from field " + str(fieldCode) + " starts at " + displayOS(x, y) + "\n")
+         shared.fpOut.write("Flow from field " + str(fieldCode) + " starts at " + DisplayOS(x, y) + "\n")
          shared.thisStartPoint += 1
 
          nStepsAfterStart = 0
@@ -208,7 +208,7 @@ class SimulationThread(QThread):
             # Refresh the display
             self.refresh.emit()
 
-            #print("thisPoint = " + displayOS(thisPoint.x(), thisPoint.y()))
+            #print("thisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()))
 
             # Safety check
             nStepsAfterStart += 1
@@ -239,7 +239,7 @@ class SimulationThread(QThread):
             if adjX != -1:
                # There is an adjacent flow line, so merge the two and finish with this flow line
                AddFlowLine(thisPoint, QgsPoint(adjX, adjY), MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, elev)
-               shared.fpOut.write("Flow from field " + fieldCode + " hit flow from field " + str(hitFieldFlowFrom) + " at " + displayOS(adjX, adjY) + ", so stopped tracing flow from this field\n")
+               shared.fpOut.write("Flow from field " + fieldCode + " hit flow from field " + str(hitFieldFlowFrom) + " at " + DisplayOS(adjX, adjY) + ", so stopped tracing flow from this field\n")
 
                # Move on to the next field
                self.refresh.emit()
@@ -248,7 +248,7 @@ class SimulationThread(QThread):
             #=============================================================================================================
             # Flow did not merge with a pre-existing flowline. Make sure that this point is at the centroid of a DEM cell
             #=============================================================================================================
-            tempPoint = centroidOfContainingDEMCell(thisPoint.x(), thisPoint.y())
+            tempPoint = GetCentroidOfContainingDEMCell(thisPoint.x(), thisPoint.y())
             if not (inBlindPit or viaLEAndHitBlindPit or viaLEAndHitStream) and tempPoint != thisPoint:
                # We had to shift the location slightly, so show a connecting line
                AddFlowLine(thisPoint, tempPoint, FLOW_ADJUSTMENT_DUMMY, fieldCode, -1)
@@ -272,14 +272,14 @@ class SimulationThread(QThread):
 
                      # And try to flow along this road
                      rtn, point = FlowAlongVectorRoad(-1, fieldCode, thisPoint)
-                     shared.fpOut.write("\tFinished flow along road at " + displayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
+                     shared.fpOut.write("\tFinished flow along road at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
                      if rtn == -1:
                         # A problem! Exit the program
                         exit (-1)
 
                      elif rtn == 1:
                         # Flow has hit a blind pit
-                        shared.fpOut.write("Flow from field " + str(fieldCode) + " hit a blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " while flowing along a road\n*** Please add a field observation\n")
+                        shared.fpOut.write("Flow from field " + str(fieldCode) + " hit a blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " while flowing along a road\n*** Please add a field observation\n")
 
                         # Move on to next field
                         self.refresh.emit()
@@ -327,14 +327,14 @@ class SimulationThread(QThread):
 
                      # And try to flow along this path
                      rtn, point = FlowAlongVectorPath(-1, fieldCode, thisPoint)
-                     shared.fpOut.write("\tFinished flow along path/track at " + displayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
+                     shared.fpOut.write("\tFinished flow along path/track at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
                      if rtn == -1:
                         # A problem! Exit the program
                         exit (-1)
 
                      elif rtn == 1:
                         # Flow has hit a blind pit
-                        shared.fpOut.write("Flow from field " + str(fieldCode) + " hit a blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " while flowing along a path/track\n*** Please add a field observation\n")
+                        shared.fpOut.write("Flow from field " + str(fieldCode) + " hit a blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " while flowing along a path/track\n*** Please add a field observation\n")
 
                         # Move on to next field
                         self.refresh.emit()
@@ -371,13 +371,13 @@ class SimulationThread(QThread):
                #==========================================================================================================
                # Search for a field observation of a landscape element near this point
                #==========================================================================================================
-               #shared.fpOut.write("Searching for field observations for flow from field " + str(fieldCode) + " near " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
+               #shared.fpOut.write("Searching for field observations for flow from field " + str(fieldCode) + " near " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
                indx = FindNearbyFieldObservation(thisPoint)
                if indx == -1:
                   # Did not find a field observation near this point
                   if viaLEAndHitBlindPit:
                      AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
-                     shared.fpOut.write("Flow from field " + str(fieldCode) + " ends at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n*** Please add a field observation\n")
+                     shared.fpOut.write("Flow from field " + str(fieldCode) + " ends at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Please add a field observation\n")
 
                      # Move on to next field
                      self.refresh.emit()
@@ -385,7 +385,7 @@ class SimulationThread(QThread):
 
                   if viaRoadAndHitStream or viaPathAndHitStream or viaLEAndHitStream:
                      AddFlowMarkerPoint(thisPoint, MARKER_AT_STREAM, fieldCode, -1)
-                     shared.fpOut.write("Flow from field " + str(fieldCode) + " hits a stream at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow enter the stream here?\n")
+                     shared.fpOut.write("Flow from field " + str(fieldCode) + " hits a stream at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow enter the stream here?\n")
 
                      # Move on to next field
                      self.refresh.emit()
@@ -408,7 +408,7 @@ class SimulationThread(QThread):
                   elif rtn == 1:
                      # Flow has passed through the field observation and then hit a blind pit, so we need another field observation. Set a switch and go round the loop once more, since we may have a field observation which relates to this
                      #AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
-                     #shared.fpOut.write("XXXX " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
+                     #shared.fpOut.write("XXXX " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
                      viaLEAndHitBlindPit = True
 
                   elif rtn == 2:
@@ -500,7 +500,7 @@ class SimulationThread(QThread):
                # Has flow hit a field boundary?
                #==========================================================================================================
                if hitBoundary:
-                  shared.fpOut.write("Flow from field " + fieldCode + " hits the boundary of field " + hitFieldCode + " at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow go through this boundary? Please add a field observation\n")
+                  shared.fpOut.write("Flow from field " + fieldCode + " hits the boundary of field " + hitFieldCode + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow go through this boundary? Please add a field observation\n")
 
                   # Move to next field
                   self.refresh.emit()
@@ -510,22 +510,22 @@ class SimulationThread(QThread):
             # End of considering-field-observations section
             #=============================================================================================================
             if inBlindPit:
-               if shared.fillBlindPits:
+               if shared.FillBlindPits:
                   AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
 
-                  newPoint, flowDepth = fillBlindPit(thisPoint, fieldCode)
+                  newPoint, flowDepth = FillBlindPit(thisPoint, fieldCode)
                   if newPoint == -1:
                      # Could not find and overflow point
-                     print("Flow from field " + fieldCode + ", no overflow point found from blind pit at " + displayOS(thisPoint.x(), thisPoint.y()))
-                     shared.fpOut.write("Flow from field " + fieldCode + ", no overflow point found from blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
+                     print("Flow from field " + fieldCode + ", no overflow point found from blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()))
+                     shared.fpOut.write("Flow from field " + fieldCode + ", no overflow point found from blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
                      # Move on to next field
                      self.refresh.emit()
                      break
 
                   # We have an overflow point
-                  #print("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m")
-                  #shared.fpOut.write("For flow from field " + fieldCode + ", filled blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m\n")
+                  #print("For flow from field " + fieldCode + ", filled blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m")
+                  #shared.fpOut.write("For flow from field " + fieldCode + ", filled blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " with flow depth " + str(flowDepth) + " m\n")
 
                   if flowDepth > shared.blindPitFillMaxDepth:
                      shared.blindPitFillMaxDepth = flowDepth
@@ -543,7 +543,7 @@ class SimulationThread(QThread):
                else:
                   AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
 
-                  shared.fpOut.write("Flow from field " + fieldCode + " hits a blind pit at " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
+                  shared.fpOut.write("Flow from field " + fieldCode + " hits a blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
                   if shared.considerFieldObservations:
                      shared.fpOut.write("*** Please add a field observation\n")
@@ -556,11 +556,11 @@ class SimulationThread(QThread):
             # Route flow down the steepest slope
             #=============================================================================================================
             # Get this cell's elevation
-            elev = getRasterElev(thisPoint.x(), thisPoint.y())
+            elev = GetRasterElev(thisPoint.x(), thisPoint.y())
 
             # Search for the adjacent raster cell with the steepest here-to-there slope, and get its centroid
             adjPoint, _adjElev = FindSteepestAdjacent(thisPoint, elev)
-            #shared.fpOut.write("Steepest adjacent is " + displayOS(adjPoint.x(), adjPoint.y()) + "\n")
+            #shared.fpOut.write("Steepest adjacent is " + DisplayOS(adjPoint.x(), adjPoint.y()) + "\n")
 
             # Is this adjacent point in a blind pit?
             if adjPoint.x() == -1:
@@ -572,10 +572,10 @@ class SimulationThread(QThread):
 
             if shared.considerFieldObservations:
                # If we are considering field observations: is there a field boundary between this point and the adjacent point?
-               hitBoundary, hitPoint, hitFieldCode = flowHitFieldBoundary(thisPoint, adjPoint, fieldCode)
+               hitBoundary, hitPoint, hitFieldCode = FlowHitFieldBoundary(thisPoint, adjPoint, fieldCode)
                if hitBoundary:
                   # Yes, flow hits a field boundary, we have set a switch
-                  shared.fpOut.write("Hit boundary at " + displayOS(hitPoint.x(), hitPoint.y()) + " which is between " + displayOS(thisPoint.x(), thisPoint.y()) + " and " + displayOS(adjPoint.x(), adjPoint.y()) + "\n")
+                  shared.fpOut.write("Hit boundary at " + DisplayOS(hitPoint.x(), hitPoint.y()) + " which is between " + DisplayOS(thisPoint.x(), thisPoint.y()) + " and " + DisplayOS(adjPoint.x(), adjPoint.y()) + "\n")
 
                   AddFlowLine(thisPoint, hitPoint, FLOW_TO_FIELD_BOUNDARY, fieldCode, -1)
                   thisPoint = hitPoint
@@ -607,7 +607,7 @@ class SimulationThread(QThread):
       shared.outFlowLineLayer.updateExtents()
 
       # If we've filled blind pits, show max flow depth to fill any pit
-      if shared.fillBlindPits:
+      if shared.FillBlindPits:
          shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
          shared.fpOut.write("Area of filled blind pits = " + str(shared.blindPitFillArea * shared.resolutionOfDEM * shared.resolutionOfDEM) + " m2\n")
          shared.fpOut.write("Maximum flow depth to fill any blind pit = " + str(shared.blindPitFillMaxDepth) + " m\n")
@@ -619,10 +619,10 @@ class SimulationThread(QThread):
 
          for i in range(len(shared.fieldObservationFlowFrom)):
             if not i in shared.allFieldsFieldObsAlreadyFollowed:
-               printStr = str(i+1) + " " + shared.fieldObservationBehaviour[i] + " " + shared.fieldObservationCategory[i] + " " + shared.fieldObservationDescription[i] + " from " + displayOS(shared.fieldObservationFlowFrom[i].x(), shared.fieldObservationFlowFrom[i].y())
+               printStr = str(i+1) + " " + shared.fieldObservationBehaviour[i] + " " + shared.fieldObservationCategory[i] + " " + shared.fieldObservationDescription[i] + " from " + DisplayOS(shared.fieldObservationFlowFrom[i].x(), shared.fieldObservationFlowFrom[i].y())
                if shared.fieldObservationFlowTo[i]:
                   printStr += " to "
-                  printStr += displayOS(shared.fieldObservationFlowTo[i].x(), shared.fieldObservationFlowTo[i].y())
+                  printStr += DisplayOS(shared.fieldObservationFlowTo[i].x(), shared.fieldObservationFlowTo[i].y())
                printStr += "\n"
                shared.fpOut.write(printStr)
 
@@ -630,8 +630,8 @@ class SimulationThread(QThread):
       shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
       shared.fpOut.write("SAVING GIS FILES\n\n")
 
-      writeVector(shared.outFlowMarkerPointLayer, shared.outFileFlowMarkerPoints + ".shp", shared.externalCRS)
-      writeVector(shared.outFlowLineLayer, shared.outFileFlowLines + ".shp", shared.externalCRS)
+      WriteVector(shared.outFlowMarkerPointLayer, shared.outFileFlowMarkerPoints + ".shp", shared.externalCRS)
+      WriteVector(shared.outFlowLineLayer, shared.outFileFlowLines + ".shp", shared.externalCRS)
 
       shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
 

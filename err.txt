@@ -11,19 +11,19 @@ W:  6, 0: Unused INPUT_RASTER_BACKGROUND imported from shared (unused-import)
 W:  6, 0: Unused INPUT_PATH_NETWORK imported from shared (unused-import)
 ************* Module FieldFlow_model.searches
 W:209, 0: TODO make this a user setting (fixme)
-W:365, 0: TODO make this a user setting (fixme)
-W:496, 0: TODO make this a user setting (fixme)
-W:649, 0: TODO make this a user setting (fixme)
-C:405, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:536, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:696, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+W:363, 0: TODO make this a user setting (fixme)
+W:493, 0: TODO make this a user setting (fixme)
+W:646, 0: TODO make this a user setting (fixme)
+C:403, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:533, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:693, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
 ************* Module FieldFlow_model.simulate
-W:1287, 0: TODO make a user option (fixme)
+W:1383, 0: TODO make a user option (fixme)
 C: 35, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:326, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:657, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:1039,12: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:1143, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:338, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:763, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:1138,12: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:1242, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
 ************* Module FieldFlow_model.utils
 R:  1, 0: Similar lines in 2 files
 ==FieldFlow_model.simulate:64
@@ -41,8 +41,8 @@ R:  1, 0: Similar lines in 2 files
          # However some results are from a 'wrong' sheet (i.e. a sheet which does not contain this point), so ignore these results
          if elev != None: (duplicate-code)
 R:  1, 0: Similar lines in 2 files
-==FieldFlow_model.searches:481
-==FieldFlow_model.simulate:257
+==FieldFlow_model.searches:478
+==FieldFlow_model.simulate:270
    roadLayerFound = False
    for layerNum in range(len(shared.vectorInputLayersCategory)):
       if shared.vectorInputLayersCategory[layerNum] == INPUT_ROAD_NETWORK:
@@ -56,8 +56,8 @@ R:  1, 0: Similar lines in 2 files
       print(printStr)
  (duplicate-code)
 R:  1, 0: Similar lines in 2 files
-==FieldFlow_model.searches:350
-==FieldFlow_model.simulate:590
+==FieldFlow_model.searches:348
+==FieldFlow_model.simulate:695
    pathLayerFound = False
    for layerNum in range(len(shared.vectorInputLayersCategory)):
       if shared.vectorInputLayersCategory[layerNum] == INPUT_PATH_NETWORK:
@@ -70,9 +70,23 @@ R:  1, 0: Similar lines in 2 files
       shared.fpOut.write(printStr)
       print(printStr)
  (duplicate-code)
+R:  1, 0: Similar lines in 3 files
+==FieldFlow_model.searches:686
+==FieldFlow_model.simulate:331
+==FieldFlow_model.simulate:756
+      distToPoint.sort(key = lambda distPoint: distPoint[2])
+
+      #for n in range(len(distToPoint)):
+         #shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+
+      flowRouted = False
+      for n in range(len(distToPoint)):
+         # Go through this list of untravelled path segments till we find a suitable one
+         feature = distToPoint[n][0]
+         featID = feature.id() (duplicate-code)
 R:  1, 0: Similar lines in 2 files
-==FieldFlow_model.searches:506
-==FieldFlow_model.simulate:285
+==FieldFlow_model.searches:503
+==FieldFlow_model.simulate:296
    for roadSeg in features:
       # Is this road segment both close enough, and has not already been followed?
       geomSeg = roadSeg.geometry()
@@ -82,8 +96,8 @@ R:  1, 0: Similar lines in 2 files
       #shared.fpOut.write("segID = " + str(segID) + " distanceToSeg = " + str(distanceToSeg) + "\n")
  (duplicate-code)
 R:  1, 0: Similar lines in 2 files
-==FieldFlow_model.searches:375
-==FieldFlow_model.simulate:616
+==FieldFlow_model.searches:373
+==FieldFlow_model.simulate:721
    for pathSeg in features:
       # Is this path segment both close enough, and has not already been followed?
       geomSeg = pathSeg.geometry()
@@ -103,5 +117,5 @@ R:  1, 0: Similar lines in 2 files
          ySize = shared.rasterInputData[layerNum][1][2] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.89/10 (previous run: 9.87/10, +0.01)
+Your code has been rated at 9.89/10 (previous run: 9.83/10, +0.06)
 

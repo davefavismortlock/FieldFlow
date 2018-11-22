@@ -4,7 +4,7 @@ from qgis.core import QgsVector, QgsRectangle, QgsPoint
 
 import shared
 from shared import COMMENT1, COMMENT2, INPUT_FIELD_BOUNDARIES, INPUT_WATER_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_OBSERVED_FLOW_LINES, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_DUMMY, FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_LEAVE, FIELD_OBS_BEHAVIOUR_DUMMY, EOF_FIELD_OBSERVATIONS, EOF_VECTOR_DATA, EOF_RASTER_DATA
-from utils import displayOS
+from utils import DisplayOS
 
 #======================================================================================================================
 #
@@ -169,13 +169,13 @@ def readInput():
       elif dataLine == 4:
          # Fill blind pits?
          if shared.considerFieldObservations:
-            shared.fillBlindPits = False
+            shared.FillBlindPits = False
          else:
             tempStr = data.upper().strip()
             if tempStr == "Y":
-               shared.fillBlindPits = True
+               shared.FillBlindPits = True
             elif tempStr == "N":
-               shared.fillBlindPits = False
+               shared.FillBlindPits = False
             else:
                printStr = "ERROR: fill blind pits = " + tempStr + ", it must be Y or N\n"
                print(printStr)
@@ -467,7 +467,7 @@ def readInput():
             elif obsLine == 1:
                # Category
                if data not in shared.fieldObservationValidCategories:
-                  printStr = "ERROR: unknown field observation category '" + str(data) + "' in field observation at " + displayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y())
+                  printStr = "ERROR: unknown field observation category '" + str(data) + "' in field observation at " + DisplayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y())
                   print(printStr)
 
                   return -1
@@ -477,7 +477,7 @@ def readInput():
             elif obsLine == 2:
                # Behaviour
                if data not in shared.fieldObservationValidBehaviours:
-                  printStr = "ERROR: unknown field observation behaviour behaviour '" + str(data) + "' in field observation at " + displayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y())
+                  printStr = "ERROR: unknown field observation behaviour behaviour '" + str(data) + "' in field observation at " + DisplayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y())
                   print(printStr)
 
                   return -1

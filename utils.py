@@ -55,7 +55,7 @@ def extCRSToGridCRS(x, y, cellWidth, cellHeight, originX, originY):
 # Given a coord, calculates the coord of the centroid of the DEM cell which contains this coord (all ext CRS)
 #
 #======================================================================================================================
-def centroidOfContainingDEMCell(x, y):
+def GetCentroidOfContainingDEMCell(x, y):
    diffX = x - shared.xMinExtentDEM
    diffY = y - shared.yMinExtentDEM
    numXPixels = diffX // shared.cellWidthDEM       # Integer division
@@ -73,7 +73,7 @@ def centroidOfContainingDEMCell(x, y):
 # Displays an OS grid reference neatly
 #
 #======================================================================================================================
-def displayOS(x, y, rounding = True):
+def DisplayOS(x, y, rounding = True):
    if rounding:
       x = round(x * 2) / 2
       y = round(y * 2) / 2
@@ -99,7 +99,7 @@ def toSentenceCase(s):
 # Given two points and a spacing, returns a list with all points (with the given spacing) on the straight line which joins the points. The list includes both start and finish points
 #
 #======================================================================================================================
-def pointsOnLine(startPoint, endPoint, spacing):
+def GetPointsOnLine(startPoint, endPoint, spacing):
    # Safety check, in case the two points are identical (could happen due to rounding errors)
    if startPoint == endPoint:
       return []
@@ -136,7 +136,7 @@ def pointsOnLine(startPoint, endPoint, spacing):
 # Returns the elevation of a point from a raster layer
 #
 #======================================================================================================================
-def getRasterElev(x, y):
+def GetRasterElev(x, y):
    # pylint: disable=too-many-locals
 
    # Search all layers
@@ -177,7 +177,7 @@ def getRasterElev(x, y):
 # Returns the z cross-product of the angle at two intersecting lines: is +ve for one direction, -ve for the other
 #
 #======================================================================================================================
-def calcZCrossProduct(prevPoint, thisPoint, nextPoint):
+def CalcZCrossProduct(prevPoint, thisPoint, nextPoint):
    dx1 = thisPoint.x() - prevPoint.x()
    dy1 = thisPoint.y() - prevPoint.y()
    dx2 = nextPoint.x() - thisPoint.x()

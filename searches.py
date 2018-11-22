@@ -8,7 +8,7 @@ from qgis.core import NULL, QgsGeometry, QgsFeatureRequest, QgsPoint
 
 import shared
 from shared import INPUT_PATH_NETWORK, PATH_DESC, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, INPUT_WATER_NETWORK, OS_WATER_NETWORK_LOCAL_ID, OS_WATER_NETWORK_NAME, TARGET_RIVER, MARKER_ENTER_RIVER, FLOW_VIA_STREAM, OS_WATER_NETWORK_LEVEL, MARKER_ENTER_CULVERT, MARKER_ENTER_STREAM, OUTPUT_FIELD_CODE
-from utils import getRasterElev, displayOS
+from utils import GetRasterElev, DisplayOS
 from layers import AddFlowMarkerPoint, AddFlowLine
 
 
@@ -28,14 +28,14 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
 
    maxGradient = 0
 
-   #shared.fpOut.write(n, displayOS(thisPoint.x(), thisPoint.y()), thisElev)
+   #shared.fpOut.write(n, DisplayOS(thisPoint.x(), thisPoint.y()), thisElev)
 
    # N
    adjX = thisPoint.x()
    adjY = thisPoint.y() + shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
-   #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
+   #shared.fpOut.write(str(DisplayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
 
    gradient = (thisElev - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("N " + str(gradient) + "\n")
@@ -53,9 +53,9 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
    # NE
    adjX = thisPoint.x() + shared.resolutionOfDEM
    adjY = thisPoint.y() + shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
-   #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
+   #shared.fpOut.write(str(DisplayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
 
    gradient = (thisElev  - adjElev) / shared.distDiag
    #shared.fpOut.write("NE " + str(gradient) + "\n")
@@ -73,9 +73,9 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
    # E
    adjX = thisPoint.x() + shared.resolutionOfDEM
    adjY = thisPoint.y()
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
-   #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
+   #shared.fpOut.write(str(DisplayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
 
    gradient = (thisElev  - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("E " + str(gradient) + "\n")
@@ -93,9 +93,9 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
    # SE
    adjX = thisPoint.x() + shared.resolutionOfDEM
    adjY = thisPoint.y() - shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
-   #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
+   #shared.fpOut.write(str(DisplayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
 
    gradient = (thisElev  - adjElev) / shared.distDiag
    #shared.fpOut.write("SE " + str(gradient) + "\n")
@@ -113,9 +113,9 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
    # S
    adjX = thisPoint.x()
    adjY = thisPoint.y() - shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
-   #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
+   #shared.fpOut.write(str(DisplayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
 
    gradient = (thisElev  - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("S " + str(gradient) + "\n")
@@ -133,9 +133,9 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
    # SW
    adjX = thisPoint.x() - shared.resolutionOfDEM
    adjY = thisPoint.y() - shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
-   #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
+   #shared.fpOut.write(str(DisplayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
 
    gradient = (thisElev  - adjElev) / shared.distDiag
    #shared.fpOut.write("SW " + str(gradient) + "\n")
@@ -153,9 +153,9 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
    # W
    adjX = thisPoint.x() - shared.resolutionOfDEM
    adjY = thisPoint.y()
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
-   #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
+   #shared.fpOut.write(str(DisplayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
 
    gradient = (thisElev  - adjElev) / shared.resolutionOfDEM
    #shared.fpOut.write("W " + str(gradient) + "\n")
@@ -173,9 +173,9 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
    # NW
    adjX = thisPoint.x() - shared.resolutionOfDEM
    adjY = thisPoint.y() + shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
-   #shared.fpOut.write(str(displayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
+   #shared.fpOut.write(str(DisplayOS(adjX, adjY)) + " elev = " + str(adjElev) + "\n")
 
    gradient = (thisElev  - adjElev) / shared.distDiag
    #shared.fpOut.write("NW " + str(gradient) + "\n")
@@ -188,7 +188,7 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
             newAdjX = adjX
             newAdjY = adjY
             newAdjElev = adjElev
-            #shared.fpOut.write("New maxGradient = " + str(maxGradient) + " to " + displayOS(newAdjX, newAdjY) + "\n")
+            #shared.fpOut.write("New maxGradient = " + str(maxGradient) + " to " + DisplayOS(newAdjX, newAdjY) + "\n")
 
    return QgsPoint(newAdjX, newAdjY), newAdjElev
 #======================================================================================================================
@@ -202,7 +202,7 @@ def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
 def FindNearbyFlowLine(thisPoint):
    # pylint: disable=too-many-locals
 
-   #shared.fpOut.write("Entered FindNearbyFlowLine() at point " + displayOS(thisPoint.x(), thisPoint.y()) + "\n")
+   #shared.fpOut.write("Entered FindNearbyFlowLine() at point " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
    #layerNum = -1
    geomThisPoint = QgsGeometry.fromPoint(thisPoint)
 
@@ -226,9 +226,9 @@ def FindNearbyFlowLine(thisPoint):
       #geom = flowLineSeg.geometry()
       #print("Geom: " + str(geom.wkbType()))
       #line = geom.asPolyline()
-      #print("For point " + displayOS(thisPoint.x(), thisPoint.y()) + ", nearby line segment is from ")
+      #print("For point " + DisplayOS(thisPoint.x(), thisPoint.y()) + ", nearby line segment is from ")
       #for point in line:
-         #print(displayOS(point.x(), point.y()))
+         #print(DisplayOS(point.x(), point.y()))
 
       # Is this flow line segment close enough?
       geomSeg = flowLineSeg.geometry()
@@ -255,7 +255,7 @@ def FindNearbyFlowLine(thisPoint):
    distToPoint.sort(key = lambda distPoint: distPoint[2])
 
    #for n in range(len(distToPoint)):
-      #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
+      #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
 
    featIDTried = []
    for flowLineSeg in distToPoint:
@@ -271,7 +271,7 @@ def FindNearbyFlowLine(thisPoint):
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
          nearPoint, _numNearpoint, _beforeNearpoint, _afterNearpoint, sqrDist = geomFeat.closestVertex(flowLineSeg[1])
 
-         shared.fpOut.write("At " + displayOS(flowLineSeg[1].x(), flowLineSeg[1].y()) + ", flow line stream segment '" + str(featID) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
+         shared.fpOut.write("At " + DisplayOS(flowLineSeg[1].x(), flowLineSeg[1].y()) + ", flow line stream segment '" + str(featID) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
 
          return nearPoint.x(), nearPoint.y(), flowLineSeg[3]
 
@@ -341,7 +341,7 @@ def FindNearbyFlowLine(thisPoint):
 def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
    # pylint: disable=too-many-locals
 
-   #shared.fpOut.write("\tEntered FindNearbyPath at point " + displayOS(point.x(), point.y()))
+   #shared.fpOut.write("\tEntered FindNearbyPath at point " + DisplayOS(point.x(), point.y()))
    layerNum = -1
    geomPoint = QgsGeometry.fromPoint(point)
 
@@ -397,7 +397,7 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
    distToPoint.sort(key = lambda distPoint: distPoint[2])
 
    #for n in range(len(distToPoint)):
-      #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+      #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
    featIDTried = []
    for n in range(len(distToPoint)):
@@ -418,10 +418,10 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
 #         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
 
-         #shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this path? Please add a field observation\n")
+         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this path? Please add a field observation\n")
 
          if not alreadyAlongPath:
-            shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled path/track segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path/track? Please add a field observation\n")
+            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path/track segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path/track? Please add a field observation\n")
 
    return 1
 #======================================================================================================================
@@ -446,7 +446,7 @@ def FindNearbyFieldObservation(foundPoint):
    yMin = foundPoint.y() - shared.searchDist
    yMax = foundPoint.y() + shared.searchDist
 
-   #shared.fpOut.write("Searching for field observations between " + displayOS(xMin, yMin) + " and " + displayOS(xMax, yMax))
+   #shared.fpOut.write("Searching for field observations between " + DisplayOS(xMin, yMin) + " and " + DisplayOS(xMax, yMax))
 
    for indx in range(numObs):
       if indx in shared.thisFieldFieldObsAlreadyFollowed:
@@ -456,7 +456,7 @@ def FindNearbyFieldObservation(foundPoint):
       yObs = shared.fieldObservationFlowFrom[indx].y()
 
       if xMin < xObs < xMax and yMin < yObs < yMax:
-         shared.fpOut.write("Field observation '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' found at " + displayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()) + "\n")
+         shared.fpOut.write("Field observation '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' found at " + DisplayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()) + "\n")
 
          return indx
    return -1
@@ -471,7 +471,7 @@ def FindNearbyFieldObservation(foundPoint):
 def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
    # pylint: disable=too-many-locals
 
-   #shared.fpOut.write("\tEntered FindNearbyRoad at point " + displayOS(point.x(), point.y()))
+   #shared.fpOut.write("\tEntered FindNearbyRoad at point " + DisplayOS(point.x(), point.y()))
    layerNum = -1
    geomPoint = QgsGeometry.fromPoint(point)
 
@@ -527,7 +527,7 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
    distToPoint.sort(key = lambda distPoint: distPoint[2])
 
    #for n in range(len(distToPoint)):
-      #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+      #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
    featIDTried = []
    for n in range(len(distToPoint)):
@@ -551,10 +551,10 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
 #         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
 
-         #shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
+         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
 
          if not alreadyAlongRoad:
-            shared.fpOut.write("At " + displayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
+            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
 
    return 1
 #======================================================================================================================
@@ -604,7 +604,7 @@ def FindSegmentIntersectionWithStream(featGeom):
          geomIntersect = featGeom.intersection(geomStreamSeg)
 
          intersectPoint = geomIntersect.asPoint()
-         #print("intersectPoint = " + displayOS(intersectPoint.x(), intersectPoint.y()))
+         #print("intersectPoint = " + DisplayOS(intersectPoint.x(), intersectPoint.y()))
 
          intersectPoints.append(intersectPoint)
 
@@ -622,7 +622,7 @@ def FindNearbyStream(point, flowFieldCode):
    # pylint: disable=too-many-branches
    # pylint: disable=too-many-statements
 
-   #shared.fpOut.write("Entered FindNearbyStream at point " + displayOS(point.x(), point.y()))
+   #shared.fpOut.write("Entered FindNearbyStream at point " + DisplayOS(point.x(), point.y()))
    layerNum = -1
    geomPoint = QgsGeometry.fromPoint(point)
 
@@ -650,7 +650,7 @@ def FindNearbyStream(point, flowFieldCode):
    #inStream = False
    while True:
       # Find the nearest stream segments
-      #shared.fpOut.write("Start of loop: " + displayOS(point.x(), point.y()))
+      #shared.fpOut.write("Start of loop: " + DisplayOS(point.x(), point.y()))
       nearestIDs = shared.vectorInputIndex[layerNum].nearestNeighbor(point, numberToSearchFor)
       request = QgsFeatureRequest().setFilterFids(nearestIDs)
       features = shared.vectorInputLayers[layerNum].getFeatures(request)
@@ -681,13 +681,13 @@ def FindNearbyStream(point, flowFieldCode):
 
       # OK we have some suitable stream segments
       #for n in range(len(distToPoint)):
-         #shared.fpOut.write("Before " + str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
+         #shared.fpOut.write("Before " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
 
       # Sort the list of untravelled stream segments, shortest distance first
       distToPoint.sort(key = lambda distPoint: distPoint[2])
 
       #for n in range(len(distToPoint)):
-         #print"After " + (str(n) + " " + str(distToPoint[n][0].id()) + " " + displayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
+         #print"After " + (str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
 
       flowRouted = False
       for n in range(len(distToPoint)):
@@ -702,7 +702,7 @@ def FindNearbyStream(point, flowFieldCode):
          streamName = feature[OS_WATER_NETWORK_NAME]
          if streamName != NULL and streamName.upper().find(TARGET_RIVER) >= 0:
             # Yes, flow has entered the Rother
-            shared.fpOut.write("Flow from field " + flowFieldCode + " enters the River Rother at " + displayOS(point.x(), point.y()) + "\n")
+            shared.fpOut.write("Flow from field " + flowFieldCode + " enters the River Rother at " + DisplayOS(point.x(), point.y()) + "\n")
             AddFlowMarkerPoint(point, MARKER_ENTER_RIVER, flowFieldCode, -1)
 
             # We are done here
@@ -724,11 +724,11 @@ def FindNearbyStream(point, flowFieldCode):
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
          nearPoint, numNearpoint, _beforeNearpoint, _afterNearpoint, _sqrDist = geomFeat.closestVertex(distToPoint[n][1])
 
-         #shared.fpOut.write("At " + displayOS(point.x(), point.y() + ", an untravelled stream segment " + str(localID) + " found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away"))
+         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y() + ", an untravelled stream segment " + str(localID) + " found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away"))
 
-         #shared.fpOut.write("\tFirst point of stream segment is " + displayOS(firstPoint.x(), firstPoint.y()))
-         #shared.fpOut.write("\tNearest point of stream segment is " + displayOS(nearPoint.x(), nearPoint.y()))
-         #shared.fpOut.write("\tLast point of stream segment is " + displayOS(lastPoint.x(), lastPoint.y()))
+         #shared.fpOut.write("\tFirst point of stream segment is " + DisplayOS(firstPoint.x(), firstPoint.y()))
+         #shared.fpOut.write("\tNearest point of stream segment is " + DisplayOS(nearPoint.x(), nearPoint.y()))
+         #shared.fpOut.write("\tLast point of stream segment is " + DisplayOS(lastPoint.x(), lastPoint.y()))
 
          # Check the flow direction
          flowDirection = feature["flowDirection"]
@@ -784,7 +784,7 @@ def FindNearbyStream(point, flowFieldCode):
             if streamName == NULL:
                streamName = "stream"
 
-         shared.fpOut.write("Flow from field " + flowFieldCode + " enters the OS " + streamName + " segment " + str(localID) + " at " + displayOS(point.x(), point.y()) + " and leaves it at " + displayOS(lastPoint.x(), lastPoint.y()) + "\n")
+         shared.fpOut.write("Flow from field " + flowFieldCode + " enters the OS " + streamName + " segment " + str(localID) + " at " + DisplayOS(point.x(), point.y()) + " and leaves it at " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
          #shared.fpOut.write("======")
 
          AddFlowMarkerPoint(point, typeName, flowFieldCode, -1)
@@ -844,7 +844,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
    # N
    adjX = thisPoint.x()
    adjY = thisPoint.y() + shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
       newPoint = QgsPoint(adjX, adjY)
@@ -854,7 +854,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
    # NE
    adjX = thisPoint.x() + shared.resolutionOfDEM
    adjY = thisPoint.y() + shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
       newPoint = QgsPoint(adjX, adjY)
@@ -864,7 +864,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
    # E
    adjX = thisPoint.x() + shared.resolutionOfDEM
    adjY = thisPoint.y()
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
       newPoint = QgsPoint(adjX, adjY)
@@ -874,7 +874,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
    # SE
    adjX = thisPoint.x() + shared.resolutionOfDEM
    adjY = thisPoint.y() - shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
       newPoint = QgsPoint(adjX, adjY)
@@ -884,7 +884,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
    # S
    adjX = thisPoint.x()
    adjY = thisPoint.y() - shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
       newPoint = QgsPoint(adjX, adjY)
@@ -894,7 +894,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
    # SW
    adjX = thisPoint.x() - shared.resolutionOfDEM
    adjY = thisPoint.y() - shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
       newPoint = QgsPoint(adjX, adjY)
@@ -904,7 +904,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
    # W
    adjX = thisPoint.x() - shared.resolutionOfDEM
    adjY = thisPoint.y()
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
       newPoint = QgsPoint(adjX, adjY)
@@ -914,7 +914,7 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
    # NW
    adjX = thisPoint.x() - shared.resolutionOfDEM
    adjY = thisPoint.y() + shared.resolutionOfDEM
-   adjElev = getRasterElev(adjX, adjY)
+   adjElev = GetRasterElev(adjX, adjY)
 
    if adjElev <= topElev:
       newPoint = QgsPoint(adjX, adjY)

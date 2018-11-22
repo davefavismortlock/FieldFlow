@@ -6,7 +6,7 @@ from PyQt4.QtCore import QFileInfo     #, QVariant
 
 import shared
 from shared import OUTPUT_TYPE, OUTPUT_FIELD_CODE, OUTPUT_ELEVATION
-from utils import toSentenceCase #, displayOS
+from utils import toSentenceCase #, DisplayOS
 
 
 #======================================================================================================================
@@ -329,7 +329,7 @@ def createVector(initString, title, fieldDefn, style, transparency):
 # Writes a vector layer as a shapefile
 #
 #======================================================================================================================
-def writeVector(layer, fileName, CRS):
+def WriteVector(layer, fileName, CRS):
    error = QgsVectorFileWriter.writeAsVectorFormat(layer, fileName, CRS, None, "ESRI Shapefile")
    if error != QgsVectorFileWriter.NoError:
       printStr = "ERROR: could not create '" + fileName + "'\n"
@@ -349,7 +349,7 @@ def writeVector(layer, fileName, CRS):
 #
 #======================================================================================================================
 def AddFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
-   # print("AddFlowMarkerPoint " + desc + " " + displayOS(thisPoint.x(), thisPoint.y()))
+   # print("AddFlowMarkerPoint " + desc + " " + DisplayOS(thisPoint.x(), thisPoint.y()))
    feature = QgsFeature()
    feature.setGeometry(QgsGeometry.fromPoint(thisPoint))
 
