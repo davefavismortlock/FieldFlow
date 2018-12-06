@@ -14,35 +14,27 @@ W:209, 0: TODO make this a user setting (fixme)
 W:363, 0: TODO make this a user setting (fixme)
 W:493, 0: TODO make this a user setting (fixme)
 W:646, 0: TODO make this a user setting (fixme)
-C:403, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:533, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:693, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
 ************* Module FieldFlow_model.simulate
-W:1383, 0: TODO make a user option (fixme)
-C: 35, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:338, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:763, 6: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:1138,12: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:1242, 3: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+W:1378, 0: TODO make a user option (fixme)
 ************* Module FieldFlow_model.utils
 R:  1, 0: Similar lines in 2 files
-==FieldFlow_model.simulate:64
+==FieldFlow_model.simulate:60
 ==FieldFlow_model.utils:156
-         error = result.error()
-         if not error.isEmpty() or not result.isValid():
-            shared.fpOut.write(error.summary())
-            return -1, -1, -1
+                  error = result.error()
+                  if not error.isEmpty() or not result.isValid():
+                     shared.fpOut.write(error.summary())
+                     return -1, -1, -1
 
-         # We have a valid result, so get the elevation (is the first in the list, since we have only a single band)
-         value = result.results()
-         elevPair = value.items()
-         elev = elevPair[0][1]
+                  # We have a valid result, so get the elevation (is the first in the list, since we have only a single band)
+                  value = result.results()
+                  elevPair = value.items()
+                  elev = elevPair[0][1]
 
-         # However some results are from a 'wrong' sheet (i.e. a sheet which does not contain this point), so ignore these results
-         if elev != None: (duplicate-code)
+                  # However some results are from a 'wrong' sheet (i.e. a sheet which does not contain this point), so ignore these results
+                  if elev != None: (duplicate-code)
 R:  1, 0: Similar lines in 2 files
 ==FieldFlow_model.searches:478
-==FieldFlow_model.simulate:270
+==FieldFlow_model.simulate:266
    roadLayerFound = False
    for layerNum in range(len(shared.vectorInputLayersCategory)):
       if shared.vectorInputLayersCategory[layerNum] == INPUT_ROAD_NETWORK:
@@ -57,7 +49,7 @@ R:  1, 0: Similar lines in 2 files
  (duplicate-code)
 R:  1, 0: Similar lines in 2 files
 ==FieldFlow_model.searches:348
-==FieldFlow_model.simulate:695
+==FieldFlow_model.simulate:691
    pathLayerFound = False
    for layerNum in range(len(shared.vectorInputLayersCategory)):
       if shared.vectorInputLayersCategory[layerNum] == INPUT_PATH_NETWORK:
@@ -70,34 +62,20 @@ R:  1, 0: Similar lines in 2 files
       shared.fpOut.write(printStr)
       print(printStr)
  (duplicate-code)
-R:  1, 0: Similar lines in 3 files
-==FieldFlow_model.searches:686
-==FieldFlow_model.simulate:331
-==FieldFlow_model.simulate:756
-      distToPoint.sort(key = lambda distPoint: distPoint[2])
-
-      #for n in range(len(distToPoint)):
-         #shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
-
-      flowRouted = False
-      for n in range(len(distToPoint)):
-         # Go through this list of untravelled path segments till we find a suitable one
-         feature = distToPoint[n][0]
-         featID = feature.id() (duplicate-code)
 R:  1, 0: Similar lines in 2 files
 ==FieldFlow_model.searches:503
-==FieldFlow_model.simulate:296
-   for roadSeg in features:
-      # Is this road segment both close enough, and has not already been followed?
-      geomSeg = roadSeg.geometry()
-      nearPoint = geomSeg.nearestPoint(geomPoint)
-      distanceToSeg = geomPoint.distance(nearPoint)
-      segID = roadSeg.id()
-      #shared.fpOut.write("segID = " + str(segID) + " distanceToSeg = " + str(distanceToSeg) + "\n")
+==FieldFlow_model.simulate:292
+      for roadSeg in features:
+         # Is this road segment both close enough, and has not already been tried?
+         geomSeg = roadSeg.geometry()
+         nearPoint = geomSeg.nearestPoint(geomPoint)
+         distanceToSeg = geomPoint.distance(nearPoint)
+         segID = roadSeg.id()
+         #shared.fpOut.write("\tRoad segID = " + str(segID) + ", nearest point = " + DisplayOS(nearPoint.asPoint().x(), nearPoint.asPoint().y()) + ", distanceToSeg = " + str(distanceToSeg) + "\n")
  (duplicate-code)
 R:  1, 0: Similar lines in 2 files
 ==FieldFlow_model.searches:373
-==FieldFlow_model.simulate:721
+==FieldFlow_model.simulate:717
    for pathSeg in features:
       # Is this path segment both close enough, and has not already been followed?
       geomSeg = pathSeg.geometry()
@@ -107,15 +85,15 @@ R:  1, 0: Similar lines in 2 files
       #shared.fpOut.write("segID = " + str(segID) + " distanceToSeg = " + str(distanceToSeg) + "\n")
  (duplicate-code)
 R:  1, 0: Similar lines in 2 files
-==FieldFlow_model.simulate:49
+==FieldFlow_model.simulate:45
 ==FieldFlow_model.utils:142
-   for layerNum in range(len(shared.rasterInputLayersCategory)):
-      if shared.rasterInputLayersCategory[layerNum] == INPUT_DIGITAL_ELEVATION_MODEL:
-         # OK, this is our raster elevation data
-         provider = shared.rasterInputData[layerNum][1][0]
-         xSize = shared.rasterInputData[layerNum][1][1]
-         ySize = shared.rasterInputData[layerNum][1][2] (duplicate-code)
+            for layerNum in range(len(shared.rasterInputLayersCategory)):
+               if shared.rasterInputLayersCategory[layerNum] == INPUT_DIGITAL_ELEVATION_MODEL:
+                  # OK, this is our raster elevation data
+                  provider = shared.rasterInputData[layerNum][1][0]
+                  xSize = shared.rasterInputData[layerNum][1][1]
+                  ySize = shared.rasterInputData[layerNum][1][2] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.89/10 (previous run: 9.83/10, +0.06)
+Your code has been rated at 9.92/10 (previous run: 9.92/10, +0.00)
 

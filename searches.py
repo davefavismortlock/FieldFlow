@@ -400,9 +400,9 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
       #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
    featIDTried = []
-   for n in range(len(distToPoint)):
+   for pathSeg in distToPoint:
       # Go through this list of untravelled path segments
-      feature = distToPoint[n][0]
+      feature = pathSeg[0]
       featID = feature.id()
 
       if featID not in featIDTried:
@@ -416,12 +416,12 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
          #nPoints = len(linePoints)
 
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
-#         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
+#         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(pathSeg[1])
 
          #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this path? Please add a field observation\n")
 
          if not alreadyAlongPath:
-            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path/track segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path/track? Please add a field observation\n")
+            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path/track segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(pathSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path/track? Please add a field observation\n")
 
    return 1
 #======================================================================================================================
@@ -530,9 +530,9 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
       #shared.fpOut.write("\tAfter sorting: " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
    featIDTried = []
-   for n in range(len(distToPoint)):
+   for roadSeg in distToPoint:
       # Go through this list of untravelled road segments
-      feature = distToPoint[n][0]
+      feature = roadSeg[0]
       featID = feature.id()
 
       if featID not in featIDTried:
@@ -549,12 +549,12 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
          #nPoints = len(linePoints)
 
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
-#         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
+#         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(roadSeg[1])
 
          #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
 
          if not alreadyAlongRoad:
-            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
+            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(roadSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
 
    return 1
 #======================================================================================================================
@@ -690,9 +690,9 @@ def FindNearbyStream(point, flowFieldCode):
          #print"After " + (str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
 
       flowRouted = False
-      for n in range(len(distToPoint)):
+      for streamSeg in distToPoint:
          # Go through this list of untravelled stream segments till we find a suitable one
-         feature = distToPoint[n][0]
+         feature = streamSeg[0]
          featID = feature.id()
          #shared.fpOut.write("Trying feature ID " + str(featID))
 
@@ -722,7 +722,7 @@ def FindNearbyStream(point, flowFieldCode):
          lastPoint = linePoints[-1]
 
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
-         nearPoint, numNearpoint, _beforeNearpoint, _afterNearpoint, _sqrDist = geomFeat.closestVertex(distToPoint[n][1])
+         nearPoint, numNearpoint, _beforeNearpoint, _afterNearpoint, _sqrDist = geomFeat.closestVertex(streamSeg[1])
 
          #shared.fpOut.write("At " + DisplayOS(point.x(), point.y() + ", an untravelled stream segment " + str(localID) + " found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away"))
 

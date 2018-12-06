@@ -27,18 +27,14 @@ def GetHighestPointOnFieldBoundary(fieldBoundary):
    maxElevX = -1
    maxElevY = -1
 
-   geom = fieldBoundary.constGeometry()
-   #shared.fpOut.write(geom.wkbType())
-   poly = geom.asPolygon()
-   #shared.fpOut.write(poly)
+   polyBoundary = fieldBoundary.constGeometry().asPolygon()
+   for point in polyBoundary:
+      for j in range(len(point) - 1):
+         thisBoundaryPointX = point[j][0]
+         thisBoundaryPointY = point[j][1]
 
-   for i in range(len(poly)):
-      for j in range(len(poly[i]) - 1):
-         thisBoundaryPointX = poly[i][j][0]
-         thisBoundaryPointY = poly[i][j][1]
-
-         nextBoundaryPointX = poly[i][j+1][0]
-         nextBoundaryPointY = poly[i][j+1][1]
+         nextBoundaryPointX = point[j+1][0]
+         nextBoundaryPointY = point[j+1][1]
 
          inBetweenPoints = GetPointsOnLine(QgsPoint(thisBoundaryPointX, thisBoundaryPointY), QgsPoint(nextBoundaryPointX, nextBoundaryPointY), shared.resolutionOfDEM)
          #shared.fpOut.write("From " + DisplayOS(thisBoundaryPointX, thisBoundaryPointY) + " to " + DisplayOS(nextBoundaryPointX, nextBoundaryPointY))
@@ -335,11 +331,11 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
          #shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
       flowRouted = False
-      for n in range(len(distToPoint)):
+      for roadSeg in distToPoint:
          # Go through this list of untravelled road segments till we find a suitable one
-         feature = distToPoint[n][0]
+         feature = roadSeg[0]
          featID = feature.id()
-         nearPoint = distToPoint[n][1]
+         nearPoint = roadSeg[1]
 
          featCode = feature[OS_VECTORMAP_FEAT_CODE]
          featDesc = feature[OS_VECTORMAP_FEAT_DESC]
@@ -348,12 +344,12 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
          fullDesc = "'" + str(featCode) + " " + str(featDesc) + " " + str(roadName) + " " + str(roadNumber) + "'"
 
-         shared.fpOut.write("\tTrying untravelled road segment " + fullDesc + " with distance to nearest point = " + str(distToPoint[n][2]) + " m\n")
+         shared.fpOut.write("\tTrying untravelled road segment " + fullDesc + " with distance to nearest point = " + str(roadSeg[2]) + " m\n")
 
          geomFeat = feature.geometry()
          linePoints = geomFeat.asPolyline()
 
-         shared.fpOut.write("\tAt " + DisplayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled road segment " + fullDesc + ", which has nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away at " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
+         shared.fpOut.write("\tAt " + DisplayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled road segment " + fullDesc + ", which has nearest point " + "{:0.1f}".format(roadSeg[2]) + " m away at " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
 
          # Find the nearest point in the road polyline
          nearPoint, numNearPoint, _beforeNearpoint, _afterNearpoint, _sqrDist = geomFeat.closestVertex(thisPoint)
@@ -760,22 +756,22 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
          #shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
       flowRouted = False
-      for n in range(len(distToPoint)):
+      for pathSeg in distToPoint:
          # Go through this list of untravelled path segments till we find a suitable one
-         feature = distToPoint[n][0]
+         feature = pathSeg[0]
          featID = feature.id()
-         nearPoint = distToPoint[n][1]
+         nearPoint = pathSeg[1]
 
          featDesc = feature[PATH_DESC]
 
          fullDesc = "'" + str(featDesc) + "'"
 
-         shared.fpOut.write("\tTrying untravelled path segment " + fullDesc + " with distance to nearest point = " + str(distToPoint[n][2]) + " m\n")
+         shared.fpOut.write("\tTrying untravelled path segment " + fullDesc + " with distance to nearest point = " + str(pathSeg[2]) + " m\n")
 
          geomFeat = feature.geometry()
          linePoints = geomFeat.asPolyline()
 
-         shared.fpOut.write("\tAt " + DisplayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled path segment " + fullDesc + ", which has nearest point " + "{:0.1f}".format(distToPoint[n][2]) + " m away at " + DisplayOS(nearPoint.x(), nearPoint.y(), False) + "\n")
+         shared.fpOut.write("\tAt " + DisplayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled path segment " + fullDesc + ", which has nearest point " + "{:0.1f}".format(pathSeg[2]) + " m away at " + DisplayOS(nearPoint.x(), nearPoint.y(), False) + "\n")
 
          # Find the nearest point in the path polyline
          nearPoint, numNearPoint, _beforeNearpoint, _afterNearpoint, _sqrDist = geomFeat.closestVertex(thisPoint)
@@ -1131,17 +1127,16 @@ def FlowHitFieldBoundary(firstPoint, secondPoint, flowFieldCode):
             # Get the field code
             fieldCode = fieldBoundary[CONNECTED_FIELD_ID]
 
-            geomFieldBoundary = fieldBoundary.constGeometry()
-            poly = geomFieldBoundary.asPolygon()
+            polyBoundary = fieldBoundary.constGeometry().asPolygon()
 
             # Do this for every pair of points on this polygon's boundary i.e. for every line comprising the boundary
-            for i in range(len(poly)):
-               for j in range(len(poly[i]) - 1):
-                  thisBoundaryPointX = poly[i][j][0]
-                  thisBoundaryPointY = poly[i][j][1]
+            for point in polyBoundary:
+               for j in range(len(point) - 1):
+                  thisBoundaryPointX = point[j][0]
+                  thisBoundaryPointY = point[j][1]
 
-                  nextBoundaryPointX = poly[i][j+1][0]
-                  nextBoundaryPointY = poly[i][j+1][1]
+                  nextBoundaryPointX = point[j+1][0]
+                  nextBoundaryPointY = point[j+1][1]
 
                   boundaryLineFeature = QgsFeature()
                   boundaryLineFeature.setGeometry(QgsGeometry.fromPolyline([QgsPoint(thisBoundaryPointX, thisBoundaryPointY), QgsPoint(nextBoundaryPointX, nextBoundaryPointY)]))
@@ -1239,9 +1234,9 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
       #print"After " + (str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
 
    flowRouted = False
-   for n in range(len(distToPoint)):
+   for boundPoly in distToPoint:
       # Go through this list of untravelled boundary polygons till we find a suitable one
-      feature = distToPoint[n][0]
+      feature = boundPoly[0]
       #featID = feature.id()
       #print("Trying feature ID " + str(featID))
 
@@ -1253,7 +1248,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
       nPointsInPoly = len(points)
 
       # OK, the nearest point is an approximation: it is not necessarily a point in the polygon's boundary. So get the actual point in the boundary which is closest
-      nearPoint, numNearPoint, _beforeNearPoint, _afterNearPoint, sqrDist = geomFeat.closestVertex(distToPoint[n][1])
+      nearPoint, numNearPoint, _beforeNearPoint, _afterNearPoint, sqrDist = geomFeat.closestVertex(boundPoly[1])
       #print(nearPoint, numNearPoint, beforeNearPoint, afterNearPoint, sqrDist)
       #print(nearPoint, points[numNearPoint])
 
