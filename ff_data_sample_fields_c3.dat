@@ -10,7 +10,7 @@ Weighting for flow start point on fields (is a weighted average of the highest b
 
 Consider field observations?                                                  : N
 Fill blind pits?                                                              : Y
-Consider ditches and streams?                                                 : Y
+Consider streams?                                                             : Y
 Consider roads? (is N if field observations not considered)                   : N
 Consider tracks and paths? (is N if field observations not considered)        : N
 Consider field boundaries (is N if field observations not considered)         : N

@@ -1,8 +1,4 @@
-from __future__ import print_function
-
-#from math import hypot
-
-from qgis.core import QgsPoint, QgsRaster
+from qgis.core import QgsPointXY, QgsRaster
 
 import shared
 from shared import INPUT_DIGITAL_ELEVATION_MODEL
@@ -33,7 +29,7 @@ def gridCRSToExtCRS(x, y, cellWidth, cellHeight, originX, originY):
    xExt = (cellWidth * x) + originX + (cellWidth / 2)
    yExt = (cellHeight * y) + originY + (cellHeight / 2)
 
-   return QgsPoint(xExt, yExt)
+   return QgsPointXY(xExt, yExt)
 #======================================================================================================================
 
 
@@ -46,7 +42,7 @@ def extCRSToGridCRS(x, y, cellWidth, cellHeight, originX, originY):
    xGrid = (x - originX - (cellWidth / 2)) / cellWidth
    yGrid = (y - originY - (cellHeight / 2)) / cellHeight
 
-   return QgsPoint(xGrid, yGrid)
+   return QgsPointXY(xGrid, yGrid)
 #======================================================================================================================
 
 
@@ -64,7 +60,7 @@ def GetCentroidOfContainingDEMCell(x, y):
    centroidX = shared.xMinExtentDEM + (numXPixels * shared.cellWidthDEM) + (shared.cellWidthDEM / 2)
    centroidY = shared.yMinExtentDEM + (numYPixels * shared.cellHeightDEM) + (shared.cellHeightDEM / 2)
 
-   return QgsPoint(centroidX, centroidY)
+   return QgsPointXY(centroidX, centroidY)
 #======================================================================================================================
 
 
@@ -120,7 +116,7 @@ def GetPointsOnLine(startPoint, endPoint, spacing):
    points = []
    # Process each interpolated point
    for _ in range(0, int(length), int(spacing)):
-      points.append(QgsPoint(x, y))
+      points.append(QgsPointXY(x, y))
 
       x += XInc
       y += YInc
@@ -152,17 +148,19 @@ def GetRasterElev(x, y):
          dpi = shared.rasterInputData[layerNum][1][6]
 
          # Now look up the elevation value at this point
-         point = QgsPoint(x, y)
+         point = QgsPointXY(x, y)
          result = provider.identify(point, QgsRaster.IdentifyFormatValue, extent, xSize, ySize, dpi)
          error = result.error()
          if not error.isEmpty() or not result.isValid():
             shared.fpOut.write(error.summary())
             return -1, -1, -1
 
-         # We have a valid result, so get the elevation (is the first in the list, since we have only a single band)
-         value = result.results()
-         elevPair = value.items()
-         elev = elevPair[0][1]
+         # We have a valid result, so get the elevation. First get this as a dict of key-value pairs
+         dictResults = result.results()
+
+         # Now get the first value from the dict (assume we only have a single band)
+         elevList = list(dictResults.values())
+         elev = elevList[0]
 
          # However some results are from a 'wrong' sheet (i.e. a sheet which does not contain this point), so ignore these results
          if elev != None:

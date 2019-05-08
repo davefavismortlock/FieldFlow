@@ -1,8 +1,7 @@
-from __future__ import print_function
+from PyQt5.QtWidgets import QAction, QMainWindow, QStatusBar, QProgressBar
+from PyQt5.QtCore import Qt
 
-from PyQt4.QtGui import QAction, QMainWindow, QStatusBar, QProgressBar
-from PyQt4.QtCore import Qt
-
+from qgis.core import QgsProject
 from qgis.gui import QgsMapCanvas, QgsMapToolPan, QgsMapToolZoom, QgsMapToolEmitPoint
 
 import pyperclip
@@ -49,12 +48,12 @@ class PointTool(QgsMapToolEmitPoint):
 class MainWindow(QMainWindow):
    # pylint: disable=too-many-instance-attributes
    # pylint: disable=too-many-statements
-   def __init__(self, app, canvasLayers, canvasLayersCategory):
+   def __init__(self, app, mapLayers, mapLayersCategory):
       QMainWindow.__init__(self)
       self.app = app
 
-      self.canvasLayers = canvasLayers
-      self.canvasLayersCategory = canvasLayersCategory
+      self.mapLayers = mapLayers
+      self.mapLayersCategory = mapLayersCategory
 
       self.resize(shared.windowWidth, shared.windowHeight)
       self.setWindowTitle(shared.progName + ": " + shared.progVer)
@@ -71,7 +70,7 @@ class MainWindow(QMainWindow):
       self.canvas.setParallelRenderingEnabled(True)
       self.canvas.enableMapTileRendering(True)
 
-      self.canvas.setLayerSet(self.canvasLayers)
+      self.canvas.setLayers(self.mapLayers)
       self.canvas.setExtent(shared.extentRect)
       self.canvas.setMagnificationFactor(shared.windowMagnification)
 
@@ -227,9 +226,10 @@ class MainWindow(QMainWindow):
 
       self.canvas.freeze(True)
 
-      doneSoFar = (float(shared.thisStartPoint) / float(len(shared.flowStartPoints) + 1)) * 100.0
-      #shared.fpOut.write(doneSoFar)
-      self.statusBar.progress.setValue(doneSoFar)
+      if not isinstance(shared.flowStartPoints, int):
+         doneSoFar = (float(shared.thisStartPoint) / float(len(shared.flowStartPoints) + 1)) * 100.0
+         #shared.fpOut.write(doneSoFar)
+         self.statusBar.progress.setValue(doneSoFar)
 
       return
 #======================================================================================================================
@@ -270,7 +270,8 @@ class MainWindow(QMainWindow):
 #======================================================================================================================
    def close(self):
       if self.myThread:
-         self.myThread.terminate()
+         self.myThread.quit()
+         self.myThread = None
 
       return
 #======================================================================================================================
@@ -284,7 +285,9 @@ class MainWindow(QMainWindow):
       self.canvas.repaint()
 
       print("Thread done")
+
       self.myThread.quit()
+      self.myThread = None
 
       self.statusBar.progress.setValue(100)
 
@@ -300,12 +303,33 @@ class MainWindow(QMainWindow):
 
 #======================================================================================================================
    def changeBackground(self):
-      for n in range(len(self.canvasLayers)):
-         if self.canvasLayersCategory[n] == INPUT_RASTER_BACKGROUND:
-            self.canvasLayers[n].setVisible(not self.canvasLayers[n].isVisible())
+      for n in range(len(shared.rasterInputLayersCategory)):
+         if shared.rasterInputLayersCategory[n] == INPUT_RASTER_BACKGROUND:
+            oldOpacity = shared.rasterInputLayers[n].renderer().opacity()
+            if oldOpacity == 0:
+               newOpacity = shared.rasterFileOpacity[n]
+            else:
+               newOpacity = 0
 
-      self.canvas.setLayerSet(self.canvasLayers)
-      self.canvas.repaint()
+            shared.rasterInputLayers[n].renderer().setOpacity(newOpacity)
+
+
+            #layerID = shared.rasterInputLayers[n].id()
+            #layerTreeNode = QgsProject.instance().layerTreeRoot().findLayer(layerID)
+
+            #print(layerTreeNode.dump())
+
+            #layerTreeNode.setItemVisibilityChecked(not layerTreeNode.itemVisibilityChecked())
+
+            #print(layerTreeNode.dump())
+            #print("*****************")
+
+      #for n in range(len(self.mapLayers)):
+         #if self.mapLayersCategory[n] == INPUT_RASTER_BACKGROUND:
+            #self.mapLayers[n].setVisible(not self.mapLayers[n].isVisible())
+
+      #self.canvas.setLayers(self.mapLayers)
+      self.doRefresh()
 
       return
 #======================================================================================================================

@@ -1,9 +1,6 @@
-from __future__ import print_function
-
 from math import sqrt
 
-from qgis.core import QgsRaster, QgsFeature, QgsFeatureRequest, QgsGeometry, QgsPoint, QgsRectangle     # NULL,
-#from qgis.gui import QgsMapCanvasLayer    #, QgsMapToolPan, QgsMapToolZoom
+from qgis.core import QgsRaster, QgsFeature, QgsFeatureRequest, QgsGeometry, QgsPointXY, QgsRectangle, QgsPoint
 
 import shared
 from shared import INPUT_DIGITAL_ELEVATION_MODEL, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_BEHAVIOUR_ALONG, MARKER_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_PATH, FIELD_OBS_CATEGORY_BOUNDARY, MARKER_FIELD_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, MARKER_ENTER_CULVERT, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_VIA_ROAD, INPUT_PATH_NETWORK, PATH_DESC, PREV_POINT, THIS_POINT, POST_POINT, FLOW_VIA_PATH, INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, FLOW_VIA_BOUNDARY, FLOW_DOWN_STEEPEST, BLIND_PIT
@@ -16,18 +13,31 @@ from utils import GetPointsOnLine, GetCentroidOfContainingDEMCell, DisplayOS, Ge
 
 #======================================================================================================================
 #
-# Returns the coords (external CRS) of the centroid of the pixel containing the highest point on a field boundary
+# Returns the coords (external CRS) of the centroid of the pixel containing the highest point and lowest point on a field boundary
 #
 #======================================================================================================================
-def GetHighestPointOnFieldBoundary(fieldBoundary):
+def GetHighestAndLowestPointsOnFieldBoundary(fieldBoundary):
    # pylint: disable=too-many-locals
    # pylint: disable=too-many-nested-blocks
 
-   maxElev = 0       # sys.float_info.min
+   maxElev = -9999
    maxElevX = -1
    maxElevY = -1
+   minElev = 9999
+   minElevX = -1
+   minElevY = -1
 
-   polyBoundary = fieldBoundary.constGeometry().asPolygon()
+   polyGeom = fieldBoundary.geometry()
+   if polyGeom.isMultipart():
+      polygons = polyGeom.asMultiPolygon()
+   else:
+      polygons = [polyGeom.asPolygon()]
+
+   # If this is a multipolygon, we only consider the first polygon here
+   polyBoundary = polygons[0]
+   #print(len(polyBoundary))
+   #print(str(polyBoundary))
+
    for point in polyBoundary:
       for j in range(len(point) - 1):
          thisBoundaryPointX = point[j][0]
@@ -36,10 +46,10 @@ def GetHighestPointOnFieldBoundary(fieldBoundary):
          nextBoundaryPointX = point[j+1][0]
          nextBoundaryPointY = point[j+1][1]
 
-         inBetweenPoints = GetPointsOnLine(QgsPoint(thisBoundaryPointX, thisBoundaryPointY), QgsPoint(nextBoundaryPointX, nextBoundaryPointY), shared.resolutionOfDEM)
-         #shared.fpOut.write("From " + DisplayOS(thisBoundaryPointX, thisBoundaryPointY) + " to " + DisplayOS(nextBoundaryPointX, nextBoundaryPointY))
-         #shared.fpOut.write("in-between points are " + str(inBetweenPoints))
-         #shared.fpOut.write("")
+         inBetweenPoints = GetPointsOnLine(QgsPointXY(thisBoundaryPointX, thisBoundaryPointY), QgsPointXY(nextBoundaryPointX, nextBoundaryPointY), shared.resolutionOfDEM)
+         #print("From " + DisplayOS(thisBoundaryPointX, thisBoundaryPointY) + " to " + DisplayOS(nextBoundaryPointX, nextBoundaryPointY))
+         #print("in-between points are " + str(inBetweenPoints))
+         #print("")
 
          for boundaryPoint in inBetweenPoints:
             # Search all raster layers
@@ -54,7 +64,7 @@ def GetHighestPointOnFieldBoundary(fieldBoundary):
 
                   # We have the point on the field boundary, but this almost certainly is not the same as the centroid of the containing pixel. So find the coords of this centroid
                   pixelCentroidPoint = GetCentroidOfContainingDEMCell(boundaryPoint.x(), boundaryPoint.y())
-                  #shared.fpOut.write("{", boundaryPoint.x(), ", ", boundaryPoint.y(), "} and {", pixelCentroidPoint.x(), ", ", pixelCentroidPoint.y(), "}")
+                  #print("{" + str(boundaryPoint.x()) + ", " + str(boundaryPoint.y()) + "} and {" + str(pixelCentroidPoint.x()) + ", " + str(pixelCentroidPoint.y()) + "}")
 
                   # Now look up the elevation value at the centroid point
                   result = provider.identify(pixelCentroidPoint, QgsRaster.IdentifyFormatValue, extent, xSize, ySize, dpi)
@@ -63,10 +73,13 @@ def GetHighestPointOnFieldBoundary(fieldBoundary):
                      shared.fpOut.write(error.summary())
                      return -1, -1, -1
 
-                  # We have a valid result, so get the elevation (is the first in the list, since we have only a single band)
-                  value = result.results()
-                  elevPair = value.items()
-                  elev = elevPair[0][1]
+                  # We have a valid result, so get the elevation. First get this as a dict of key-value pairs
+                  dictResults = result.results()
+
+                  # Now get the first value from the dict (assume we only have a single band)
+                  elevList = list(dictResults.values())
+                  elev = elevList[0]
+                  #print(elev)
 
                   # However some results are from a 'wrong' sheet (i.e. a sheet which does not contain this point), so ignore these results
                   if elev != None:
@@ -75,7 +88,13 @@ def GetHighestPointOnFieldBoundary(fieldBoundary):
                         maxElevX = pixelCentroidPoint.x()
                         maxElevY = pixelCentroidPoint.y()
 
-   return maxElevX, maxElevY, maxElev
+                     if elev < minElev:
+                        minElev = elev
+                        minElevX = pixelCentroidPoint.x()
+                        minElevY = pixelCentroidPoint.y()
+
+   #print("Returning " + str(maxElevX) + ", " + str(maxElevY) + ", " + str(maxElev))
+   return maxElevX, maxElevY, maxElev, minElevX, minElevY, minElev
 #======================================================================================================================
 
 
@@ -196,13 +215,13 @@ def FlowViaFieldObservation(indx, fieldCode, thisPoint, elev):
 
    # We do have an outflow location: OK, show some marker points
    if shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_CULVERT:
-      AddFlowMarkerPoint(QgsPoint(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()), MARKER_ENTER_CULVERT, fieldCode, -1)
+      AddFlowMarkerPoint(QgsPointXY(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()), MARKER_ENTER_CULVERT, fieldCode, -1)
 
    elif shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_PATH:
-      AddFlowMarkerPoint(QgsPoint(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()), MARKER_PATH, fieldCode, -1)
+      AddFlowMarkerPoint(QgsPointXY(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()), MARKER_PATH, fieldCode, -1)
 
    elif shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_ROAD:
-      AddFlowMarkerPoint(QgsPoint(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()), MARKER_ROAD, fieldCode, -1)
+      AddFlowMarkerPoint(QgsPointXY(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()), MARKER_ROAD, fieldCode, -1)
 
    printStr = "Flow from field " + fieldCode + " routed via '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' from " + DisplayOS(thisPoint.x(), thisPoint.y())
    if thisPoint != shared.fieldObservationFlowFrom[indx]:
@@ -261,7 +280,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
    #shared.fpOut.write("Entered FlowAlongVectorRoad at point " + DisplayOS(thisPoint.x(), thisPoint.y()))
    layerNum = -1
-   #geomPoint = QgsGeometry.fromPoint(thisPoint)
+   #geomPoint = QgsGeometry.fromPointXY(thisPoint)
 
    # Find the road network layer
    roadLayerFound = False
@@ -283,12 +302,15 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
    while True:
       # Find the nearest road segments
       #shared.fpOut.write("Start of FlowAlongVectorRoad loop at " + DisplayOS(thisPoint.x(), thisPoint.y()))
-      nearestIDs = shared.vectorInputIndex[layerNum].nearestNeighbor(thisPoint, 3)
+      nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(thisPoint, 3)
+      #if len(nearestIDs) > 0:
+         #print("Nearest road segment IDs (1) = " + str(nearestIDs))
+
       request = QgsFeatureRequest().setFilterFids(nearestIDs)
       features = shared.vectorInputLayers[layerNum].getFeatures(request)
 
       distToPoint = []
-      geomPoint = QgsGeometry.fromPoint(thisPoint)
+      geomPoint = QgsGeometry.fromPointXY(thisPoint)
 
       for roadSeg in features:
          # Is this road segment both close enough, and has not already been tried?
@@ -346,8 +368,16 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
          shared.fpOut.write("\tTrying untravelled road segment " + fullDesc + " with distance to nearest point = " + str(roadSeg[2]) + " m\n")
 
+         #geomFeat = feature.geometry()
+         #linePoints = geomFeat.asPolyline()
+
          geomFeat = feature.geometry()
-         linePoints = geomFeat.asPolyline()
+         if geomFeat.isMultipart():
+            linePointsAll = geomFeat.asMultiPolyline()
+         else:
+            linePointsAll = [geomFeat.asPolyline()]
+
+         linePoints = linePointsAll[0]
 
          shared.fpOut.write("\tAt " + DisplayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled road segment " + fullDesc + ", which has nearest point " + "{:0.1f}".format(roadSeg[2]) + " m away at " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
 
@@ -498,7 +528,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                elevNextPoint = GetRasterElev(nextPoint.x(), nextPoint.y())
 
                # Check to see whether this road segment intersects a ditch/stream segment (note that we have not yet checked whether the next point is downhill from this point, but is a reasonable assumption that any intersect point must be downhill from this point)
-               geomLine = QgsGeometry.fromPolyline([thisPoint, nextPoint])
+               geomLine = QgsGeometry.fromPolyline([QgsPoint(thisPoint), QgsPoint(nextPoint)])
                rtn = -1
                streamIntersectPoints = []
                rtn, streamIntersectPoints = FindSegmentIntersectionWithStream(geomLine)
@@ -528,7 +558,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(nextPoint)
                if adjX != -1:
                   # There is an adjacent flow line, so merge the two and finish with this flow line
-                  adjPoint = QgsPoint(adjX, adjY)
+                  adjPoint = QgsPointXY(adjX, adjY)
                   AddFlowLine(thisPoint, adjPoint, MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, -1)
 
                   shared.fpOut.write("Flow from field " + fieldCode + " hit flow from field " + str(hitFieldFlowFrom) + " at " + DisplayOS(adjX, adjY) + " while moving along road segment " + fullDesc + ", so stopped tracing flow from this field\n")
@@ -542,7 +572,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                   rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, nextPoint, elevNextPoint)
                   if rtn == 0:
                      # Flow has passed through the field observation
-                     shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 1, rtn = " + str(rtn) + "\n")
+                     #shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 1, rtn = " + str(rtn) + "\n")
                      return rtn, adjPoint
 
                   elif rtn == -1:
@@ -587,7 +617,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                elevNextPoint = GetRasterElev(nextPoint.x(), nextPoint.y())
 
                # Check to see whether this road segment intersects a ditch/stream segment (note that we have not yet checked whether the next point is downhill from this point, but is a reasonable assumption that any intersect point must be downhill from this point)
-               geomLine = QgsGeometry.fromPolyline([thisPoint, nextPoint])
+               geomLine = QgsGeometry.fromPolyline([QgsPoint(thisPoint), QgsPoint(nextPoint)])
                rtn = -1
                streamIntersectPoints = []
                rtn, streamIntersectPoints = FindSegmentIntersectionWithStream(geomLine)
@@ -617,7 +647,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(nextPoint)
                if adjX != -1:
                   # There is an adjacent flow line, so merge the two and finish with this flow line
-                  AddFlowLine(thisPoint, QgsPoint(adjX, adjY), MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, -1)
+                  AddFlowLine(thisPoint, QgsPointXY(adjX, adjY), MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, -1)
 
                   shared.fpOut.write("Flow from field " + fieldCode + " hit flow from field " + str(hitFieldFlowFrom) + " at " + DisplayOS(adjX, adjY) + " while moving along road segment " + fullDesc + ", so stopped tracing flow from this field\n")
 
@@ -686,7 +716,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
 
    #shared.fpOut.write("Entered FlowAlongVectorPath at point " + DisplayOS(thisPoint.x(), thisPoint.y()))
    layerNum = -1
-   #geomPoint = QgsGeometry.fromPoint(thisPoint)
+   #geomPoint = QgsGeometry.fromPointXY(thisPoint)
 
    # Find the path network layer
    pathLayerFound = False
@@ -708,12 +738,15 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
    while True:
       # Find the nearest path segments
       #shared.fpOut.write("Start of FlowAlongVectorPath loop at " + DisplayOS(thisPoint.x(), thisPoint.y()))
-      nearestIDs = shared.vectorInputIndex[layerNum].nearestNeighbor(thisPoint, 3)
+      nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(thisPoint, 3)
+      #if len(nearestIDs) > 0:
+         #print("Nearest path segment IDs (1) = " + str(nearestIDs))
+
       request = QgsFeatureRequest().setFilterFids(nearestIDs)
       features = shared.vectorInputLayers[layerNum].getFeatures(request)
 
       distToPoint = []
-      geomPoint = QgsGeometry.fromPoint(thisPoint)
+      geomPoint = QgsGeometry.fromPointXY(thisPoint)
 
       for pathSeg in features:
          # Is this path segment both close enough, and has not already been tried?
@@ -768,8 +801,16 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
 
          shared.fpOut.write("\tTrying untravelled path segment " + fullDesc + " with distance to nearest point = " + str(pathSeg[2]) + " m\n")
 
+         #geomFeat = feature.geometry()
+         #linePoints = geomFeat.asPolyline()
+
          geomFeat = feature.geometry()
-         linePoints = geomFeat.asPolyline()
+         if geomFeat.isMultipart():
+            linePointsAll = geomFeat.asMultiPolyline()
+         else:
+            linePointsAll = [geomFeat.asPolyline()]
+
+         linePoints = linePointsAll[0]
 
          shared.fpOut.write("\tAt " + DisplayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled path segment " + fullDesc + ", which has nearest point " + "{:0.1f}".format(pathSeg[2]) + " m away at " + DisplayOS(nearPoint.x(), nearPoint.y(), False) + "\n")
 
@@ -920,7 +961,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                elevNextPoint = GetRasterElev(nextPoint.x(), nextPoint.y())
 
                # Check to see whether this path segment intersects a ditch/stream segment (note that we have not yet checked whether the next point is downhill from this point, but is a reasonable assumption that any intersect point must be downhill from this point)
-               geomLine = QgsGeometry.fromPolyline([thisPoint, nextPoint])
+               geomLine = QgsGeometry.fromPolyline([QgsPoint(thisPoint), QgsPoint(nextPoint)])
                rtn = -1
                streamIntersectPoints = []
                rtn, streamIntersectPoints = FindSegmentIntersectionWithStream(geomLine)
@@ -950,7 +991,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(nextPoint)
                if adjX != -1:
                   # There is an adjacent flow line, so merge the two and finish with this flow line
-                  adjPoint = QgsPoint(adjX, adjY)
+                  adjPoint = QgsPointXY(adjX, adjY)
                   AddFlowLine(thisPoint, adjPoint, MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, -1)
 
                   shared.fpOut.write("Flow from field " + fieldCode + " hit flow from field " + str(hitFieldFlowFrom) + " at " + DisplayOS(adjX, adjY) + " while moving along path segment " + fullDesc + ", so stopped tracing flow from this field\n")
@@ -1009,7 +1050,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                elevNextPoint = GetRasterElev(nextPoint.x(), nextPoint.y())
 
                # Check to see whether this path segment intersects a ditch/stream segment (note that we have not yet checked whether the next point is downhill from this point, but is a reasonable assumption that any intersect point must be downhill from this point)
-               geomLine = QgsGeometry.fromPolyline([thisPoint, nextPoint])
+               geomLine = QgsGeometry.fromPolyline([QgsPoint(thisPoint), QgsPoint(nextPoint)])
                rtn = -1
                streamIntersectPoints = []
                rtn, streamIntersectPoints = FindSegmentIntersectionWithStream(geomLine)
@@ -1039,7 +1080,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(nextPoint)
                if adjX != -1:
                   # There is an adjacent flow line, so merge the two and finish with this flow line
-                  AddFlowLine(thisPoint, QgsPoint(adjX, adjY), MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, -1)
+                  AddFlowLine(thisPoint, QgsPointXY(adjX, adjY), MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, -1)
 
                   shared.fpOut.write("Flow from field " + fieldCode + " hit flow from field " + str(hitFieldFlowFrom) + " at " + DisplayOS(adjX, adjY) + " while moving along path segment " + fullDesc + ", so stopped tracing flow from this field\n")
 
@@ -1099,7 +1140,7 @@ def FlowHitFieldBoundary(firstPoint, secondPoint, flowFieldCode):
    # pylint: disable=too-many-nested-blocks
 
    flowLineFeature = QgsFeature()
-   flowLineFeature.setGeometry(QgsGeometry.fromPolyline([firstPoint, secondPoint]))
+   flowLineFeature.setGeometry(QgsGeometry.fromPolyline([QgsPoint(firstPoint), QgsPoint(secondPoint)]))
    geomFlowLine = flowLineFeature.geometry()
 
    # Construct a bounding box
@@ -1127,7 +1168,16 @@ def FlowHitFieldBoundary(firstPoint, secondPoint, flowFieldCode):
             # Get the field code
             fieldCode = fieldBoundary[CONNECTED_FIELD_ID]
 
-            polyBoundary = fieldBoundary.constGeometry().asPolygon()
+            polyGeom = fieldBoundary.geometry()
+            if polyGeom.isMultipart():
+               polygons = polyGeom.asMultiPolygon()
+            else:
+               polygons = [polyGeom.asPolygon()]
+
+            # If this is a multipolygon, we only consider the first polygon here
+            polyBoundary = polygons[0]
+            #print(len(polyBoundary))
+            #print(str(polyBoundary))
 
             # Do this for every pair of points on this polygon's boundary i.e. for every line comprising the boundary
             for point in polyBoundary:
@@ -1151,7 +1201,7 @@ def FlowHitFieldBoundary(firstPoint, secondPoint, flowFieldCode):
 
                      return True, intersectPoint, fieldCode
 
-   return False, QgsPoint(-1, -1), -1
+   return False, QgsPointXY(-1, -1), -1
 #======================================================================================================================
 
 
@@ -1175,7 +1225,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
    #print("Entered flowAlongVectorFieldBoundary at point " + DisplayOS(thisPoint.x(), thisPoint.y()))
    layerNum = -1
-   #geomPoint = QgsGeometry.fromPoint(thisPoint)
+   #geomPoint = QgsGeometry.fromPointXY(thisPoint)
 
    # Find the field boundary layer
    boundaryLayerFound = False
@@ -1195,12 +1245,15 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
    #numberToSearchFor = 3
 
    # Find the nearest field boundary polygon TODO could this be passed in as a parameter?
-   nearestIDs = shared.vectorInputIndex[layerNum].nearestNeighbor(thisPoint, 3)
+   nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(thisPoint, 3)
+   #if len(nearestIDs) > 0:
+      #print("Nearest field boundary IDs = " + str(nearestIDs))
+
    request = QgsFeatureRequest().setFilterFids(nearestIDs)
    features = shared.vectorInputLayers[layerNum].getFeatures(request)
 
    distToPoint = []
-   geomPoint = QgsGeometry.fromPoint(thisPoint)
+   geomPoint = QgsGeometry.fromPointXY(thisPoint)
 
    for boundaryPoly in features:
       # Is this boundary polygon both close enough, and has not already been tried?
@@ -1236,19 +1289,36 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
    flowRouted = False
    for boundPoly in distToPoint:
       # Go through this list of untravelled boundary polygons till we find a suitable one
-      feature = boundPoly[0]
-      #featID = feature.id()
+      featPoly = boundPoly[0]
+      #featID = featPoly.id()
       #print("Trying feature ID " + str(featID))
 
-      boundaryFieldCode = feature[CONNECTED_FIELD_ID]
+      boundaryFieldCode = featPoly[CONNECTED_FIELD_ID]
 
-      geomFeat = feature.geometry()
-      polygon = geomFeat.asPolygon()
-      points = polygon[0]
+      #geomPoly = featPoly.geometry()
+      #polygon = geomPoly.asPolygon()
+      #points = polygon[0]
+
+      polyGeom = featPoly.geometry()
+      if polyGeom.isMultipart():
+         polygons = polyGeom.asMultiPolygon()
+      else:
+         polygons = [polyGeom.asPolygon()]
+
+      # If this is a multipolygon, we only consider the first polygon here
+      points = polygons[0]
+      #print(len(polyBoundary))
+      #print(str(polyBoundary))
+
       nPointsInPoly = len(points)
+      #print("nPointsInPoly = " + str(nPointsInPoly))
+
+      # If this polygon is too small, forget it
+      if nPointsInPoly < 3:
+         continue
 
       # OK, the nearest point is an approximation: it is not necessarily a point in the polygon's boundary. So get the actual point in the boundary which is closest
-      nearPoint, numNearPoint, _beforeNearPoint, _afterNearPoint, sqrDist = geomFeat.closestVertex(boundPoly[1])
+      nearPoint, numNearPoint, _beforeNearPoint, _afterNearPoint, sqrDist = polyGeom.closestVertex(boundPoly[1])
       #print(nearPoint, numNearPoint, beforeNearPoint, afterNearPoint, sqrDist)
       #print(nearPoint, points[numNearPoint])
 
@@ -1275,7 +1345,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
          elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
 
-         geomThisPoint = QgsGeometry.fromPoint(thisPoint)
+         geomThisPoint = QgsGeometry.fromPointXY(thisPoint)
 
          prevSlope = nextSlope = -1
 
@@ -1286,13 +1356,15 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
          if numPrevVertex not in verticesTravelled:
             # This vertex has not already had flow through it
+            print("numPrevVertex = " + str(numPrevVertex))
+            print("nPointsInPoly = " + str(nPointsInPoly))
             prevPoint = points[numPrevVertex]
 
             elevPrevPoint = GetRasterElev(prevPoint.x(), prevPoint.y())
 
             elevDiffPrev = elevThisPoint - elevPrevPoint
 
-            geomPrevPoint = QgsGeometry.fromPoint(prevPoint)
+            geomPrevPoint = QgsGeometry.fromPointXY(prevPoint)
             prevDist = geomThisPoint.distance(geomPrevPoint)
 
             #print(numPrevVertex, prevPoint, elevDiffPrev, prevDist)
@@ -1311,7 +1383,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
             elevDiffNext = elevThisPoint - elevNextPoint
 
-            geomNextPoint = QgsGeometry.fromPoint(nextPoint)
+            geomNextPoint = QgsGeometry.fromPointXY(nextPoint)
             nextDist = geomThisPoint.distance(geomNextPoint)
 
             #print(numNextVertex, nextPoint, elevDiffNext, nextDist)
@@ -1336,7 +1408,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
             numFlowToPoint = numNextVertex
 
          # Check to see whether this field boundary intersects a stream segment
-         geomLine = QgsGeometry.fromPolyline([thisPoint, flowToPoint])
+         geomLine = QgsGeometry.fromPolyline([QgsPoint(thisPoint), QgsPoint(flowToPoint)])
          rtn = -1
          streamIntersectPoints = []
          #streamIntersectFound = False
@@ -1367,7 +1439,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
             adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(point1)
             if adjX != -1:
                # There is an adjacent flow line, so merge the two and finish with this flow line
-               adjPoint = QgsPoint(adjX, adjY)
+               adjPoint = QgsPointXY(adjX, adjY)
                AddFlowLine(point1, adjPoint, MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, -1)
 
                shared.fpOut.write("Flow from field " + fieldCode + " hit flow from field " + str(hitFieldFlowFrom) + " at " + DisplayOS(adjX, adjY) + ", so stopped tracing flow from this field\n")
@@ -1387,7 +1459,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
                   elev = GetRasterElev(point1.x(), point1.y())
 
                   # Search for the adjacent raster cell with the steepest here-to-there slope, and get its centroid
-                  geomPoint1 = QgsGeometry.fromPoint(point1)
+                  geomPoint1 = QgsGeometry.fromPointXY(point1)
                   adjPoint, _adjElev = FindSteepestAdjacent(point1, elev, geomPoint1)
                   #print(adjPoint, adjElev)
                   if adjPoint.x() != -1:

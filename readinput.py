@@ -1,6 +1,4 @@
-from __future__ import print_function
-
-from qgis.core import QgsVector, QgsRectangle, QgsPoint
+from qgis.core import QgsVector, QgsRectangle, QgsPointXY
 
 import shared
 from shared import COMMENT1, COMMENT2, INPUT_FIELD_BOUNDARIES, INPUT_WATER_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_OBSERVED_FLOW_LINES, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_DUMMY, FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_LEAVE, FIELD_OBS_BEHAVIOUR_DUMMY, EOF_FIELD_OBSERVATIONS, EOF_VECTOR_DATA, EOF_RASTER_DATA
@@ -89,18 +87,18 @@ def readInput():
    shared.vectorFileTitle = []
    shared.vectorFileType = []
    shared.vectorFileStyle = []
-   shared.vectorFileTransparency = []
+   shared.vectorFileOpacity = []
    shared.vectorFileCategory = []
 
    shared.rasterFileName = []
    shared.rasterFileTitle = []
    shared.rasterFileStyle = []
-   shared.rasterFileTransparency = []
+   shared.rasterFileOpacity = []
    shared.rasterFileCategory = []
 
    shared.vectorInputLayers = []
    shared.vectorInputLayersCategory = []
-   shared.vectorInputIndex = []
+   shared.vectorInputLayerIndex = []
    shared.rasterInputLayers = []
    shared.rasterInputLayersCategory = []
    shared.rasterInputData = []
@@ -184,15 +182,15 @@ def readInput():
          dataLine += 1
 
       elif dataLine == 5:
-         # Consider ditches and streams?
+         # Consider streams?
          if shared.considerFieldObservations:
-            shared.considerDitches = True
+            shared.considerStreams = True
          else:
             tempStr = data.upper().strip()
             if tempStr == "Y":
-               shared.considerDitches = True
+               shared.considerStreams = True
             elif tempStr == "N":
-               shared.considerDitches = False
+               shared.considerStreams = False
             else:
                printStr = "ERROR: consider ditches and streams = " + tempStr + ", it must be Y or N\n"
                print(printStr)
@@ -277,7 +275,7 @@ def readInput():
          dataLine += 1
 
       elif dataLine == 14:
-         shared.outFileFlowMarkerPointsTransparency = int(data)
+         shared.outFileFlowMarkerPointsOpacity = (100.0 - int(data)) / 100.0
          dataLine += 1
 
       elif dataLine == 15:
@@ -291,7 +289,7 @@ def readInput():
          dataLine += 1
 
       elif dataLine == 17:
-         shared.outFileFlowLinesTransparency = int(data)
+         shared.outFileFlowLinesOpacity = (100.0 - int(data)) / 100.0
          dataLine += 1
 
       elif dataLine == 18:
@@ -361,7 +359,7 @@ def readInput():
             elif vecLine == 4:
                shared.vectorFileStyle.append(shared.GISPath + data)
             elif vecLine == 5:
-               shared.vectorFileTransparency.append(int(data))
+               shared.vectorFileOpacity.append((100.0 - int(data)) / 100.0)
             elif vecLine == 6:
                shared.vectorFileCategory.append(eval(data))
 
@@ -403,7 +401,7 @@ def readInput():
             elif rasLine == 2:
                shared.rasterFileStyle.append(shared.GISPath + data)
             elif rasLine == 3:
-               shared.rasterFileTransparency.append(int(data))
+               shared.rasterFileOpacity.append((100.0 - int(data)) / 100.0)
             elif rasLine == 4:
                shared.rasterFileCategory.append(eval(data))
 
@@ -462,7 +460,7 @@ def readInput():
 
                   return -1
 
-               shared.fieldObservationFlowFrom.append(QgsPoint(float(xCoord), float(yCoord)))
+               shared.fieldObservationFlowFrom.append(QgsPointXY(float(xCoord), float(yCoord)))
 
             elif obsLine == 1:
                # Category
@@ -477,7 +475,7 @@ def readInput():
             elif obsLine == 2:
                # Behaviour
                if data not in shared.fieldObservationValidBehaviours:
-                  printStr = "ERROR: unknown field observation behaviour behaviour '" + str(data) + "' in field observation at " + DisplayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y())
+                  printStr = "ERROR: unknown field observation behaviour '" + str(data) + "' in field observation at " + DisplayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y())
                   print(printStr)
 
                   return -1
@@ -511,7 +509,7 @@ def readInput():
 
                      return -1
 
-                  shared.fieldObservationFlowTo.append(QgsPoint(float(xCoord), float(yCoord)))
+                  shared.fieldObservationFlowTo.append(QgsPointXY(float(xCoord), float(yCoord)))
                else:
                   # We do not have an outflow location. This is only allowable if the category is "along road", "along path", or "boundary blocked"
                   if not ((shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_ROAD and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_PATH and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_BOUNDARY and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG)):

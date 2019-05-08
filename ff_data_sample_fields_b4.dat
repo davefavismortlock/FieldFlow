@@ -10,7 +10,7 @@ Weighting for flow start point on fields (is a weighted average of the highest b
 
 Consider field observations?                                                  : Y
 Fill blind pits?                                                              : N
-Consider ditches and streams?                                                 : Y
+Consider streams?                                                             : Y
 Consider roads? (is N if field observations not considered)                   : Y
 Consider tracks and paths? (is N if field observations not considered)        : Y
 Consider field boundaries (is N if field observations not considered)         : Y
@@ -164,20 +164,20 @@ Description                                                                   : 
 Outflow location                                                              : 486246, 123643
 
 Inflow location                                                               : 486082, 123442
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : out of blind pit in field 48
 Outflow location                                                              : 486021, 123415
 
 Inflow location                                                               : 486021, 123415
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : negotiate Stedham Lane junction (1)
 Outflow location                                                              : 486009, 123403
 
 Inflow location                                                               : 486009, 123403
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : negotiate Stedham Lane junction (2)
 Outflow location                                                              : 486016, 123339
 
@@ -188,8 +188,8 @@ Description                                                                   : 
 Outflow location                                                              :
 
 Inflow location                                                               : 486104, 123167
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : out of blind pit (1) along Stedham Lane
 Outflow location                                                              : 486119, 123137
 
@@ -200,26 +200,26 @@ Description                                                                   : 
 Outflow location                                                              :
 
 Inflow location                                                               : 486134, 123101
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : out of blind pit (2) along Stedham Lane
 Outflow location                                                              : 486152, 122968
 
 Inflow location                                                               : 486152, 122968
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : going WSW along Stedham Lane (3)
 Outflow location                                                              : 486160, 122860
 
 Inflow location                                                               : 486160, 122860
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : going WSW along Stedham Lane (4)
 Outflow location                                                              : 486164, 122740
 
 Inflow location                                                               : 486164, 122740
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : going WSW along Stedham Lane (5)
 Outflow location                                                              : 486209, 122656
 
@@ -232,8 +232,8 @@ Outflow location                                                              :
 
 # FIELD 44
 Inflow location                                                               : 485908, 123768
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : to east of Talbots building
 Outflow location                                                              : 485912, 123756
 
@@ -250,8 +250,8 @@ Description                                                                   : 
 Outflow location                                                              : 485780, 123617
 
 Inflow location                                                               : 485728, 123558
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : to get out of blind pit in SW corner of field 44
 Outflow location                                                              : 485715, 123534
 
@@ -268,8 +268,8 @@ Description                                                                   : 
 Outflow location                                                              :
 
 Inflow location                                                               : 485559,123477
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : From road to stream
 Outflow location                                                              : 485533,123468
 
@@ -295,8 +295,8 @@ Description                                                                   : 
 Outflow location                                                              : 486312, 123370
 
 Inflow location                                                               : 486257, 123262
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : out of blind pit in field ??
 Outflow location                                                              : 486291, 123256
 
@@ -307,14 +307,14 @@ Description                                                                   : 
 Outflow location                                                              : 486300, 123251
 
 Inflow location                                                               : 486305, 123249
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : to get moving southward in wood
 Outflow location                                                              : 486283, 123175
 
 Inflow location                                                               : 486291.5, 123174.5
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : to prevent moving NE into blind pit
 Outflow location                                                              : 486326, 123142
 

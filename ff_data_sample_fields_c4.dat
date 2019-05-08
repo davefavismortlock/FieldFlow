@@ -10,7 +10,7 @@ Weighting for flow start point on fields (is a weighted average of the highest b
 
 Consider field observations?                                                  : Y
 Fill blind pits?                                                              : N
-Consider ditches and streams?                                                 : Y
+Consider streams?                                                             : Y
 Consider roads? (is N if field observations not considered)                   : Y
 Consider tracks and paths? (is N if field observations not considered)        : Y
 Consider field boundaries (is N if field observations not considered)         : Y
@@ -233,8 +233,8 @@ Description                                                                   : 
 Outflow location                                                              :
 
 Inflow location                                                               : 489449, 123566
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : leave W edge of 73
 Outflow location                                                              : 489436, 123545
 
@@ -263,8 +263,8 @@ Description                                                                   : 
 Outflow location                                                              :
 
 Inflow location                                                               : 489164, 123326
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : out of blind pit on NW edge of field 75
 Outflow location                                                              : 489156, 123306
 
@@ -287,8 +287,8 @@ Description                                                                   : 
 Outflow location                                                              :
 
 Inflow location                                                               : 488952, 122086
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : into stream
 Outflow location                                                              : 488931, 122066
 

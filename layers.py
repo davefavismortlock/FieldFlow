@@ -1,12 +1,10 @@
-from __future__ import print_function
+from qgis.core import QgsProject, QgsRasterLayer, QgsVectorLayer, QgsDataSourceUri, QgsFeatureRequest, QgsWkbTypes, QgsVectorFileWriter, QgsFeature, QgsGeometry, QgsRectangle, QgsCoordinateReferenceSystem, QgsPoint, QgsField
 
-from qgis.core import QgsRasterLayer, QgsMapLayerRegistry, QgsVectorLayer, QgsDataSourceURI, QgsFeatureRequest, QGis, QgsWKBTypes, QgsVectorFileWriter, QgsFeature, QgsGeometry, QgsRectangle
-
-from PyQt4.QtCore import QFileInfo     #, QVariant
+from PyQt5.QtCore import QFileInfo     #, QVariant
 
 import shared
 from shared import OUTPUT_TYPE, OUTPUT_FIELD_CODE, OUTPUT_ELEVATION
-from utils import toSentenceCase #, DisplayOS
+from utils import toSentenceCase, DisplayOS
 
 
 #======================================================================================================================
@@ -72,23 +70,11 @@ def readRasterLayer(i, allBandData):
       if not layer.loadNamedStyle(shared.rasterFileStyle[i]):
          shared.fpOut.write("Could not load style '" + shared.rasterFileStyle[i] + "' for raster layer '" + shared.rasterFileTitle[i] + "'")
 
-   # Set transparency
-   rasterTransparency = layer.renderer().rasterTransparency()
-   rasterTransparency.initializeTransparentPixelList(shared.rasterFileTransparency[i])
-   #layer.renderer().setRasterTransparency(rasterTransparency)
-
-   #rasterTransparency = layer.renderer().rasterTransparency()
-   #listPixels = []
-   #pixel = QgsRasterTransparency.TransparentThreeValuePixel()
-   #pixel.red = 255
-   #pixel.green = 255
-   #pixel.blue = 255
-   #pixel.percentTransparent = shared.rasterFileTransparency[i]
-   #listPixels.append(pixel)
-   #rasterTransparency.setTransparentThreeValuePixelList(listPixels)
+   # Set opacity
+   layer.renderer().setOpacity(shared.rasterFileOpacity[i])
 
    # Add this layer to the app's registry
-   QgsMapLayerRegistry.instance().addMapLayer(layer)
+   QgsProject.instance().addMapLayer(layer)
 
    return layer
 #======================================================================================================================
@@ -104,7 +90,7 @@ def ReadVectorLayer(i):
       layer = QgsVectorLayer(shared.vectorFileName[i], shared.vectorFileTitle[i], "ogr")
 
    elif shared.vectorFileType[i] == "spatialite":
-      uri = QgsDataSourceURI()
+      uri = QgsDataSourceUri()
       uri.setDatabase(shared.vectorFileName[i])
 
       schema = ''
@@ -137,11 +123,11 @@ def ReadVectorLayer(i):
       if not layer.loadNamedStyle(shared.vectorFileStyle[i]):
          shared.fpOut.write("Could not load style '" + shared.vectorFileStyle[i] + "' for vector layer '" + shared.vectorFileTitle[i] + "'")
 
-   # Set transparency
-   layer.setLayerTransparency(shared.vectorFileTransparency[i])
+   # Set opacity
+   layer.setOpacity(shared.vectorFileOpacity[i])
 
    # Add this layer to the app's registry
-   QgsMapLayerRegistry.instance().addMapLayer(layer)
+   QgsProject.instance().addMapLayer(layer)
 
    return layer
 #======================================================================================================================
@@ -165,7 +151,7 @@ def ReadAndMergeVectorLayers(vectorLayers):
          thisLayer = QgsVectorLayer(shared.vectorFileName[i], shared.vectorFileTitle[i], "ogr")
 
       elif shared.vectorFileType[i] == "spatialite":
-         uri = QgsDataSourceURI()
+         uri = QgsDataSourceUri()
          uri.setDatabase(shared.vectorFileName[i])
 
          schema = ''
@@ -203,17 +189,20 @@ def ReadAndMergeVectorLayers(vectorLayers):
       print("Copying features from vector layer '" + shared.vectorFileTitle[i] + "'")
       feats += features
       #for feat in features:
-         ##feature = QgsFeature()
-         ##feature.setGeometry(feat.geometry())
+         #newFeature = QgsFeature()
+         #newFeature.setGeometry(feat.geometry())
 
-         ###fields = feat.fields()
-         ###feature.setFields(fields)
+         #fields = feat.fields()
+         #newFeature.setFields(fields)
 
-         ##attrs = feat.attributes()
-         ##feature.setAttributes(attrs)
+         #attrs = feat.attributes()
+         #newFeature.setAttributes(attrs)
 
-         ##feats.append(feature)
-         #feats.append(feat)
+         #feats.append(newFeature)
+
+         ##print(feat)
+
+         ##feats.append(feat)
 
       category = shared.vectorFileCategory[i]
 
@@ -221,22 +210,45 @@ def ReadAndMergeVectorLayers(vectorLayers):
    thisLayerCRS = thisLayer.crs().toWkt()
    thisLayerFieldList = thisLayer.dataProvider().fields().toList()
 
-   # Create the merged layer by checking the geometry type of  the input files
-   if thisLayer.wkbType() == QGis.WKBPoint:
-      mergedLayer = QgsVectorLayer('Point?crs=' + thisLayerCRS, 'Merged', "memory")
+   # Create the merged layer by checking the geometry type of the input files
+   layerGeom = thisLayer.geometryType()
+   layerWkb = thisLayer.wkbType()
+   isMulti = QgsWkbTypes.isMultiType(layerWkb)
+   if layerGeom == QgsWkbTypes.PointGeometry:
+      if isMulti:
+         mergedLayer = QgsVectorLayer('MultiPoint?crs=' + thisLayerCRS, 'merged', "memory")
+      else:
+         mergedLayer = QgsVectorLayer('Point?crs=' + thisLayerCRS, 'merged', "memory")
 
-   elif thisLayer.wkbType() == QGis.WKBLineString:
-      mergedLayer = QgsVectorLayer('LineString?crs=' + thisLayerCRS, 'Merged', "memory")
+   elif layerGeom == QgsWkbTypes.LineGeometry:
+      if isMulti:
+         mergedLayer = QgsVectorLayer('MultiLineString?crs=' + thisLayerCRS, 'merged', "memory")
+      else:
+         mergedLayer = QgsVectorLayer('LineString?crs=' + thisLayerCRS, 'merged', "memory")
 
-   elif thisLayer.wkbType() == QGis.WKBLineString25D:
-      mergedLayer = QgsVectorLayer('LineString?crs=' + thisLayerCRS, 'Merged', "memory")
-
-   elif thisLayer.wkbType() == QGis.WKBPolygon:
-      mergedLayer = QgsVectorLayer('Polygon?crs=' + thisLayerCRS, 'Merged', "memory")
+   elif layerGeom == QgsWkbTypes.PolygonGeometry:
+      if isMulti:
+         mergedLayer = QgsVectorLayer('MultiPolygon?crs=' + thisLayerCRS, 'merged', "memory")
+      else:
+         mergedLayer = QgsVectorLayer('Polygon?crs=' + thisLayerCRS, 'merged', "memory")
 
    else:
-      geomTypeString = QgsWKBTypes.displayString(int(thisLayer.wkbType()))
-      shared.fpOut.write("Layer type " + geomTypeString + " cannot be merged")
+      geomTypeString = QgsWkbTypes.displayString(int(layerWkb))
+      errStr = "ERROR: layer type " + geomTypeString + " could not be merged"
+      print(errStr)
+      shared.fpOut.write(errStr + "\n")
+      return -1, -1
+
+   # Is the new (but still empty) merged layer OK?
+   if not mergedLayer.isValid():
+      titleStr = ""
+      for i in vectorLayers:
+         titleStr += shared.vectorFileTitle[i]
+         if i < len(vectorLayers):
+            titleStr += "' '"
+      errStr = "ERROR: could not create new vector layer for merge of '" + titleStr + "'"
+      print(errStr)
+      shared.fpOut.write(errStr + "\n")
       return -1, -1
 
    # Sort the list of features by identifier
@@ -246,24 +258,68 @@ def ReadAndMergeVectorLayers(vectorLayers):
    feats.sort(key = lambda feat : feat.attributes()[1])
 
    #for i in range(10):
-      #shared.fpOut.write(feats[i].attributes())
+      #print("BEFORE MERGE " + str(feats[i].attributes()))
+   #print("=================")
 
-   # Add the features to the merged layer
+   # BODGE
+   # This is needed because QGIS 3 handles Boolean layers incorrectly
+   #print("*********************")
+   #print("*** ORIGINAL: " + str(thisLayerFieldList))
+   #for fld in thisLayerFieldList:
+      #print(fld.type())
+   #print("*********************")
+
+   for fld in thisLayerFieldList:
+      fldName = fld.typeName()
+      if fldName == "Boolean":
+         fld.setTypeName("Integer64")
+         fld.setType(4)
+
+   #print("**** CHANGED : " + str(thisLayerFieldList))
+   #for fld in thisLayerFieldList:
+      #print(fld.type())
+   #print("*********************")
+
+   # Add the field attributes to the merged layer
    provider = mergedLayer.dataProvider()
-   provider.addAttributes(thisLayerFieldList)
+   #print(provider)
+   print("Number of attribute fields = " + str(len(thisLayerFieldList)))
+   if not provider.addAttributes(thisLayerFieldList):
+      errStr = "ERROR: could not add attributes to merged layer"
+      print(errStr)
+      shared.fpOut.write(errStr + "\n")
+      return -1, -1
 
    mergedLayer.updateFields()
-   mergedLayer.startEditing()
 
-   provider.addFeatures(feats)
+   flds = mergedLayer.fields()
+   #print(flds.names())
+   print("Number of attribute fields = " + str(len(flds.names())))
+
+
+   if not mergedLayer.startEditing():
+      errStr = "ERROR: could not edit merged layer"
+      print(errStr)
+      shared.fpOut.write(errStr + "\n")
+      return -1, -1
+
+   if not provider.addFeatures(feats):
+      errStr = "ERROR: could not add features to merged layer"
+      print(errStr)
+      shared.fpOut.write(errStr + "\n")
+      return -1, -1
+
    mergedLayer.commitChanges()
+
+   #testFeats = mergedLayer.getFeatures()
+   #print("testFeats = " + str(list(testFeats)))
 
    #features = mergedLayer.getFeatures()
    #for feat in features:
-      #shared.fpOut.write(feat.attributes())
+      #shared.fpOut.write(str(feat.attributes()))
 
    #for field in mergedLayer.fields().toList():
-      #shared.fpOut.write(field.name())
+      #shared.fpOut.write(str(field.name()))
 
 
    # Sort out style
@@ -272,16 +328,20 @@ def ReadAndMergeVectorLayers(vectorLayers):
       shared.vectorFileStyle[i] = mergedLayer.styleURI()
       #shared.fpOut.write(shared.vectorFileStyle[i])
       if not mergedLayer.loadDefaultStyle():
-         shared.fpOut.write("Could not load default style '" + shared.vectorFileStyle[i] + "' for vector layer '" + shared.vectorFileTitle[i] + "'")
+         errStr = "ERROR: could not load default style '" + shared.vectorFileStyle[i] + "' for vector layer '" + shared.vectorFileTitle[i] + "'"
+         print(errStr)
+         shared.fpOut.write(errStr + "\n")
    else:
       if not mergedLayer.loadNamedStyle(shared.vectorFileStyle[i]):
-         shared.fpOut.write("Could not load style '" + shared.vectorFileStyle[i] + "' for vector layer '" + shared.vectorFileTitle[i] + "'")
+         errStr = "ERROR: could not load style '" + shared.vectorFileStyle[i] + "' for vector layer '" + shared.vectorFileTitle[i] + "'"
+         print(errStr)
+         shared.fpOut.write(errStr + "\n")
 
    # Set transparency
-   mergedLayer.setLayerTransparency(shared.vectorFileTransparency[i])
+   mergedLayer.setOpacity(shared.vectorFileOpacity[i])
 
    # Add this layer to the app's registry
-   QgsMapLayerRegistry.instance().addMapLayer(mergedLayer)
+   QgsProject.instance().addMapLayer(mergedLayer)
 
    mergedNames = ""
    for i in vectorLayers:
@@ -301,7 +361,7 @@ def ReadAndMergeVectorLayers(vectorLayers):
 # Creates a new vector layer
 #
 #======================================================================================================================
-def createVector(initString, title, fieldDefn, style, transparency):
+def createVector(initString, title, fieldDefn, style, opacity):
    layer = QgsVectorLayer(initString, title, "memory")
    if not layer.isValid():
       shared.fpOut.write("Could not create vector layer '" + title + "'")
@@ -313,12 +373,12 @@ def createVector(initString, title, fieldDefn, style, transparency):
    layer.dataProvider().addAttributes(fieldDefn)
    layer.updateFields()
 
-   # Sort out style and transparency
+   # Sort out style and opacity
    layer.loadNamedStyle(style)
-   layer.setLayerTransparency(transparency)
+   layer.setOpacity(opacity)
 
    # Add this layer to the app's registry
-   QgsMapLayerRegistry.instance().addMapLayer(layer)
+   QgsProject.instance().addMapLayer(layer)
 
    return layer
 #======================================================================================================================
@@ -330,9 +390,9 @@ def createVector(initString, title, fieldDefn, style, transparency):
 #
 #======================================================================================================================
 def WriteVector(layer, fileName, CRS):
-   error = QgsVectorFileWriter.writeAsVectorFormat(layer, fileName, CRS, None, "ESRI Shapefile")
+   error, errorString  = QgsVectorFileWriter.writeAsVectorFormat(layer, fileName, "UTF-8", driverName = "ESRI Shapefile")
    if error != QgsVectorFileWriter.NoError:
-      printStr = "ERROR: could not create '" + fileName + "'\n"
+      printStr = "ERROR: could not create '" + fileName + "' '" + errorString + "'\n"
       shared.fpOut.write(printStr)
       print(printStr)
 
@@ -349,9 +409,9 @@ def WriteVector(layer, fileName, CRS):
 #
 #======================================================================================================================
 def AddFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
-   # print("AddFlowMarkerPoint " + desc + " " + DisplayOS(thisPoint.x(), thisPoint.y()))
+   #print("In AddFlowMarkerPoint " + desc + " " + DisplayOS(thisPoint.x(), thisPoint.y()) + " for field " + str(fieldCode))
    feature = QgsFeature()
-   feature.setGeometry(QgsGeometry.fromPoint(thisPoint))
+   feature.setGeometry(QgsGeometry.fromPointXY(thisPoint))
 
    fields = shared.outFlowMarkerPointLayer.fields()
    feature.setFields(fields)
@@ -375,7 +435,7 @@ def AddFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
 #======================================================================================================================
 def AddFlowLine(lineStartPoint, lineEndPoint, desc, fieldCode, elev):
    feature = QgsFeature()
-   feature.setGeometry(QgsGeometry.fromPolyline([lineStartPoint, lineEndPoint]))
+   feature.setGeometry(QgsGeometry.fromPolyline([QgsPoint(lineStartPoint), QgsPoint(lineEndPoint)]))
 
    fields = shared.outFlowLineLayer.fields()
    feature.setFields(fields)

@@ -1,8 +1,8 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 # TODO flow along road segments does not look for nearby pre-existing flow
 
-from __future__ import print_function
+from sys import argv
 
 from qgis.core import QgsApplication
 
@@ -17,13 +17,18 @@ from initialize import setUpSimulation
 #
 #======================================================================================================================
 class MainApp(QgsApplication):
-   def __init__(self):
-      QgsApplication.__init__(self, sys.argv, True)
+   def __init__(self, args):
+      args2 = []
+      for arg in args:
+         args2.append(arg.encode('utf-8'))
+
+      super(MainApp, self).__init__(args2, True)
 
       #print(self.showSettings())
 
       # Set the path to QGIS and initialize
-      self.setPrefixPath("/usr", True)
+      qgisPath = "/usr" # TODO Put in shared
+      self.setPrefixPath(qgisPath, True)
       self.initQgis()
 
       # Get the input parameters
@@ -33,13 +38,13 @@ class MainApp(QgsApplication):
          exit(rtn)
 
       # Initialise variables and read the GIS layers
-      canvasLayers, canvasLayersCategory = setUpSimulation()
-      if canvasLayers == -1:
-         print("ERROR: see output file")
+      mapLayers, mapLayersCategory = setUpSimulation()
+      if mapLayers == -1:
+         print("ERROR: could not create map layer, see output file")
          exit(rtn)
 
       # Create the main window, and start the simulation thread
-      appWindow = MainWindow(self, canvasLayers, canvasLayersCategory)
+      appWindow = MainWindow(self, mapLayers, mapLayersCategory)
 
       # Show the window
       appWindow.show()
@@ -55,10 +60,9 @@ class MainApp(QgsApplication):
 
       print("\nEnd of run")
 
-      #exit (0)
+      exit (0)
 #======================================================================================================================
 
 
 if __name__ == "__main__":
-   import sys
-   app = MainApp()
+   app = MainApp(argv)

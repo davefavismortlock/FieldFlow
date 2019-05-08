@@ -1,11 +1,9 @@
-from __future__ import print_function
 from math import hypot
 import sys
 
-from PyQt4.QtCore import QVariant # QFileInfo,
+from PyQt5.QtCore import QVariant
 
-from qgis.core import QgsField, QgsSpatialIndex, QgsRectangle # NULL,
-from qgis.gui import QgsMapCanvasLayer     #, QgsMapToolPan, QgsMapToolZoom
+from qgis.core import QgsField, QgsSpatialIndex, QgsRectangle, QgsVectorLayer, QgsRasterLayer
 
 import shared
 from shared import FLOW_MARKERS, OUTPUT_TYPE, FLOW_LINES, OUTPUT_FIELD_CODE, OUTPUT_ELEVATION, INPUT_FIELD_BOUNDARIES, INPUT_WATER_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, OUTPUT_FLOW_MARKERS, OUTPUT_FLOW_LINES
@@ -94,7 +92,7 @@ def setUpSimulation():
    initString += shared.externalCRS
    title = FLOW_MARKERS
    fieldDefn = [QgsField(OUTPUT_TYPE, QVariant.String, "char", 10), QgsField(OUTPUT_FIELD_CODE, QVariant.String, "char", 10), QgsField(OUTPUT_ELEVATION, QVariant.Double, "float", 12, 4)]
-   shared.outFlowMarkerPointLayer = createVector(initString, title, fieldDefn, shared.outFileFlowMarkerPointsStyle, shared.outFileFlowMarkerPointsTransparency)
+   shared.outFlowMarkerPointLayer = createVector(initString, title, fieldDefn, shared.outFileFlowMarkerPointsStyle, shared.outFileFlowMarkerPointsOpacity)
    if shared.outFlowMarkerPointLayer == -1:
       return (-1, -1)
 
@@ -103,7 +101,7 @@ def setUpSimulation():
    initString += shared.externalCRS
    title = FLOW_LINES
    fieldDefn = [QgsField(OUTPUT_TYPE, QVariant.String, "char", 10), QgsField(OUTPUT_FIELD_CODE, QVariant.String, "char", 10), QgsField(OUTPUT_ELEVATION, QVariant.Double, "float", 12, 4)]
-   shared.outFlowLineLayer = createVector(initString, title, fieldDefn, shared.outFileFlowLinesStyle, shared.outFileFlowLinesTransparency)
+   shared.outFlowLineLayer = createVector(initString, title, fieldDefn, shared.outFileFlowLinesStyle, shared.outFileFlowLinesOpacity)
    if shared.outFlowLineLayer == -1:
       return (-1, -1)
 
@@ -148,9 +146,18 @@ def setUpSimulation():
       shared.vectorInputLayers.append(layer)
       shared.vectorInputLayersCategory.append(category)
 
-      # Create a spatial index
-      index = QgsSpatialIndex(layer.getFeatures())
-      shared.vectorInputIndex.append(index)
+      #feats = layer.getFeatures()
+      #n = 0
+      #for feat in feats:
+         #print("AFTER MERGE " + str(feat.attributes()))
+         #n += 1
+         #if n == 10:
+            #break
+      #print("=================")
+
+      # Create a spatial index for each merged vector layer
+      index = QgsSpatialIndex(layer)
+      shared.vectorInputLayerIndex.append(index)
 
    #for i in range(len(shared.vectorInputLayers)):
       #fields = shared.vectorInputLayers[i].fields().toList()
@@ -169,8 +176,8 @@ def setUpSimulation():
       shared.vectorInputLayersCategory.append(shared.vectorFileCategory[i])
 
       # Create a spatial index
-      index = QgsSpatialIndex(layer.getFeatures())
-      shared.vectorInputIndex.append(index)
+      index = QgsSpatialIndex(layer)
+      shared.vectorInputLayerIndex.append(index)
 
    #for i in range(len(shared.vectorInputLayers)):
       #fields = shared.vectorInputLayers[i].fields().toList()
@@ -185,7 +192,7 @@ def setUpSimulation():
          shared.rasterFileName.insert(0, shared.rasterFileName.pop(i))
          shared.rasterFileTitle.insert(0, shared.rasterFileTitle.pop(i))
          shared.rasterFileStyle.insert(0, shared.rasterFileStyle.pop(i))
-         shared.rasterFileTransparency.insert(0, shared.rasterFileTransparency.pop(i))
+         shared.rasterFileOpacity.insert(0, shared.rasterFileOpacity.pop(i))
          shared.rasterFileCategory.insert(0, shared.rasterFileCategory.pop(i))
 
    # Now read the raster files
@@ -200,6 +207,9 @@ def setUpSimulation():
       shared.rasterInputData.append(rasterData)
 
    shared.fpOut.write("")
+
+   #for ind in shared.vectorInputLayerIndex:
+      #print(ind)
 
    # OK, check what we have read in
    haveFieldBoundaries = False
@@ -281,11 +291,11 @@ def setUpSimulation():
    for i in range(len(shared.rasterInputLayers)):
       allLayers.append([shared.rasterInputLayers[i], shared.rasterInputLayersCategory[i]])
 
-   canvasLayers = []
-   canvasLayersCategory = []
+   mapLayers = []
+   mapLayersCategory = []
    for layer in allLayers:
-      canvasLayers.append(QgsMapCanvasLayer(layer[0]))
-      canvasLayersCategory.append(layer[1])
+      mapLayers.append(layer[0])
+      mapLayersCategory.append(layer[1])
 
       layerExtent = layer[0].extent()
       if not layerExtent.isEmpty():
@@ -297,8 +307,8 @@ def setUpSimulation():
    #for i in range(len(listLayers)):
       #print i, listLayers[i].crs().authid()
 
-   #for i in range(len(canvasLayers)):
-      #shared.fpOut.write(i, canvasLayers[i].isVisible())
+   #for i in range(len(mapLayers)):
+      #shared.fpOut.write(i, mapLayers[i].isVisible())
 
    # Set up the extent of the main window
    if shared.extentRect.isEmpty():
@@ -386,5 +396,5 @@ def setUpSimulation():
 
    #shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
 
-   return canvasLayers, canvasLayersCategory
+   return mapLayers, mapLayersCategory
 #======================================================================================================================

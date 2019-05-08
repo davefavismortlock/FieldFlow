@@ -5,12 +5,12 @@
 #======================================================================================================================
 Run title                                                                     : West Sussex: Sample Fields A. CONSIDER ALL FIELD OBERVATIONS
 
-Fields which generate flow (comma-separated list, blank for auto)             : 22a, Unknown, B6
+Fields which generate flow (comma-separated list, blank for auto)             : 22a, 21, B6
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
 Consider field observations?                                                  : Y
 Fill blind pits?                                                              : N
-Consider ditches and streams?                                                 : Y
+Consider streams?                                                             : Y
 Consider roads? (is N if field observations not considered)                   : Y
 Consider tracks and paths? (is N if field observations not considered)        : Y
 Consider field boundaries (is N if field observations not considered)         : Y
@@ -32,12 +32,12 @@ Transparency for flow lines (0-100)                                           : 
 Width of window (pixels)                                                      : 900
 Height of window (pixels)                                                     : 1150
 Initial magnification                                                         : 1.0
-   
+
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
 Coordinates of SW corner of area displayed                                    : 479000, 123100
 Coordinates of NE corner of area displayed                                    : 480700, 124900
- 
+
 # Vector files ========================================================================================================
 
 # Field boundaries REQUIRED ===========================================================================================
@@ -57,7 +57,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Category                                                                      : INPUT_WATER_NETWORK   
+Category                                                                      : INPUT_WATER_NETWORK
 
 # OS Mastermap Water Network file
 File for vector water network (with extension)                                : MasterMap Water Network_1718110/su/SU7520.gml|layerid=1
@@ -66,7 +66,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Category                                                                      : INPUT_WATER_NETWORK   
+Category                                                                      : INPUT_WATER_NETWORK
 
 # Roads REQUIRED ======================================================================================================
 File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su72se_Road_Centreline.shp
@@ -75,7 +75,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : OS VectorMap Local/su/roads.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_ROAD_NETWORK   
+Category                                                                      : INPUT_ROAD_NETWORK
 
 File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su82sw_Road_Centreline.shp
 Table name                                                                    : vml-su82sw_Road_Centreline
@@ -83,7 +83,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : OS VectorMap Local/su/roads.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_ROAD_NETWORK   
+Category                                                                      : INPUT_ROAD_NETWORK
 
 # Paths REQUIRED ======================================================================================================
 File for vector path network (with extension)                                 : selected_paths.shp
@@ -92,7 +92,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : paths.qml
 Transparency (0-100)                                                          : 50
-Category                                                                      : INPUT_PATH_NETWORK   
+Category                                                                      : INPUT_PATH_NETWORK
 
 # Observed flow lines OPTIONAL ========================================================================================
 File for observed flow lines (with extension)                                 : Connectivity/flow_lines_a.sqlite
@@ -184,7 +184,6 @@ Category                                                                      : 
 END OF RASTER LAYERS ==================================================================================================
 
 # Field observations ==================================================================================================
-
 # FIELD B6
 Inflow location                                                               : 480322, 124578
 Category                                                                      : boundary
@@ -213,11 +212,17 @@ Description                                                                   : 
 Outflow location                                                              : 480448, 124404
 
 
-# FIELD UNKNOWN
+# FIELD 21
+Inflow location                                                               : 480052, 124608
+Category                                                                      : boundary
+Behaviour                                                                     : across
+Description                                                                   : bodge since start point outside field
+Outflow location                                                              : 480050, 124608
+
 Inflow location                                                               : 479938, 124482
 Category                                                                      : path
 Behaviour                                                                     : across
-Description                                                                   : in field Unknown
+Description                                                                   : in field 21
 Outflow location                                                              : 479938, 124472
 
 Inflow location                                                               : 480054, 124292
@@ -233,3 +238,5 @@ Description                                                                   : 
 Outflow location                                                              : 480066, 124282
 
 END OF FIELD OBSERVATIONS =============================================================================================
+
+

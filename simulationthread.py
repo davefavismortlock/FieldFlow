@@ -1,13 +1,11 @@
-from __future__ import print_function
+from PyQt5.QtCore import QThread, pyqtSignal
 
-from PyQt4.QtCore import QThread, pyqtSignal
-
-from qgis.core import QgsPoint, QgsFeatureRequest
+from qgis.core import QgsPointXY, QgsFeatureRequest
 
 import shared
-from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_BLIND_PIT, MARKER_AT_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_ROAD, MARKER_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST
+from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_BLIND_PIT, MARKER_AT_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_ROAD, MARKER_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID
 from layers import AddFlowMarkerPoint, AddFlowLine, WriteVector
-from simulate import GetHighestPointOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoad, FlowAlongVectorPath
+from simulate import GetHighestAndLowestPointsOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoad, FlowAlongVectorPath
 from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
 from utils import GetRasterElev, GetCentroidOfContainingDEMCell, DisplayOS
 
@@ -54,10 +52,10 @@ class SimulationThread(QThread):
       #===================================================================================================================
       # OK, off we go. First determine the flow start points
       #===================================================================================================================
-      #shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-      #shared.fpOut.write("FLOW START POINTS\n\n")
+      shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
+      shared.fpOut.write("FLOW START POINTS\n\n")
 
-      fieldCodes = []
+      fieldCodesStartPointFound = []
       for layerNum in range(len(shared.vectorInputLayersCategory)):
          #fields = shared.vectorInputLayers[layerNum].fields().toList()
          #for field in fields:
@@ -70,7 +68,6 @@ class SimulationThread(QThread):
             for fieldBoundary in features:
                # Get the field code
                fieldCode = fieldBoundary[CONNECTED_FIELD_ID]
-               #shared.fpOut.write(str(fieldCode) + "\n")
 
                # Is the centroid of this field within the coverage of one of the raster landscape element files which we have read in? TODO change to vector extent
                isWithin = False
@@ -84,46 +81,56 @@ class SimulationThread(QThread):
                if not isWithin:
                   continue
 
-               # Ignore duplicate fields
-               if fieldCode not in fieldCodes:
-                  #shared.fpOut.write(str(fieldCode) + "\n")
+               #print("fieldCode = " + str(fieldCode))
+               #print("fieldCodesStartPointFound = " + str(fieldCodesStartPointFound))
 
-                  # Get the coords of the centroid of the pixel which contains the highest point on the boundary of this field (including in-between points), and also the elevation of this point
-                  xBoundary, yBoundary, _boundaryElev = GetHighestPointOnFieldBoundary(fieldBoundary)
+               # Ignore any duplicate fields
+               if fieldCode not in fieldCodesStartPointFound:
+                  # Calculate the start-of-flow location only for fields which generate runoff
+                  if not doAllFields and fieldCode not in shared.fieldsWithFlow:
+                     shared.fpOut.write("Not calculating start of flow for field " + str(fieldCode) + "\n")
+                     continue
 
-                  # Is it valid?
-                  if (xBoundary == -1) and (yBoundary == -1):
+                  #print("Finding flow start point for field " + str(fieldCode))
+
+                  # Get the coords of the centroid of the pixel which contains the highest point and lowest point on the boundary of this field (including in-between points), and also the elevation of these points
+                  xMaxBoundary, yMaxBoundary, _maxBoundaryElev, xMinBoundary, yMinBoundary, _minBoundaryElev = GetHighestAndLowestPointsOnFieldBoundary(fieldBoundary)
+
+                  # Are the results valid?
+                  if (xMaxBoundary == -1) or (xMinBoundary == -1):
                      # No
                      continue
 
-                  # Is valid, so show on the map
-                  #AddFlowMarkerPoint(QgsPoint(xBoundary, yBoundary), MARKER_HIGHEST_POINT, fieldCode, boundaryElev)
-
-                  # Calculate the start-of-flow location only for fields which generate runoff
-                  if not doAllFields and fieldCode not in shared.fieldsWithFlow:
-                     continue
+                  # Is valid, so show the highest and lowest points on the map
+                  #AddFlowMarkerPoint(QgsPointXY(xMaxBoundary, yMaxBoundary), str(fieldCode) + MARKER_HIGHEST_POINT, fieldCode, _maxBoundaryElev)
+                  #AddFlowMarkerPoint(QgsPointXY(xMinBoundary, yMinBoundary), str(fieldCode) + MARKER_LOWEST_POINT, fieldCode, _minBoundaryElev)
 
                   # OK, get the elevation of the field's centroid
                   xCentroid = centroidPoint.x()
                   yCentroid = centroidPoint.y()
-                  #centroidElev = GetRasterElev(xCentroid, yCentroid)
 
                   # Show the centroid on the map
-                  #AddFlowMarkerPoint(centroidPoint, MARKER_CENTROID, fieldCode, centroidElev)
+                  #AddFlowMarkerPoint(centroidPoint, str(fieldCode) + MARKER_CENTROID, fieldCode, GetRasterElev(xCentroid, yCentroid))
 
                   # Calculate the flow start point for this field, as a weighted average of the highest boundary point and the centroid point
                   weightCentroid = 1 - shared.weightBoundary
-                  xFlowStart = (xBoundary * shared.weightBoundary) + (xCentroid * weightCentroid)
-                  yFlowStart = (yBoundary * shared.weightBoundary) + (yCentroid * weightCentroid)
+                  xFlowStart = (xMaxBoundary * shared.weightBoundary) + (xCentroid * weightCentroid)
+                  yFlowStart = (yMaxBoundary * shared.weightBoundary) + (yCentroid * weightCentroid)
+
+                  # Calculate the flow start point for this field, as a weighted average of the highest boundary point and the lowest boundary point
+                  #weightCentroid = 1 - shared.weightBoundary
+                  #xFlowStart = (xMaxBoundary * shared.weightBoundary) + (xMinBoundary * weightCentroid)
+                  #yFlowStart = (yMaxBoundary * shared.weightBoundary) + (yMinBoundary * weightCentroid)
 
                   flowStartElev = GetRasterElev(xFlowStart, yFlowStart)
 
                   # Save the flow start point for this field
                   shared.flowStartPoints.append([xFlowStart, yFlowStart, flowStartElev, fieldCode])
-                  fieldCodes.append(fieldCode)
+                  #print("ADDED FLOW START POINT")
+                  fieldCodesStartPointFound.append(fieldCode)
 
                   # And show it on the map
-                  AddFlowMarkerPoint(QgsPoint(xFlowStart, yFlowStart), fieldCode + MARKER_FLOW_START_POINT, fieldCode, flowStartElev)
+                  AddFlowMarkerPoint(QgsPointXY(xFlowStart, yFlowStart), MARKER_FLOW_START_POINT_1 + fieldCode + MARKER_FLOW_START_POINT_2, fieldCode, flowStartElev)
                   #shared.fpOut.write("Flow from field " + fieldCode + " begins at " + DisplayOS(xFlowStart, yFlowStart) + "\n")
 
                   # Refresh the display
@@ -176,7 +183,7 @@ class SimulationThread(QThread):
 
          x = shared.flowStartPoints[field][0]
          y = shared.flowStartPoints[field][1]
-         thisPoint = QgsPoint(x, y)
+         thisPoint = QgsPointXY(x, y)
          elev = shared.flowStartPoints[field][2]
          fieldCode = shared.flowStartPoints[field][3]
 
@@ -208,7 +215,7 @@ class SimulationThread(QThread):
             # Refresh the display
             self.refresh.emit()
 
-            #print("thisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()))
+            #shared.fpOut.write("At start of inner loop, thisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
             # Safety check
             nStepsAfterStart += 1
@@ -238,7 +245,7 @@ class SimulationThread(QThread):
             adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(thisPoint)
             if adjX != -1:
                # There is an adjacent flow line, so merge the two and finish with this flow line
-               AddFlowLine(thisPoint, QgsPoint(adjX, adjY), MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, elev)
+               AddFlowLine(thisPoint, QgsPointXY(adjX, adjY), MERGED_WITH_ADJACENT_FLOWLINE, fieldCode, elev)
                shared.fpOut.write("Flow from field " + fieldCode + " hit flow from field " + str(hitFieldFlowFrom) + " at " + DisplayOS(adjX, adjY) + ", so stopped tracing flow from this field\n")
 
                # Move on to the next field
@@ -376,7 +383,7 @@ class SimulationThread(QThread):
                if indx == -1:
                   # Did not find a field observation near this point
                   if viaLEAndHitBlindPit:
-                     AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
+                     #AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
                      shared.fpOut.write("Flow from field " + str(fieldCode) + " ends at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Please add a field observation\n")
 
                      # Move on to next field
@@ -407,7 +414,7 @@ class SimulationThread(QThread):
 
                   elif rtn == 1:
                      # Flow has passed through the field observation and then hit a blind pit, so we need another field observation. Set a switch and go round the loop once more, since we may have a field observation which relates to this
-                     #AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
+                     AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
                      #shared.fpOut.write("XXXX " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
                      viaLEAndHitBlindPit = True
 
@@ -511,7 +518,7 @@ class SimulationThread(QThread):
             #=============================================================================================================
             if inBlindPit:
                if shared.FillBlindPits:
-                  AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
+                  #AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
 
                   newPoint, flowDepth = FillBlindPit(thisPoint, fieldCode)
                   if newPoint == -1:

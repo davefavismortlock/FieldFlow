@@ -27,7 +27,7 @@ OS_TERRAIN_5_XYZ_ELEVATION    = "field_3"
 # OS MASTERMAP WATER NETWORK FIELD NAMES
 OS_WATER_NETWORK_LEVEL        = "level"
 OS_WATER_NETWORK_NAME         = "watercourseName"
-OS_WATER_NETWORK_LOCAL_ID     = "localid"
+OS_WATER_NETWORK_LOCAL_ID     = "localId"
 
 # OS VECTORMAP LOCAL ROAD CENTRELINE FIELD NAMES
 OS_VECTORMAP_FEAT_CODE        = "FeatCode"
@@ -47,7 +47,7 @@ FIELD_OBS_CATEGORY_CULVERT    = "culvert"
 FIELD_OBS_CATEGORY_PATH       = "path"
 FIELD_OBS_CATEGORY_ROAD       = "road"
 FIELD_OBS_CATEGORY_STREAM     = "stream"
-FIELD_OBS_CATEGORY_DUMMY      = "dummy"
+FIELD_OBS_CATEGORY_DUMMY      = "overtop"
 
 # Field observation valid behaviours
 FIELD_OBS_BEHAVIOUR_ALONG    = "along"
@@ -56,7 +56,7 @@ FIELD_OBS_BEHAVIOUR_ACROSS   = "across"
 FIELD_OBS_BEHAVIOUR_THROUGH  = "through"
 FIELD_OBS_BEHAVIOUR_ENTER    = "enter"
 FIELD_OBS_BEHAVIOUR_LEAVE    = "leave"
-FIELD_OBS_BEHAVIOUR_DUMMY    = "dummy"
+FIELD_OBS_BEHAVIOUR_DUMMY    = "overtop"
 
 # Output datasets =====================================================================================================
 OUTPUT_FLOW_MARKERS           = 0
@@ -86,9 +86,11 @@ FLOW_OUT_OF_BLIND_PIT         = "OutBlindPit"
 BLIND_PIT                     = "BlindPit"
 
 # Markers
-MARKER_HIGHEST_POINT          = "Highest point"
-MARKER_CENTROID               = "Centroid"
-MARKER_FLOW_START_POINT       = " flow start"
+MARKER_HIGHEST_POINT          = " highest point"
+MARKER_LOWEST_POINT           = " lowest point"
+MARKER_CENTROID               = " centroid"
+MARKER_FLOW_START_POINT_1     = "Field "
+MARKER_FLOW_START_POINT_2     = " flow start"
 MARKER_BLIND_PIT              = "Blind pit"
 MARKER_FIELD_BOUNDARY         = "Field boundary"
 MARKER_ENTER_STREAM           = "Stream"
@@ -101,12 +103,12 @@ MARKER_AT_STREAM              = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "6 December 2018 version"
+progVer = "8 May 2019 QGIS3 version"
 runTitle = ""
 
 considerFieldObservations = ""
 FillBlindPits = ""
-considerDitches = ""
+considerStreams = ""
 considerFieldBoundaries = ""
 considerRoads = ""
 considerTracks = ""
@@ -120,10 +122,10 @@ haveRasterBackground = False
 
 outFileFlowMarkerPoints = ""
 outFileFlowMarkerPointsStyle = ""
-outFileFlowMarkerPointsTransparency = 0
+outFileFlowMarkerPointsOpacity = 100
 outFileFlowLines = ""
 outFileFlowLinesStyle = ""
-outFileFlowLinesTransparency = 0
+outFileFlowLinesOpacity = 100
 
 windowWidth = 0
 windowHeight = 0
@@ -153,13 +155,13 @@ vectorFileName = 0
 vectorFileTitle = 0
 vectorFileType = 0
 vectorFileStyle = 0
-vectorFileTransparency = 0
+vectorFileOpacity = 0
 vectorFileCategory = 0
 
 rasterFileName = 0
 rasterFileTitle = 0
 rasterFileStyle = 0
-rasterFileTransparency = 0
+rasterFileOpacity = 0
 rasterFileCategory = 0
 
 outFlowMarkerPointLayer = 0
@@ -168,7 +170,7 @@ outFlowLineLayerIndex = 0
 
 vectorInputLayers = 0
 vectorInputLayersCategory = 0
-vectorInputIndex = 0
+vectorInputLayerIndex = 0
 rasterInputLayers = 0
 rasterInputLayersCategory = 0
 rasterInputData = 0

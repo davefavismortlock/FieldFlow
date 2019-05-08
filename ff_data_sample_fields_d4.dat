@@ -10,7 +10,7 @@ Weighting for flow start point on fields (is a weighted average of the highest b
 
 Consider field observations?                                                  : Y
 Fill blind pits?                                                              : N
-Consider ditches and streams?                                                 : Y
+Consider streams?                                                             : Y
 Consider roads? (is N if field observations not considered)                   : Y
 Consider tracks and paths? (is N if field observations not considered)        : Y
 Consider field boundaries (is N if field observations not considered)         : Y
@@ -268,8 +268,8 @@ Outflow location                                                              : 
 # FLOW FROM FIELD 88
 
 Inflow location                                                               : 491722, 122478
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : out of blind pit in field 88
 Outflow location                                                              : 491682, 122460
 
@@ -280,8 +280,8 @@ Description                                                                   : 
 Outflow location                                                              : 491680, 122443
 
 Inflow location                                                               : 491652, 122402
-Type                                                                          : dummy
-Behaviour                                                                     : dummy
+Type                                                                          : overtop
+Behaviour                                                                     : overtop
 Description                                                                   : out of blind pit in field 88a
 Outflow location                                                              : 491605, 122343
 
