@@ -223,56 +223,37 @@ Behaviour                                                                     : 
 Description                                                                   : going WSW along Stedham Lane (5)
 Outflow location                                                              : 486209, 122656
 
-#Inflow location                                                               : 486209, 122656
-#Type                                                                          : road
-#Behaviour                                                                     : along
-#Description                                                                   : going WSW along Stedham Lane (6)
-#Outflow location                                                              :
-
 
 # FIELD 44
-Inflow location                                                               : 485908, 123768
+Inflow location                                                               : 485792, 123622
+Type                                                                          : path
+Behaviour                                                                     : across
+Description                                                                   : to east of former Talbots building
+Outflow location                                                              : 485781, 123614
+
+Inflow location                                                               : 485728, 123558
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : to east of Talbots building
-Outflow location                                                              : 485912, 123756
+Description                                                                   : south of former Talbots building
+Outflow location                                                              : 485723, 123544
 
-Inflow location                                                               : 485912, 123756
-Type                                                                          : path
+Inflow location                                                               : 485712, 123542
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : SW edge of field 44
+Outflow location                                                              : 485708, 123538
+
+Inflow location                                                               : 485708, 123538
+Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : to east of Talbots building
+Description                                                                   : Stanwater Lane
 Outflow location                                                              :
 
-#Inflow location                                                               : 485789, 123617
-#Type                                                                          : path
-#Behaviour                                                                     : leave
-#Description                                                                   : south of Talbots building
-#Outflow location                                                              : 485780, 123617
-
-#Inflow location                                                               : 485728, 123558
-#Type                                                                          : blindpit
-#Behaviour                                                                     : overtop
-#Description                                                                   : to get out of blind pit in SW corner of field 44
-#Outflow location                                                              : 485715, 123534
-
-#Inflow location                                                               : 485712, 123532
-#Type                                                                          : boundary
-#Behaviour                                                                     : across
-#Description                                                                   : at west edge of field 44
-#Outflow location                                                              : 485707, 123513
-
-#Inflow location                                                               : 485707, 123513
-#Type                                                                          : road
-#Behaviour                                                                     : along
-#Description                                                                   : Stanwater Lane
+#Inflow location                                                               : 485712, 123508
+#Type                                                                          : stream
+#Behaviour                                                                     : enter
+#Description                                                                   : Stanwater Lane Bridge
 #Outflow location                                                              :
-
-#Inflow location                                                               : 485559,123477
-#Type                                                                          : blindpit
-#Behaviour                                                                     : overtop
-#Description                                                                   : From road to stream
-#Outflow location                                                              : 485533,123468
-
 
 
 # FIELD 47
