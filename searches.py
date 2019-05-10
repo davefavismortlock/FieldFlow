@@ -457,7 +457,7 @@ def FindNearbyFieldObservation(foundPoint):
       yObs = shared.fieldObservationFlowFrom[indx].y()
 
       if xMin < xObs < xMax and yMin < yObs < yMax:
-         shared.fpOut.write("Field observation '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' found at " + DisplayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()) + "\n")
+         shared.fpOut.write("Field observation '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' found for location " + DisplayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()) + "\n")
 
          return indx
    return -1

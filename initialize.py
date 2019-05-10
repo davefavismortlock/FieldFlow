@@ -41,7 +41,7 @@ def setUpSimulation():
 
    n = len(shared.fieldsWithFlow)
    if n > 0:
-      printStr += "Flow from fields "
+      printStr += "Flow from source fields "
       for m in range(n):
          printStr += shared.fieldsWithFlow[m]
          if m < n-1:

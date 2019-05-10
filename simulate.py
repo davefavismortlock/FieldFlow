@@ -117,7 +117,7 @@ def FlowViaFieldObservation(indx, fieldCode, thisPoint, elev):
    # pylint: disable=too-many-return-statements
    # pylint: disable=too-many-branches
 
-   shared.fpOut.write("Entered FlowViaFieldObservation() at " + DisplayOS(thisPoint.x(), thisPoint.y(), False) + ", field observation found at " + DisplayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y(), False) + "\n")
+   #shared.fpOut.write("Entered FlowViaFieldObservation() at " + DisplayOS(thisPoint.x(), thisPoint.y(), False) + ", field observation for location " + DisplayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y(), False) + "\n")
    #shared.fpOut.write(shared.fieldObservationFlowTo)
    if not shared.fieldObservationFlowTo[indx]:
       # The outflow location is not known, so we have flow along a road or along a path
@@ -223,7 +223,7 @@ def FlowViaFieldObservation(indx, fieldCode, thisPoint, elev):
    elif shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_ROAD:
       AddFlowMarkerPoint(QgsPointXY(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()), MARKER_ROAD, fieldCode, -1)
 
-   printStr = "Flow from field " + fieldCode + " routed via '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' from " + DisplayOS(thisPoint.x(), thisPoint.y())
+   printStr = "Flow from field " + fieldCode + " routed '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + " " + shared.fieldObservationDescription[indx] + "' from " + DisplayOS(thisPoint.x(), thisPoint.y())
    if thisPoint != shared.fieldObservationFlowFrom[indx]:
       printStr += " via " + DisplayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y())
    printStr += " to " + DisplayOS(shared.fieldObservationFlowTo[indx].x(), shared.fieldObservationFlowTo[indx].y())
@@ -366,7 +366,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
          fullDesc = "'" + str(featCode) + " " + str(featDesc) + " " + str(roadName) + " " + str(roadNumber) + "'"
 
-         shared.fpOut.write("\tTrying untravelled road segment " + fullDesc + " with distance to nearest point = " + str(roadSeg[2]) + " m\n")
+         #shared.fpOut.write("\tTrying untravelled road segment " + fullDesc + " with distance to nearest point = " + str(roadSeg[2]) + " m\n")
 
          #geomFeat = feature.geometry()
          #linePoints = geomFeat.asPolyline()
@@ -392,12 +392,12 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
             nextPoint = linePoints[1]
             elevNextPoint = GetRasterElev(nextPoint.x(), nextPoint.y())
 
-            shared.fpOut.write("\tA: near point elev = " + str(elevNearPoint) + ", next point elev = " + str(elevNextPoint) + "\n")
+            #shared.fpOut.write("\tA: near point elev = " + str(elevNearPoint) + ", next point elev = " + str(elevNextPoint) + "\n")
 
             if elevNearPoint + TOLERANCE > elevNextPoint:
                # Flow towards next point
                flowTowardsLastPoint = True
-               shared.fpOut.write("\tFlow towards last point in road (a)\n")
+               #shared.fpOut.write("\tFlow towards last point in road (a)\n")
 
                # Forget about this list of untravelled road segments since we have found a suitable one
                flowRouted = True
@@ -415,12 +415,12 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
             prevPoint = linePoints[numNearPoint-1]
             elevPrevPoint = GetRasterElev(prevPoint.x(), prevPoint.y())
 
-            shared.fpOut.write("\tB: near point elev = " + str(elevNearPoint) + ", prev point elev = " + str(elevPrevPoint) + "\n")
+            #shared.fpOut.write("\tB: near point elev = " + str(elevNearPoint) + ", prev point elev = " + str(elevPrevPoint) + "\n")
 
             if elevNearPoint + TOLERANCE > elevPrevPoint:
                # Flow towards first point
                flowTowardsLastPoint = False
-               shared.fpOut.write("\tFlow towards first point in road (b)\n")
+               #shared.fpOut.write("\tFlow towards first point in road (b)\n")
 
                # Forget about this list of untravelled road segments since we have found a suitable one
                flowRouted = True
@@ -441,13 +441,13 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
             postPoint = linePoints[numNearPoint+1]
             elevPostPoint = GetRasterElev(postPoint.x(), postPoint.y())
 
-            shared.fpOut.write("\tC: prev point elev = " + str(elevPrevPoint) + ", nearest point elev = " + str(elevNearPoint) + ", post point elev = " + str(elevPostPoint) + "\n")
+            #shared.fpOut.write("\tC: prev point elev = " + str(elevPrevPoint) + ", nearest point elev = " + str(elevNearPoint) + ", post point elev = " + str(elevPostPoint) + "\n")
 
             pts = [[PREV_POINT, elevPrevPoint], [THIS_POINT, elevNearPoint], [POST_POINT, elevPostPoint]]
             pts.sort(key = lambda pt: pt[1])
 
-            for m in range(3):
-               shared.fpOut.write("\tpts[" + str(m) + "][0] = " + str(pts[m][0]) + ", pts[" + str(m) + "][1] = " + str(pts[m][1]) + "\n")
+            #for m in range(3):
+               #shared.fpOut.write("\tpts[" + str(m) + "][0] = " + str(pts[m][0]) + ", pts[" + str(m) + "][1] = " + str(pts[m][1]) + "\n")
 
             if pts[0][0] == THIS_POINT:
                # Near point is lowest: we are in a blind pit, so try the next road segment in the list of untravelled road segments
@@ -459,7 +459,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
             elif pts[1][0] == THIS_POINT:
                if pts[0][0] == PREV_POINT:
                   # The previous point is lower than the near point, so flow goes towards the first point
-                  shared.fpOut.write("\tFlow towards first point in road (c)\n")
+                  #shared.fpOut.write("\tFlow towards first point in road (c)\n")
                   flowTowardsLastPoint = False
 
                   # Forget about this list of untravelled road segments since we have found a suitable one
@@ -468,7 +468,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
                else:
                   # The post point is lower than the near point, so flow goes towards the last point
-                  shared.fpOut.write("\tFlow towards last point in road (d)\n")
+                  #shared.fpOut.write("\tFlow towards last point in road (d)\n")
                   flowTowardsLastPoint = True
 
                   # Forget about this list of untravelled road segments since we have found a suitable one
@@ -477,14 +477,14 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
             else:
                # Both first and last points are lower, so we need to compare gradients
-               shared.fpOut.write("\tprevPoint = " + DisplayOS(prevPoint.x(), prevPoint.y()) + " nearPoint = " + DisplayOS(nearPoint.x(), nearPoint.y()) + " postPoint = " + DisplayOS(postPoint.x(), postPoint.y()) + "\n")
+               #shared.fpOut.write("\tprevPoint = " + DisplayOS(prevPoint.x(), prevPoint.y()) + " nearPoint = " + DisplayOS(nearPoint.x(), nearPoint.y()) + " postPoint = " + DisplayOS(postPoint.x(), postPoint.y()) + "\n")
 
                flowToLast = FindSteepestSegment(prevPoint, nearPoint, postPoint, elevNearPoint - elevPrevPoint, elevNearPoint - elevPostPoint)
-               shared.fpOut.write("\t" + str(flowToLast) + " \n")
+               #shared.fpOut.write("\t" + str(flowToLast) + " \n")
 
                if flowToLast:
                   flowTowardsLastPoint = True
-                  shared.fpOut.write("\tFlow towards last point in road (e)\n")
+                  #shared.fpOut.write("\tFlow towards last point in road (e)\n")
 
                   # Forget about this list of untravelled road segments since we have found a suitable one
                   flowRouted = True
@@ -492,7 +492,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
                else:
                   flowTowardsLastPoint = False
-                  shared.fpOut.write("\tFlow towards first point in road (f)\n")
+                  #shared.fpOut.write("\tFlow towards first point in road (f)\n")
 
                   # Forget about this list of untravelled road segments since we have found a suitable one
                   flowRouted = True
@@ -514,11 +514,11 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
          if flowTowardsLastPoint:
             # Flow goes towards the last point of the road segment
             for nn in range(numNearPoint, len(linePoints)+1):
-               shared.fpOut.write("\tTowards last point of road segment " + fullDesc + " at " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + ", nn = " + str(nn) + ", nPoints = " + str(nPoints) + "\n")
+               #shared.fpOut.write("\tTowards last point of road segment " + fullDesc + " at " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + ", nn = " + str(nn) + ", nPoints = " + str(nPoints) + "\n")
 
                # Are we at the final point in the line?
                if nn == nPoints-1:
-                  shared.fpOut.write("\tAt last point of road segment " + fullDesc + " " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + "\n")
+                  #shared.fpOut.write("\tAt last point of road segment " + fullDesc + " " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + "\n")
                   return 4, linePoints[nn]
 
                # Not at the last point on the line
@@ -658,7 +658,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                if indx != -1:
                   # We have found a field observation near this point, so route flow accordingly
                   rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, nextPoint, elevNextPoint)
-                  shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 2, rtn = " + str(rtn) + "\n")
+                  #shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 2, rtn = " + str(rtn) + "\n")
                   if rtn == 0:
                      # Flow has passed through the field observation
                      return rtn, adjPoint
@@ -825,12 +825,12 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
             nextPoint = linePoints[1]
             elevNextPoint = GetRasterElev(nextPoint.x(), nextPoint.y())
 
-            shared.fpOut.write("\tA: near point elev = " + str(elevNearPoint) + ", next point elev = " + str(elevNextPoint) + "\n")
+            #shared.fpOut.write("\tA: near point elev = " + str(elevNearPoint) + ", next point elev = " + str(elevNextPoint) + "\n")
 
             if elevNearPoint + TOLERANCE > elevNextPoint:
                # Flow towards next point
                flowTowardsLastPoint = True
-               shared.fpOut.write("\tFlow towards last point in path (a)\n")
+               #shared.fpOut.write("\tFlow towards last point in path (a)\n")
 
                # Forget about this list of untravelled path segments since we have found a suitable one
                flowRouted = True
@@ -848,12 +848,12 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
             prevPoint = linePoints[numNearPoint-1]
             elevPrevPoint = GetRasterElev(prevPoint.x(), prevPoint.y())
 
-            shared.fpOut.write("\tB: near point elev = " + str(elevNearPoint) + ", prev point elev = " + str(elevPrevPoint) + "\n")
+            #shared.fpOut.write("\tB: near point elev = " + str(elevNearPoint) + ", prev point elev = " + str(elevPrevPoint) + "\n")
 
             if elevNearPoint + TOLERANCE > elevPrevPoint:
                # Flow towards first point
                flowTowardsLastPoint = False
-               shared.fpOut.write("\tFlow towards first point in path (b)\n")
+               #shared.fpOut.write("\tFlow towards first point in path (b)\n")
 
                # Forget about this list of untravelled path segments since we have found a suitable one
                flowRouted = True
@@ -874,13 +874,13 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
             postPoint = linePoints[numNearPoint+1]
             elevPostPoint = GetRasterElev(postPoint.x(), postPoint.y())
 
-            shared.fpOut.write("\tC: prev point elev = " + str(elevPrevPoint) + ", nearest point elev = " + str(elevNearPoint) + ", post point elev = " + str(elevPostPoint) + "\n")
+            #shared.fpOut.write("\tC: prev point elev = " + str(elevPrevPoint) + ", nearest point elev = " + str(elevNearPoint) + ", post point elev = " + str(elevPostPoint) + "\n")
 
             pts = [[PREV_POINT, elevPrevPoint], [THIS_POINT, elevNearPoint], [POST_POINT, elevPostPoint]]
             pts.sort(key = lambda pt: pt[1])
 
-            for m in range(3):
-               shared.fpOut.write("\tpts[" + str(m) + "][0] = " + str(pts[m][0]) + ", pts[" + str(m) + "][1] = " + str(pts[m][1]) + "\n")
+            #for m in range(3):
+               #shared.fpOut.write("\tpts[" + str(m) + "][0] = " + str(pts[m][0]) + ", pts[" + str(m) + "][1] = " + str(pts[m][1]) + "\n")
 
             if pts[0][0] == THIS_POINT:
                # Near point is lowest: we are in a blind pit, so try the next path segment in the list of untravelled path segments
@@ -892,7 +892,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
             elif pts[1][0] == THIS_POINT:
                if pts[0][0] == PREV_POINT:
                   # The previous point is lower than the near point, so flow goes towards the first point
-                  shared.fpOut.write("\tFlow towards first point in path (c)\n")
+                  #shared.fpOut.write("\tFlow towards first point in path (c)\n")
                   flowTowardsLastPoint = False
 
                   # Forget about this list of untravelled path segments since we have found a suitable one
@@ -901,7 +901,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
 
                else:
                   # The post point is lower than the near point, so flow goes towards the last point
-                  shared.fpOut.write("\tFlow towards last point in path (d)\n")
+                  #shared.fpOut.write("\tFlow towards last point in path (d)\n")
                   flowTowardsLastPoint = True
 
                   # Forget about this list of untravelled path segments since we have found a suitable one
@@ -910,14 +910,14 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
 
             else:
                # Both first and last points are lower, so we need to compare gradients
-               shared.fpOut.write("\tprevPoint = " + DisplayOS(prevPoint.x(), prevPoint.y()) + " nearPoint = " + DisplayOS(nearPoint.x(), nearPoint.y()) + " postPoint = " + DisplayOS(postPoint.x(), postPoint.y()) + "\n")
+               #shared.fpOut.write("\tprevPoint = " + DisplayOS(prevPoint.x(), prevPoint.y()) + " nearPoint = " + DisplayOS(nearPoint.x(), nearPoint.y()) + " postPoint = " + DisplayOS(postPoint.x(), postPoint.y()) + "\n")
 
                flowToLast = FindSteepestSegment(prevPoint, nearPoint, postPoint, elevNearPoint - elevPrevPoint, elevNearPoint - elevPostPoint)
                shared.fpOut.write("\t" + str(flowToLast) + " \n")
 
                if flowToLast:
                   flowTowardsLastPoint = True
-                  shared.fpOut.write("\tFlow towards last point in path (e)\n")
+                  #shared.fpOut.write("\tFlow towards last point in path (e)\n")
 
                   # Forget about this list of untravelled path segments since we have found a suitable one
                   flowRouted = True
@@ -925,7 +925,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
 
                else:
                   flowTowardsLastPoint = False
-                  shared.fpOut.write("\tFlow towards first point in path (f)\n")
+                  #shared.fpOut.write("\tFlow towards first point in path (f)\n")
 
                   # Forget about this list of untravelled path segments since we have found a suitable one
                   flowRouted = True
@@ -947,11 +947,11 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
          if flowTowardsLastPoint:
             # Flow goes towards the last point of the path segment
             for nn in range(numNearPoint, len(linePoints)+1):
-               shared.fpOut.write("\tTowards last point of path segment " + fullDesc + " at " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + ", nn = " + str(nn) + ", nPoints = " + str(nPoints) + "\n")
+               #shared.fpOut.write("\tTowards last point of path segment " + fullDesc + " at " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + ", nn = " + str(nn) + ", nPoints = " + str(nPoints) + "\n")
 
                # Are we at the final point in the line?
                if nn == nPoints-1:
-                  shared.fpOut.write("\tAt last point of path segment " + fullDesc + " " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + "\n")
+                  #shared.fpOut.write("\tAt last point of path segment " + fullDesc + " " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + "\n")
                   return 4, linePoints[nn]
 
                # Not at the last point on the line
@@ -1005,7 +1005,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                   rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, nextPoint, elevNextPoint)
                   if rtn == 0:
                      # Flow has passed through the field observation
-                     shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 1, rtn = " + str(rtn) + "\n")
+                     #shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 1, rtn = " + str(rtn) + "\n")
                      return rtn, adjPoint
 
                   elif rtn == -1:
@@ -1091,7 +1091,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                if indx != -1:
                   # We have found a field observation near this point, so route flow accordingly
                   rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, nextPoint, elevNextPoint)
-                  shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 2, rtn = " + str(rtn) + "\n")
+                  #shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 2, rtn = " + str(rtn) + "\n")
                   if rtn == 0:
                      # Flow has passed through the field observation
                      return rtn, adjPoint
@@ -1478,7 +1478,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
                # So route flow accordingly
                rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, point1, thisElev)
-               shared.fpOut.write("Left FlowViaFieldObservation() called in flowAlongVectorFieldBoundary(), rtn = " + str(rtn) + "\n")
+               #shared.fpOut.write("Left FlowViaFieldObservation() called in flowAlongVectorFieldBoundary(), rtn = " + str(rtn) + "\n")
                if rtn == 0:
                   # Flow has passed through the LE
                   return rtn, adjPoint

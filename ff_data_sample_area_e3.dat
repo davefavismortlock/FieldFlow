@@ -1,0 +1,154 @@
+#======================================================================================================================
+#
+# Data for FieldFlow: West Sussex Sample Area E
+#
+#======================================================================================================================
+Run title                                                                     : West Sussex: Sample Area E. SIMPLE MODE, FILL BLIND PITS, CONSIDER DITCHES/STREAMS
+
+Fields which generate flow (comma-separated list, blank for auto)             : H, M, N, O, P, Q
+Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
+
+Consider field observations?                                                  : N
+Fill blind pits?                                                              : Y
+Consider streams?                                                             : Y
+Consider roads? (is N if field observations not considered)                   : N
+Consider tracks and paths? (is N if field observations not considered)        : N
+Consider field boundaries (is N if field observations not considered)         : N
+
+DEM resolution or mean spacing of spot heights (metres)                       : 5
+Distance to search (metres)                                                   : 5
+
+#======================================================================================================================
+Path to all GIS data (all paths below are relative to this)                   : /home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/
+
+Output shapefile for flow marker points (no extension)                        : ff_flow_marker_points_E3
+Style file (with extension, blank for default style)                          : ff_flow_marker_points.qml
+Transparency for flow marker points (0-100)                                   : 0
+
+Output shapefile for flow lines (no extension)                                : ff_flow_E3
+Style file (with extension, blank for default style)                          : ff_flow.qml
+Transparency for flow lines (0-100)                                           : 0
+
+Width of window (pixels)                                                      : 700
+Height of window (pixels)                                                     : 1150
+Initial magnification                                                         : 1.0
+
+Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
+
+Coordinates of SW corner of area displayed                                    : 494500, 120115
+Coordinates of NE corner of area displayed                                    : 495800, 121797
+
+# Vector layers =======================================================================================================
+
+# Field boundaries REQUIRED
+File for vector field boundaries (with extension)                             : field_boundaries/connected_field_boundaries.shp
+Table name                                                                    : boundaries
+Title                                                                         : Boundaries of connected fields
+File type                                                                     : ogr
+Style file (with extension, blank for default style)                          : field_boundaries/connected_field_boundaries.qml
+Transparency (0-100)                                                          : 70
+Type                                                                          : INPUT_FIELD_BOUNDARIES
+
+# Water network REQUIRED
+# OS Mastermap Water Network file
+File for vector water network (with extension)                                : MasterMap Water Network_1718110/su/SU9020.gml|layerid=1
+Table name                                                                    : WatercourseLink
+Title                                                                         : OS Mastermap Water Network SU9020
+File type                                                                     : ogr
+Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
+Transparency (0-100)                                                          : 0
+Type                                                                          : INPUT_WATER_NETWORK
+
+# OS Mastermap Water Network file
+File for vector water network (with extension)                                : MasterMap Water Network_1718110/su/SU9520.gml|layerid=1
+Table name                                                                    : WatercourseLink
+Title                                                                         : OS Mastermap Water Network SU9520
+File type                                                                     : ogr
+Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
+Transparency (0-100)                                                          : 0
+Type                                                                          : INPUT_WATER_NETWORK
+
+# Roads REQUIRED ======================================================================================================
+File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su92sw_Road_Centreline.shp
+Table name                                                                    : vml-su82sw_Road_Centreline
+Title                                                                         : OS VectorMap Local Road Centreline SU92sw
+File type                                                                     : ogr
+Style file (with extension, blank for default style)                          : OS VectorMap Local/su/roads.qml
+Transparency (0-100)                                                          : 50
+Type                                                                          : INPUT_ROAD_NETWORK
+
+File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su92se_Road_Centreline.shp
+Table name                                                                    : vml-su82sw_Road_Centreline
+Title                                                                         : OS VectorMap Local Road Centreline SU92se
+File type                                                                     : ogr
+Style file (with extension, blank for default style)                          : OS VectorMap Local/su/roads.qml
+Transparency (0-100)                                                          : 50
+Type                                                                          : INPUT_ROAD_NETWORK
+
+# Paths REQUIRED ======================================================================================================
+File for vector path network (with extension)                                 : selected_paths.shp
+Table name                                                                    : Footpaths
+Title                                                                         : Centrelines of selected paths and tracks
+File type                                                                     : ogr
+Style file (with extension, blank for default style)                          : paths.qml
+Transparency (0-100)                                                          : 50
+Type                                                                          : INPUT_PATH_NETWORK
+
+# Observed flow lines OPTIONAL ========================================================================================
+File for observed flow lines (with extension)                                 : Connectivity/flow_lines_e.sqlite
+Table name for observed flow lines                                            : flow_paths
+Title for observed flow lines                                                 : Observed flow lines E
+Layer type                                                                    : spatialite
+Style file (with extension, blank for default style)                          : Connectivity/flow_lines.qml
+Transparency for observed flow lines (0-100)                                  : 0
+Type                                                                          : INPUT_OBSERVED_FLOW_LINES
+
+END OF VECTOR LAYERS ==================================================================================================
+
+# Raster layers =======================================================================================================
+
+# DEM REQUIRED ========================================================================================================
+DEM file (with extension)                                                     : terrain-5-dtm/su/terrain-5-dtm-SU92SW.tif
+DEM title                                                                     : OS Terrain 5 SU92sw
+Style file (with extension, blank for default style)                          : terrain-5-dtm/default.qml
+DEM transparency (0-100)                                                      : 70
+Type                                                                          : INPUT_DIGITAL_ELEVATION_MODEL
+
+DEM file (with extension)                                                     : terrain-5-dtm/su/terrain-5-dtm-SU92SE.tif
+DEM title                                                                     : OS Terrain 5 SU92se
+Style file (with extension, blank for default style)                          : terrain-5-dtm/default.qml
+DEM transparency (0-100)                                                      : 70
+Type                                                                          : INPUT_DIGITAL_ELEVATION_MODEL
+
+# Background OPTIONAL =================================================================================================
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9420.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9420
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9421.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9421
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9520.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9520
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9521.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9521
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+END OF RASTER LAYERS ==================================================================================================
+
+# Field observations ==================================================================================================
+
+END OF FIELD OBSERVATIONS =============================================================================================
+
+

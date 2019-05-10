@@ -47,7 +47,7 @@ FIELD_OBS_CATEGORY_CULVERT    = "culvert"
 FIELD_OBS_CATEGORY_PATH       = "path"
 FIELD_OBS_CATEGORY_ROAD       = "road"
 FIELD_OBS_CATEGORY_STREAM     = "stream"
-FIELD_OBS_CATEGORY_DUMMY      = "overtop"
+FIELD_OBS_CATEGORY_BLIND_PIT  = "blindpit"
 
 # Field observation valid behaviours
 FIELD_OBS_BEHAVIOUR_ALONG    = "along"
@@ -56,7 +56,7 @@ FIELD_OBS_BEHAVIOUR_ACROSS   = "across"
 FIELD_OBS_BEHAVIOUR_THROUGH  = "through"
 FIELD_OBS_BEHAVIOUR_ENTER    = "enter"
 FIELD_OBS_BEHAVIOUR_LEAVE    = "leave"
-FIELD_OBS_BEHAVIOUR_DUMMY    = "overtop"
+FIELD_OBS_BEHAVIOUR_OVERTOP  = "overtop"
 
 # Output datasets =====================================================================================================
 OUTPUT_FLOW_MARKERS           = 0
@@ -103,7 +103,7 @@ MARKER_AT_STREAM              = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "8 May 2019 QGIS3 version"
+progVer = "10 May 2019 QGIS3 version"
 runTitle = ""
 
 considerFieldObservations = ""

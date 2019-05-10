@@ -283,7 +283,7 @@ def ReadAndMergeVectorLayers(vectorLayers):
    # Add the field attributes to the merged layer
    provider = mergedLayer.dataProvider()
    #print(provider)
-   print("Number of attribute fields = " + str(len(thisLayerFieldList)))
+   #print("Number of attribute fields = " + str(len(thisLayerFieldList)))
    if not provider.addAttributes(thisLayerFieldList):
       errStr = "ERROR: could not add attributes to merged layer"
       print(errStr)
@@ -294,7 +294,7 @@ def ReadAndMergeVectorLayers(vectorLayers):
 
    flds = mergedLayer.fields()
    #print(flds.names())
-   print("Number of attribute fields = " + str(len(flds.names())))
+   #print("Number of attribute fields = " + str(len(flds.names())))
 
 
    if not mergedLayer.startEditing():

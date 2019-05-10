@@ -88,7 +88,7 @@ class SimulationThread(QThread):
                if fieldCode not in fieldCodesStartPointFound:
                   # Calculate the start-of-flow location only for fields which generate runoff
                   if not doAllFields and fieldCode not in shared.fieldsWithFlow:
-                     shared.fpOut.write("Not calculating start of flow for field " + str(fieldCode) + "\n")
+                     shared.fpOut.write("Not calculating start of flow for field " + str(fieldCode) + ", is not a source field\n")
                      continue
 
                   #print("Finding flow start point for field " + str(fieldCode))
@@ -130,7 +130,7 @@ class SimulationThread(QThread):
                   fieldCodesStartPointFound.append(fieldCode)
 
                   # And show it on the map
-                  AddFlowMarkerPoint(QgsPointXY(xFlowStart, yFlowStart), MARKER_FLOW_START_POINT_1 + fieldCode + MARKER_FLOW_START_POINT_2, fieldCode, flowStartElev)
+                  #AddFlowMarkerPoint(QgsPointXY(xFlowStart, yFlowStart), MARKER_FLOW_START_POINT_1 + fieldCode + MARKER_FLOW_START_POINT_2, fieldCode, flowStartElev)
                   #shared.fpOut.write("Flow from field " + fieldCode + " begins at " + DisplayOS(xFlowStart, yFlowStart) + "\n")
 
                   # Refresh the display
@@ -195,7 +195,7 @@ class SimulationThread(QThread):
          viaPathAndHitStream = False
 
          shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-         shared.fpOut.write("SIMULATED FLOW FROM FIELD " + str(fieldCode) + "\n\n")
+         shared.fpOut.write("SIMULATED FLOW FROM SOURCE FIELD " + str(fieldCode) + "\n\n")
          shared.fpOut.write("Flow from field " + str(fieldCode) + " starts at " + DisplayOS(x, y) + "\n")
          shared.thisStartPoint += 1
 
@@ -406,7 +406,7 @@ class SimulationThread(QThread):
                else:
                   # We have found a field observation near this point, so route flow accordingly
                   rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, thisPoint, elev)
-                  shared.fpOut.write("Left FlowViaFieldObservation() called in run(), rtn = " + str(rtn) + "\n")
+                  #shared.fpOut.write("Left FlowViaFieldObservation() called in run(), rtn = " + str(rtn) + "\n")
                   if rtn == -1:
                      # Could not determine the outflow location, so move on to the next field's flow
                      self.refresh.emit()
@@ -616,20 +616,21 @@ class SimulationThread(QThread):
       # If we've filled blind pits, show max flow depth to fill any pit
       if shared.FillBlindPits:
          shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-         shared.fpOut.write("Area of filled blind pits = " + str(shared.blindPitFillArea * shared.resolutionOfDEM * shared.resolutionOfDEM) + " m2\n")
-         shared.fpOut.write("Maximum flow depth to fill any blind pit = " + str(shared.blindPitFillMaxDepth) + " m\n")
+         shared.fpOut.write("Area of filled blind pits = " + "{:0.1f}".format(shared.blindPitFillArea * shared.resolutionOfDEM * shared.resolutionOfDEM) + " m2\n")
+         shared.fpOut.write("Maximum flow depth to fill any blind pit = " + "{:0.3f}".format(shared.blindPitFillMaxDepth) + " m\n")
 
       # If we are considering field observations, are they any still unused?
       if shared.considerFieldObservations:
          shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
          shared.fpOut.write("UNUSED FIELD OBSERVATIONS\n\n")
 
-         for i in range(len(shared.fieldObservationFlowFrom)):
-            if not i in shared.allFieldsFieldObsAlreadyFollowed:
-               printStr = str(i+1) + " " + shared.fieldObservationBehaviour[i] + " " + shared.fieldObservationCategory[i] + " " + shared.fieldObservationDescription[i] + " from " + DisplayOS(shared.fieldObservationFlowFrom[i].x(), shared.fieldObservationFlowFrom[i].y())
-               if shared.fieldObservationFlowTo[i]:
-                  printStr += " to "
-                  printStr += DisplayOS(shared.fieldObservationFlowTo[i].x(), shared.fieldObservationFlowTo[i].y())
+         for obs in range(len(shared.fieldObservationFlowFrom)):
+            if not obs in shared.allFieldsFieldObsAlreadyFollowed:
+               printStr = str(obs+1) + ": '" + shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y(), False)
+
+               if shared.fieldObservationFlowTo[obs]:
+                  printStr += (" to " + DisplayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y(), False))
+
                printStr += "\n"
                shared.fpOut.write(printStr)
 
