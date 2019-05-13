@@ -518,7 +518,7 @@ class SimulationThread(QThread):
                # Has flow hit a field boundary?
                #==========================================================================================================
                if hitBoundary:
-                  shared.fpOut.write("Flow from field " + fieldCode + " hits the boundary of field " + hitFieldCode + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow go through this boundary? Please add a field observation\n")
+                  shared.fpOut.write("Flow from field " + fieldCode + " hits the boundary of field " + hitFieldCode + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow go through or along this boundary? Please add a field observation\n")
 
                   # Move to next field
                   self.refresh.emit()

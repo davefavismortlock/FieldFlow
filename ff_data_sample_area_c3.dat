@@ -35,8 +35,8 @@ Initial magnification                                                         : 
 
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
-Coordinates of SW corner of area displayed                                    : 488410, 120900
-Coordinates of NE corner of area displayed                                    : 490500, 124300
+Coordinates of SW corner of area displayed                                    : 488410, 121000
+Coordinates of NE corner of area displayed                                    : 490600, 124300
 
 # Vector layers =======================================================================================================
 
