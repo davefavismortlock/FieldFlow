@@ -3,10 +3,10 @@ from math import sqrt
 from qgis.core import QgsRaster, QgsFeature, QgsFeatureRequest, QgsGeometry, QgsPointXY, QgsRectangle, QgsPoint
 
 import shared
-from shared import INPUT_DIGITAL_ELEVATION_MODEL, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_BEHAVIOUR_ALONG, MARKER_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_PATH, FIELD_OBS_CATEGORY_BOUNDARY, MARKER_FIELD_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, MARKER_ENTER_CULVERT, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_VIA_ROAD, INPUT_PATH_NETWORK, PATH_DESC, PREV_POINT, THIS_POINT, POST_POINT, FLOW_VIA_PATH, INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, FLOW_VIA_BOUNDARY, FLOW_DOWN_STEEPEST, BLIND_PIT
+from shared import INPUT_DIGITAL_ELEVATION_MODEL, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_BEHAVIOUR_ALONG, MARKER_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_PATH, FIELD_OBS_CATEGORY_BOUNDARY, MARKER_FIELD_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, MARKER_ENTER_CULVERT, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_VIA_ROAD, INPUT_PATH_NETWORK, PATH_DESC, PREV_POINT, THIS_POINT, POST_POINT, FLOW_VIA_PATH, INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, FLOW_VIA_BOUNDARY, FLOW_DOWN_STEEPEST, FLOW_INTO_BLIND_PIT
 from layers import AddFlowMarkerPoint, AddFlowLine
 from searches import FindSteepestAdjacent, FindSegmentIntersectionWithStream, FindSteepestSegment, FindNearbyFlowLine, FindNearbyFieldObservation, CanOverflowTo
-from utils import GetPointsOnLine, GetCentroidOfContainingDEMCell, DisplayOS, GetRasterElev, CalcZCrossProduct
+from utils import GetPointsOnLine, GetCentroidOfContainingDEMCell, DisplayOS, GetRasterElev, CalcZCrossProduct, GetSteeperOfTwoLines
 
 # pylint: disable=too-many-lines
 
@@ -144,7 +144,7 @@ def FlowViaFieldObservation(indx, fieldCode, thisPoint, elev):
 
          elif rtn == 4:
             # Flow has reached the beginning or end of the road, so carry on flowing along any other nearby roads
-            shared.fpOut.write("\tFinished flow along road at " + DisplayOS(point.x(), point.y()) + " called from FlowViaFieldObservation(), rtn = 4\n")
+            #shared.fpOut.write("\tFinished flow along road at " + DisplayOS(point.x(), point.y()) + " called from FlowViaFieldObservation(), rtn = 4\n")
             return 4, point
 
          else:
@@ -273,12 +273,12 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
    # pylint: disable=too-many-branches
    # pylint: disable=too-many-statements
 
-   TOLERANCE = 0.1
+   TOLERANCE = 0.5
 
    if indx >= 0:
       shared.thisFieldFieldObsAlreadyFollowed.append(indx)
 
-   #shared.fpOut.write("Entered FlowAlongVectorRoad at point " + DisplayOS(thisPoint.x(), thisPoint.y()))
+   shared.fpOut.write("Entered FlowAlongVectorRoad at point " + DisplayOS(thisPoint.x(), thisPoint.y()))
    layerNum = -1
    #geomPoint = QgsGeometry.fromPointXY(thisPoint)
 
@@ -297,12 +297,12 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
       return -1, -1
 
-   #numberToSearchFor = 4
+   numberToSearchFor = 4
 
    while True:
       # Find the nearest road segments
       #shared.fpOut.write("Start of FlowAlongVectorRoad loop at " + DisplayOS(thisPoint.x(), thisPoint.y()))
-      nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(thisPoint, 3)
+      nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(thisPoint, numberToSearchFor)
       #if len(nearestIDs) > 0:
          #print("Nearest road segment IDs (1) = " + str(nearestIDs))
 
@@ -322,13 +322,13 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
          if distanceToSeg > shared.searchDist:
             # Too far away, so forget about this road segment
-            #shared.fpOut.write("\tToo far away (" + str(distanceToSeg) + " m) for road segID = " + str(segID) + "\n")
+            shared.fpOut.write("\tToo far away (" + "{:0.1f}".format(distanceToSeg) + " m) for road segID = " + str(segID) + "\n")
 
             continue
 
          if segID in shared.thisFieldRoadSegIDsTried:
             # Already travelled, so forget about this road segment
-            #shared.fpOut.write("\tAlready travelled for road segID = " + str(segID) + "\n")
+            shared.fpOut.write("\tAlready travelled for road segID = " + str(segID) + "\n")
 
             continue
 
@@ -353,11 +353,14 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
          #shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
       flowRouted = False
+      flowTowardsLastVert = None
+
       for roadSeg in distToPoint:
          # Go through this list of untravelled road segments till we find a suitable one
          feature = roadSeg[0]
          featID = feature.id()
          nearPoint = roadSeg[1]
+         nearPointElev = GetRasterElev(nearPoint.x(), nearPoint.y())
 
          featCode = feature[OS_VECTORMAP_FEAT_CODE]
          featDesc = feature[OS_VECTORMAP_FEAT_DESC]
@@ -366,164 +369,211 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
          fullDesc = "'" + str(featCode) + " " + str(featDesc) + " " + str(roadName) + " " + str(roadNumber) + "'"
 
-         #shared.fpOut.write("\tTrying untravelled road segment " + fullDesc + " with distance to nearest point = " + str(roadSeg[2]) + " m\n")
-
-         #geomFeat = feature.geometry()
-         #linePoints = geomFeat.asPolyline()
+         shared.fpOut.write("\tTrying untravelled road segment " + fullDesc + " with nearest point at " + DisplayOS(nearPoint.x(), nearPoint.y()) + " and distance to nearest point = " + "{:0.1f}".format(roadSeg[2]) + " m\n")
 
          geomFeat = feature.geometry()
          if geomFeat.isMultipart():
-            linePointsAll = geomFeat.asMultiPolyline()
+            lineVertAll = geomFeat.asMultiPolyline()
          else:
-            linePointsAll = [geomFeat.asPolyline()]
+            lineVertAll = [geomFeat.asPolyline()]
 
-         linePoints = linePointsAll[0]
+         lineVert = lineVertAll[0]
 
-         shared.fpOut.write("\tAt " + DisplayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled road segment " + fullDesc + ", which has nearest point " + "{:0.1f}".format(roadSeg[2]) + " m away at " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
+         #shared.fpOut.write("Points in lineVert\n")
+         #for pt in lineVert:
+            #shared.fpOut.write(DisplayOS(pt.x(), pt.y()) + "\n")
 
-         # Find the nearest point in the road polyline
-         nearPoint, numNearPoint, _beforeNearpoint, _afterNearpoint, _sqrDist = geomFeat.closestVertex(thisPoint)
+         # Find the closest segment of the road polyline
+         _sqrDist, _minDistPoint, afterVertex, _leftOf = geomFeat.closestSegmentWithContext(nearPoint)
 
-         # If there is a choice, then find out which direction along the road has the steepest downhill slope
-         flowTowardsLastPoint = None
-         elevNearPoint = GetRasterElev(nearPoint.x(), nearPoint.y())
-         if numNearPoint == 0:
-            # The nearest point is the same as the first point, so compare elevations with the next point (the second point in the line)
-            nextPoint = linePoints[1]
-            elevNextPoint = GetRasterElev(nextPoint.x(), nextPoint.y())
+         afterVertexPoint = geomFeat.vertexAt(afterVertex)
+         afterVertexElev = GetRasterElev(afterVertexPoint.x(), afterVertexPoint.y())
 
-            #shared.fpOut.write("\tA: near point elev = " + str(elevNearPoint) + ", next point elev = " + str(elevNextPoint) + "\n")
+         prevVertex = afterVertex - 1
+         prevVertexPoint = geomFeat.vertexAt(prevVertex)
+         prevVertexElev = GetRasterElev(prevVertexPoint.x(), prevVertexPoint.y())
 
-            if elevNearPoint + TOLERANCE > elevNextPoint:
-               # Flow towards next point
-               flowTowardsLastPoint = True
-               #shared.fpOut.write("\tFlow towards last point in road (a)\n")
+         shared.fpOut.write("\t" + DisplayOS(prevVertexPoint.x(), prevVertexPoint.y(), False) + " " + DisplayOS(nearPoint.x(), nearPoint.y(), False) + " " + DisplayOS(afterVertexPoint.x(), afterVertexPoint.y(), False) + "\n")
+
+         # NOTE need to separately test both x and y components of the two points, no idea why can't just test points for equality
+         if prevVertexPoint.x() == nearPoint.x() and prevVertexPoint.y() == nearPoint.y():
+            # The nearest point on the road segment is co-incident with the 'previous' vertex, so we only need check the elevation of the 'after' vertex
+            if nearPointElev + TOLERANCE > afterVertexElev:
+               # Flow towards 'after' vertex
+               flowTowardsLastVert = True
+               shared.fpOut.write("\tFlow is towards the 'after' vertex in road (a)\n")
+
+               printStr = "Flow from field " + fieldCode + " enters the road segment " + fullDesc + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " A "
+               shared.fpOut.write("\t" + printStr + "\n")
+
+               elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
+               AddFlowMarkerPoint(thisPoint, FLOW_VIA_ROAD, fieldCode, elevThisPoint)
+
+               if thisPoint != nearPoint:
+                  shared.fpOut.write("\tFlowline added from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
+                  AddFlowLine(thisPoint, nearPoint, FLOW_VIA_ROAD, fieldCode, -1)
+
+               thisPoint = nearPoint
+               nextPoint = afterVertexPoint
 
                # Forget about this list of untravelled road segments since we have found a suitable one
                flowRouted = True
                break
 
-            else:
-               # This point is lower: we are in a blind pit, so try the next road segment in the list of untravelled road segments
-               shared.fpOut.write("\tIn road blind pit: for road segment " + fullDesc + ", downhill flow ends at " + DisplayOS(nearPoint.x(), nearPoint.y()) + ", abandoning\n")
+         # NOTE need to separately test both x and y components of the two points, no idea why can't just test points for equality
+         if afterVertexPoint.x() == nearPoint.x() and afterVertexPoint.y() == nearPoint.y():
+            # The nearest point on the road segment is co-incident with the 'after' vertex, so we only need check the elevation of the 'previous' vertex
+            if nearPointElev + TOLERANCE > prevVertexElev:
+               # Flow towards 'previous' vertex
+               flowTowardsLastVert = False
+               shared.fpOut.write("\tFlow is towards the 'previous' vertex in road (a)\n")
 
-               shared.thisFieldRoadSegIDsTried.append(featID)
-               continue
+               printStr = "Flow from field " + fieldCode + " enters the road segment " + fullDesc + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " B "
+               shared.fpOut.write("\t" + printStr + "\n")
 
-         elif numNearPoint == len(linePoints)-1:
-            # The nearest point is the same as the last point, so compare elevations with the previous point (the penultimate point in the line)
-            prevPoint = linePoints[numNearPoint-1]
-            elevPrevPoint = GetRasterElev(prevPoint.x(), prevPoint.y())
+               elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
+               AddFlowMarkerPoint(thisPoint, FLOW_VIA_ROAD, fieldCode, elevThisPoint)
 
-            #shared.fpOut.write("\tB: near point elev = " + str(elevNearPoint) + ", prev point elev = " + str(elevPrevPoint) + "\n")
+               if thisPoint != nearPoint:
+                  shared.fpOut.write("\tFlowline added from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
+                  AddFlowLine(thisPoint, nearPoint, FLOW_VIA_ROAD, fieldCode, -1)
 
-            if elevNearPoint + TOLERANCE > elevPrevPoint:
-               # Flow towards first point
-               flowTowardsLastPoint = False
-               #shared.fpOut.write("\tFlow towards first point in road (b)\n")
+               thisPoint = nearPoint
+               nextPoint = prevVertexPoint
 
                # Forget about this list of untravelled road segments since we have found a suitable one
                flowRouted = True
                break
 
-            else:
-               # This point is lower: we are in a blind pit, so try the next road segment
-               shared.fpOut.write("\tIn road blind pit: for road segment " + fullDesc + ", downhill flow ends at " + DisplayOS(nearPoint.x(), nearPoint.y()) + ", abandoning\n")
+         # Now determine the flow direction
+         prevBelow = False
+         afterBelow = False
 
-               shared.thisFieldRoadSegIDsTried.append(featID)
-               continue
+         if nearPointElev + TOLERANCE > prevVertexElev:
+            prevBelow = True
 
+         if nearPointElev + TOLERANCE > afterVertexElev:
+            afterBelow = True
+
+         if afterBelow and not prevBelow:
+            # Flow is towards the 'after' vertex
+            flowTowardsLastVert = True
+            shared.fpOut.write("\tFlow is towards the 'after' vertex of road (a)\n")
+
+            printStr = "Flow from field " + fieldCode + " enters the road segment " + fullDesc + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " C "
+            shared.fpOut.write("\t" + printStr + "\n")
+
+            elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
+            AddFlowMarkerPoint(thisPoint, FLOW_VIA_ROAD, fieldCode, elevThisPoint)
+
+            if thisPoint != nearPoint:
+               shared.fpOut.write("\tFlowline added from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
+               AddFlowLine(thisPoint, nearPoint, FLOW_VIA_ROAD, fieldCode, -1)
+
+            thisPoint = nearPoint
+            nextPoint = afterVertexPoint
+
+            # Forget about this list of untravelled road segments since we have found a suitable one
+            flowRouted = True
+            break
+
+         elif prevBelow and not afterBelow:
+            # Flow is towards the 'previous' vertex
+            flowTowardsLastVert = False
+            shared.fpOut.write("\tFlow is towards the 'previous' vertex of road (b)\n")
+
+            printStr = "Flow from field " + fieldCode + " enters the road segment " + fullDesc + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " D "
+            shared.fpOut.write("\t" + printStr + "\n")
+
+            elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
+            AddFlowMarkerPoint(thisPoint, FLOW_VIA_ROAD, fieldCode, elevThisPoint)
+
+            if thisPoint != nearPoint:
+               shared.fpOut.write("\tFlowline added from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
+               AddFlowLine(thisPoint, nearPoint, FLOW_VIA_ROAD, fieldCode, -1)
+
+            thisPoint = nearPoint
+            nextPoint = prevVertexPoint
+
+            # Forget about this list of untravelled road segments since we have found a suitable one
+            flowRouted = True
+            break
+
+         elif not prevBelow and not afterBelow:
+            # We are in a blind pit, so try the next road segment in the list of untravelled road segments
+            shared.fpOut.write("\tIn road blind pit for road segment " + fullDesc + ", downhill flow ends at " + DisplayOS(nearPoint.x(), nearPoint.y()) + ", abandoning\n")
+            shared.fpOut.write(str(prevVertexElev) + " " + str(nearPointElev) + " " + str(afterVertexElev) + "\n")
+
+            shared.thisFieldRoadSegIDsTried.append(featID)
+            continue
+
+         # Must be prevBelow and AfterBelow so find steepest
+         previousIsSteepest = GetSteeperOfTwoLines(prevVertexPoint, prevVertexElev, nearPoint, nearPointElev, afterVertexPoint, afterVertexElev)
+         shared.fpOut.write("\tpreviousIsSteepest = " + str(previousIsSteepest) + "\n")
+
+         if previousIsSteepest:
+            shared.fpOut.write("\tFlow is towards 'previous' vertex in road (c)\n")
+            flowTowardsLastVert = False
+
+            printStr = "Flow from field " + fieldCode + " enters the road segment " + fullDesc + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " E "
+            shared.fpOut.write("\t" + printStr + "\n")
+
+            elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
+            AddFlowMarkerPoint(thisPoint, FLOW_VIA_ROAD, fieldCode, elevThisPoint)
+
+            if thisPoint != nearPoint:
+               shared.fpOut.write("\tFlowline added from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
+               AddFlowLine(thisPoint, nearPoint, FLOW_VIA_ROAD, fieldCode, -1)
+
+            thisPoint = nearPoint
+            nextPoint = prevVertexPoint
          else:
-            # The nearest point is neither the first or last point in the road polyline
-            prevPoint = linePoints[numNearPoint-1]
-            elevPrevPoint = GetRasterElev(prevPoint.x(), prevPoint.y())
+            shared.fpOut.write("\tFlow is towards 'after' vertex in road (d)\n")
+            flowTowardsLastVert = True
 
-            postPoint = linePoints[numNearPoint+1]
-            elevPostPoint = GetRasterElev(postPoint.x(), postPoint.y())
+            printStr = "Flow from field " + fieldCode + " enters the road segment " + fullDesc + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " F "
+            shared.fpOut.write("\t" + printStr + "\n")
 
-            #shared.fpOut.write("\tC: prev point elev = " + str(elevPrevPoint) + ", nearest point elev = " + str(elevNearPoint) + ", post point elev = " + str(elevPostPoint) + "\n")
+            elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
+            AddFlowMarkerPoint(thisPoint, FLOW_VIA_ROAD, fieldCode, elevThisPoint)
 
-            pts = [[PREV_POINT, elevPrevPoint], [THIS_POINT, elevNearPoint], [POST_POINT, elevPostPoint]]
-            pts.sort(key = lambda pt: pt[1])
+            if thisPoint != nearPoint:
+               shared.fpOut.write("\tFlowline added from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
+               AddFlowLine(thisPoint, nearPoint, FLOW_VIA_ROAD, fieldCode, -1)
 
-            #for m in range(3):
-               #shared.fpOut.write("\tpts[" + str(m) + "][0] = " + str(pts[m][0]) + ", pts[" + str(m) + "][1] = " + str(pts[m][1]) + "\n")
+            thisPoint = nearPoint
+            nextPoint = afterVertexPoint
 
-            if pts[0][0] == THIS_POINT:
-               # Near point is lowest: we are in a blind pit, so try the next road segment in the list of untravelled road segments
-               shared.fpOut.write("\tIn road blind pit: for road segment " + fullDesc + ", downhill flow ends at " + DisplayOS(nearPoint.x(), nearPoint.y()) + ", abandoning\n")
-
-               shared.thisFieldRoadSegIDsTried.append(featID)
-               continue
-
-            elif pts[1][0] == THIS_POINT:
-               if pts[0][0] == PREV_POINT:
-                  # The previous point is lower than the near point, so flow goes towards the first point
-                  #shared.fpOut.write("\tFlow towards first point in road (c)\n")
-                  flowTowardsLastPoint = False
-
-                  # Forget about this list of untravelled road segments since we have found a suitable one
-                  flowRouted = True
-                  break
-
-               else:
-                  # The post point is lower than the near point, so flow goes towards the last point
-                  #shared.fpOut.write("\tFlow towards last point in road (d)\n")
-                  flowTowardsLastPoint = True
-
-                  # Forget about this list of untravelled road segments since we have found a suitable one
-                  flowRouted = True
-                  break
-
-            else:
-               # Both first and last points are lower, so we need to compare gradients
-               #shared.fpOut.write("\tprevPoint = " + DisplayOS(prevPoint.x(), prevPoint.y()) + " nearPoint = " + DisplayOS(nearPoint.x(), nearPoint.y()) + " postPoint = " + DisplayOS(postPoint.x(), postPoint.y()) + "\n")
-
-               flowToLast = FindSteepestSegment(prevPoint, nearPoint, postPoint, elevNearPoint - elevPrevPoint, elevNearPoint - elevPostPoint)
-               #shared.fpOut.write("\t" + str(flowToLast) + " \n")
-
-               if flowToLast:
-                  flowTowardsLastPoint = True
-                  #shared.fpOut.write("\tFlow towards last point in road (e)\n")
-
-                  # Forget about this list of untravelled road segments since we have found a suitable one
-                  flowRouted = True
-                  break
-
-               else:
-                  flowTowardsLastPoint = False
-                  #shared.fpOut.write("\tFlow towards first point in road (f)\n")
-
-                  # Forget about this list of untravelled road segments since we have found a suitable one
-                  flowRouted = True
-                  break
+         # Forget about this list of untravelled road segments since we have found a suitable one
+         flowRouted = True
+         break
 
       if flowRouted:
+         # OK we have found a suitable road segment, thisPoint is the start of flow along this segment, nextPoint is the end of flow along this segment
+         AddFlowLine(thisPoint, nextPoint, FLOW_VIA_ROAD, fieldCode, -1)
+
+         #shared.fpOut.write("\tflowTowardsLastVert = " + str(flowTowardsLastVert) + "\n")
+
          # OK we know the initial direction of flow along this road, so keep going downhill till we reach a pre-existing flow line, a ditch/stream, a blind pit, or the end of the road
          shared.thisFieldRoadSegIDsTried.append(featID)
 
          elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
 
-         printStr = "Flow from field " + fieldCode + " enters the road segment " + fullDesc + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " "
-         shared.fpOut.write("\t" + printStr + "\n")
+         nVert = len(lineVert)
 
-         AddFlowMarkerPoint(thisPoint, FLOW_VIA_ROAD, fieldCode, elevThisPoint)
-
-         nPoints = len(linePoints)
-
-         if flowTowardsLastPoint:
-            # Flow goes towards the last point of the road segment
-            for nn in range(numNearPoint, len(linePoints)+1):
-               #shared.fpOut.write("\tTowards last point of road segment " + fullDesc + " at " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + ", nn = " + str(nn) + ", nPoints = " + str(nPoints) + "\n")
+         if flowTowardsLastVert:
+            # Flow goes towards the last vertex of the road segment
+            for nn in range(afterVertex, nVert+1):
+               shared.fpOut.write("\tTowards last vertex of road segment " + fullDesc + " at " + DisplayOS(lineVert[nn].x(), lineVert[nn].y()) + ", nn = " + str(nn) + ", nVert = " + str(nVert) + "\n")
 
                # Are we at the final point in the line?
-               if nn == nPoints-1:
-                  #shared.fpOut.write("\tAt last point of road segment " + fullDesc + " " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + "\n")
-                  return 4, linePoints[nn]
+               if nn == nVert-1:
+                  shared.fpOut.write("\tAt last vertex of road segment " + fullDesc + " " + DisplayOS(lineVert[nn].x(), lineVert[nn].y()) + "\n")
+                  return 4, lineVert[nn]
 
                # Not at the last point on the line
-               thisPoint = linePoints[nn]
-               nextPoint = linePoints[nn+1]
+               thisPoint = lineVert[nn]
+               nextPoint = lineVert[nn+1]
                elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
                elevNextPoint = GetRasterElev(nextPoint.x(), nextPoint.y())
 
@@ -542,11 +592,13 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                      AddFlowLine(thisPoint, intPoint, FLOW_VIA_ROAD, fieldCode, -1)
 
                      # NOTE we are only considering the first intersection point
+                     #shared.fpOut.write("AAA Intersection with stream found, added flowline from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(intPoint.x(), intPoint.y()) + "\n")
                      return 2, intPoint
 
                # Next check to see whether the next point is downhill from this point
                if elevNextPoint > elevThisPoint + TOLERANCE:
                   # The next point is not downhill, so stop flowing along this road segment
+                  AddFlowMarkerPoint(thisPoint, FLOW_INTO_BLIND_PIT, fieldCode, -1)
                   shared.fpOut.write("\tFlow from field " + fieldCode + " hit a blind pit in road segment " + fullDesc + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
                   return 1, thisPoint
@@ -572,7 +624,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                   rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, nextPoint, elevNextPoint)
                   if rtn == 0:
                      # Flow has passed through the field observation
-                     #shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 1, rtn = " + str(rtn) + "\n")
+                     shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 1, rtn = " + str(rtn) + "\n")
                      return rtn, adjPoint
 
                   elif rtn == -1:
@@ -602,17 +654,17 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
          else:
             # Flow goes towards the first point of the road segment
-            for nn in range(numNearPoint, -1, -1):
-               shared.fpOut.write("\tTowards first point of road segment " + fullDesc + " at " + DisplayOS(linePoints[nn].x(), linePoints[nn].y()) + ", nn = " + str(nn) + ", nPoints = " + str(nPoints) + "\n")
+            for nn in range(prevVertex, -1, -1):
+               shared.fpOut.write("\tTowards first vertex of road segment " + fullDesc + " at " + DisplayOS(lineVert[nn].x(), lineVert[nn].y()) + ", nn = " + str(nn) + ", nVert = " + str(nVert) + "\n")
 
                # Are we at the first point in the line?
                if nn == 0:
-                  shared.fpOut.write("\tAt first point of road segment " + fullDesc + " " + DisplayOS(linePoints[0].x(), linePoints[0].y()) + "\n")
-                  return 4, linePoints[0]
+                  shared.fpOut.write("\tAt first vertex of road segment " + fullDesc + " " + DisplayOS(lineVert[0].x(), lineVert[0].y()) + "\n")
+                  return 4, lineVert[0]
 
                # Not at the first point on the line
-               thisPoint = linePoints[nn]
-               nextPoint = linePoints[nn-1]
+               thisPoint = lineVert[nn]
+               nextPoint = lineVert[nn-1]
                elevThisPoint = GetRasterElev(thisPoint.x(), thisPoint.y())
                elevNextPoint = GetRasterElev(nextPoint.x(), nextPoint.y())
 
@@ -631,11 +683,13 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                      AddFlowLine(thisPoint, intPoint, FLOW_VIA_ROAD, fieldCode, -1)
 
                      # NOTE we are only considering the first intersection point
+                     #shared.fpOut.write("BBB Intersection with stream found, added flowline from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(intPoint.x(), intPoint.y()) + "\n")
                      return 2, intPoint
 
                # Next check to see whether the next point is downhill from this point
                if elevNextPoint > elevThisPoint + TOLERANCE:
                   # The next point is not downhill, so stop flowing along this road segment
+                  AddFlowMarkerPoint(thisPoint, FLOW_INTO_BLIND_PIT, fieldCode, -1)
                   shared.fpOut.write("\tFlow from field " + fieldCode + " hit a blind pit in road segment " + fullDesc + " at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
                   return 1, thisPoint
@@ -658,7 +712,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                if indx != -1:
                   # We have found a field observation near this point, so route flow accordingly
                   rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, nextPoint, elevNextPoint)
-                  #shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 2, rtn = " + str(rtn) + "\n")
+                  shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorPath() 2, rtn = " + str(rtn) + "\n")
                   if rtn == 0:
                      # Flow has passed through the field observation
                      return rtn, adjPoint
@@ -689,7 +743,8 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                      return rtn, thisPoint
 
 
-      if not flowRouted:
+      else:
+         # not flowRouted
          shared.fpOut.write("\tNo suitable road segment found at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
          return 1, thisPoint
 
@@ -758,7 +813,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
 
          if distanceToSeg > shared.searchDist:
             # Too far away, so forget about this path segment
-            #shared.fpOut.write("\tToo far away (" + str(distanceToSeg) + " m) for path segID = " + str(segID) + "\n")
+            #shared.fpOut.write("\tToo far away (" + "{:0.1f}".format(distanceToSeg) + " m) for path segID = " + str(segID) + "\n")
 
             continue
 
@@ -799,7 +854,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
 
          fullDesc = "'" + str(featDesc) + "'"
 
-         shared.fpOut.write("\tTrying untravelled path segment " + fullDesc + " with distance to nearest point = " + str(pathSeg[2]) + " m\n")
+         shared.fpOut.write("\tTrying untravelled path segment " + fullDesc + " with distance to nearest point = " + "{:0.1f}".format(pathSeg[2]) + " m\n")
 
          #geomFeat = feature.geometry()
          #linePoints = geomFeat.asPolyline()
@@ -812,10 +867,10 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
 
          linePoints = linePointsAll[0]
 
-         shared.fpOut.write("\tAt " + DisplayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled path segment " + fullDesc + ", which has nearest point " + "{:0.1f}".format(pathSeg[2]) + " m away at " + DisplayOS(nearPoint.x(), nearPoint.y(), False) + "\n")
-
          # Find the nearest point in the path polyline
          nearPoint, numNearPoint, _beforeNearpoint, _afterNearpoint, _sqrDist = geomFeat.closestVertex(thisPoint)
+
+         shared.fpOut.write("\tAt " + DisplayOS(thisPoint.x(), thisPoint.y()) +", trying untravelled path segment " + fullDesc + ", which has nearest point " + "{:0.1f}".format(pathSeg[2]) + " m away at " + DisplayOS(nearPoint.x(), nearPoint.y(), False) + "\n")
 
          # If there is a choice, then find out which direction along the path has the steepest downhill slope
          flowTowardsLastPoint = None
@@ -845,7 +900,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
 
          elif numNearPoint == len(linePoints)-1:
             # The nearest point is the same as the last point, so compare elevations with the previous point (the penultimate point in the line)
-            prevPoint = linePoints[numNearPoint-1]
+            prevPoint = linePoints[numNearPoint-2]
             elevPrevPoint = GetRasterElev(prevPoint.x(), prevPoint.y())
 
             #shared.fpOut.write("\tB: near point elev = " + str(elevNearPoint) + ", prev point elev = " + str(elevPrevPoint) + "\n")
@@ -975,6 +1030,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                      AddFlowLine(thisPoint, intPoint, FLOW_VIA_PATH, fieldCode, -1)
 
                      # NOTE we are only considering the first intersection point
+                     #shared.fpOut.write("CCC Intersection with stream found, added flowline from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(intPoint.x(), intPoint.y()) + "\n")
                      return 2, intPoint
 
                # Next check to see whether the next point is downhill from this point
@@ -1064,6 +1120,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                      AddFlowLine(thisPoint, intPoint, FLOW_VIA_ROAD, fieldCode, -1)
 
                      # NOTE we are only considering the first intersection point
+                     #shared.fpOut.write("DDD Intersection with stream found, added flowline from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(intPoint.x(), intPoint.y()) + "\n")
                      return 2, intPoint
 
                # Next check to see whether the next point is downhill from this point
@@ -1426,6 +1483,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
                AddFlowLine(thisPoint, intPoint, FLOW_VIA_BOUNDARY, fieldCode, -1)
 
                # NOTE we are only considering the first intersection point
+               #shared.fpOut.write("EEE Intersection with stream found, added flowline from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(intPoint.x(), intPoint.y()) + "\n")
                return 2, intPoint
 
          # OK, now find the in-between points
@@ -1466,7 +1524,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
                      # There is a within-polygon cell with a steeper gradient
                      AddFlowLine(point1, adjPoint, FLOW_DOWN_STEEPEST, fieldCode, elev)
 
-                     shared.fpOut.write("\tFlow from field " + str(fieldCode) + " has left the boundary of field " + str(boundaryFieldCode) + " at " + DisplayOS(point1.x(), point1.y()) + " and flows down the steepest with-in field gradient, to " +  DisplayOS(adjPoint.x(), adjPoint.y()) + "\n")
+                     shared.fpOut.write("\tFlow from field " + str(fieldCode) + " has left the boundary of field " + str(boundaryFieldCode) + " at " + DisplayOS(point1.x(), point1.y()) + " and flows down the steepest within-field gradient, to " +  DisplayOS(adjPoint.x(), adjPoint.y()) + "\n")
 
                      return 0, adjPoint
 

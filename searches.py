@@ -552,13 +552,13 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
          #linePoints = geomFeat.asPolyline()
          #nPoints = len(linePoints)
 
-         # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
+         # The nearest point may or may not be a vertex of the line. So get the closest vertex in the line
 #         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(roadSeg[1])
 
          #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
 
-         if not alreadyAlongRoad:
-            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(roadSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
+         #if not alreadyAlongRoad:
+            #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(roadSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
 
    return 1
 #======================================================================================================================
@@ -608,7 +608,7 @@ def FindSegmentIntersectionWithStream(featGeom):
          geomIntersect = featGeom.intersection(geomStreamSeg)
 
          intersectPoint = geomIntersect.asPoint()
-         #print("intersectPoint = " + DisplayOS(intersectPoint.x(), intersectPoint.y()))
+         #shared.fpOut.write("intersectPoint = " + DisplayOS(intersectPoint.x(), intersectPoint.y()) + "\n")
 
          intersectPoints.append(intersectPoint)
 
@@ -674,7 +674,7 @@ def FindNearbyStream(point, flowFieldCode):
 
          if distanceToSeg > shared.searchDist:
             # Too far away, so forget about this stream segment
-            #print("Too far away, max is " + str(shared.searchDist) + " m, abandoning")
+            #print("Too far away, max is " + "{:0.1f}".format(shared.searchDist) + " m, abandoning")
             continue
 
          if segID in streamSegIDsFollowed:

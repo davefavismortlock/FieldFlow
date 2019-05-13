@@ -82,8 +82,8 @@ FLOW_VIA_PATH                 = "Path"
 FLOW_VIA_BOUNDARY             = "Boundary"
 FLOW_ADJUSTMENT_DUMMY         = "Dummy"
 FLOW_TO_FIELD_BOUNDARY        = "ToBoundary"
+FLOW_INTO_BLIND_PIT           = "BlindPit"
 FLOW_OUT_OF_BLIND_PIT         = "OutBlindPit"
-BLIND_PIT                     = "BlindPit"
 
 # Markers
 MARKER_HIGHEST_POINT          = " highest point"
@@ -103,7 +103,7 @@ MARKER_AT_STREAM              = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "10 May 2019 QGIS3 version"
+progVer = "13 May 2019 QGIS3 version"
 runTitle = ""
 
 considerFieldObservations = ""

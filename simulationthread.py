@@ -286,17 +286,18 @@ class SimulationThread(QThread):
 
                      elif rtn == 1:
                         # Flow has hit a blind pit
-                        shared.fpOut.write("Flow from field " + str(fieldCode) + " hit a blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " while flowing along a road\n*** Please add a field observation\n")
+                        shared.fpOut.write("Flow from field " + str(fieldCode) + " hit a blind pit at " + DisplayOS(point.x(), point.y()) + " while flowing along a road\n*** Please add a field observation\n")
 
                         # Move on to next field
                         self.refresh.emit()
                         break
 
                      elif rtn == 2:
-                        # Flow has hit a stream, so carry on and look for a field observation
+                        # Flow has hit a stream, so carry on and look for a field observation (or the Rother)
                         viaRoadAndHitStream = True
                         viaLEAndAlongRoad = False
-                        #shared.fpOut.write("viaRoadAndHitStream = True\n")
+                        thisPoint = point
+                        #shared.fpOut.write("viaRoadAndHitStream = True, viaLEAndAlongRoad = False, looking for FO\n")
                         continue
 
                      elif rtn == 3:
@@ -348,9 +349,10 @@ class SimulationThread(QThread):
                         break
 
                      elif rtn == 2:
-                        # Flow has hit a stream, so carry on and look for a field observation
+                        # Flow has hit a stream, so carry on and look for a field observation (or the Rother)
                         viaPathAndHitStream = True
                         viaLEAndAlongPath = False
+                        thisPoint = point
                         #shared.fpOut.write("viaPathAndHitStream = True\n")
                         continue
 
@@ -379,7 +381,7 @@ class SimulationThread(QThread):
                # Search for a field observation of a landscape element near this point
                #==========================================================================================================
                #shared.fpOut.write("Searching for field observations for flow from field " + str(fieldCode) + " near " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
-               indx = FindNearbyFieldObservation(thisPoint)
+               indx = FindNearbyFieldObservation(thisPoint) #**** NEED TO RETURN THISPOINT
                if indx == -1:
                   # Did not find a field observation near this point
                   if viaLEAndHitBlindPit:
@@ -398,7 +400,16 @@ class SimulationThread(QThread):
                      self.refresh.emit()
                      break
 
-                  if hitRoadBehaviourUnknown or hitPathBehaviourUnknown:
+                  if hitRoadBehaviourUnknown:
+                     shared.fpOut.write("Flow from field " + str(fieldCode) + " hits a road at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow go over, under, or along this road?\n")
+
+                     # Move on to next field
+                     self.refresh.emit()
+                     break
+
+                  if hitPathBehaviourUnknown:
+                     shared.fpOut.write("Flow from field " + str(fieldCode) + " hits a path at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow go over, under, or along this path?\n")
+
                      # Move on to next field
                      self.refresh.emit()
                      break

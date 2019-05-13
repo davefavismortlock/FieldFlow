@@ -144,7 +144,7 @@ END OF RASTER LAYERS ===========================================================
 
 # Field observations ==================================================================================================
 
-# FIELD 45
+# FIELD 45 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 486406, 123941
 Type                                                                          : boundary
 Behaviour                                                                     : across
@@ -169,62 +169,32 @@ Behaviour                                                                     : 
 Description                                                                   : out of blind pit in field 48
 Outflow location                                                              : 486021, 123415
 
-Inflow location                                                               : 486021, 123415
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : negotiate Stedham Lane junction (1)
-Outflow location                                                              : 486009, 123403
-
-Inflow location                                                               : 486009, 123403
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : negotiate Stedham Lane junction (2)
-Outflow location                                                              : 486016, 123339
-
-Inflow location                                                               : 486016, 123339
+Inflow location                                                               : 486022, 123418
 Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : going WSW along Stedham Lane (1)
+Description                                                                   : onto Stedham Lane
 Outflow location                                                              :
+
+Inflow location                                                               : 486014, 123412
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : negotiate Stedham Lane junction
+Outflow location                                                              : 486008, 123372
 
 Inflow location                                                               : 486104, 123167
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : out of blind pit (1) along Stedham Lane
-Outflow location                                                              : 486119, 123137
+Description                                                                   : out of road blind pit by Meadowhills Cottage on Stedham Lane
+Outflow location                                                              : 486118, 123138
 
-Inflow location                                                               : 486119, 123137
+Inflow location                                                               : 486118, 123138
 Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : going WSW along Stedham Lane (2)
+Description                                                                   : WSW along Stedham Lane
 Outflow location                                                              :
 
-Inflow location                                                               : 486134, 123101
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : out of blind pit (2) along Stedham Lane
-Outflow location                                                              : 486152, 122968
 
-Inflow location                                                               : 486152, 122968
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : going WSW along Stedham Lane (3)
-Outflow location                                                              : 486160, 122860
-
-Inflow location                                                               : 486160, 122860
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : going WSW along Stedham Lane (4)
-Outflow location                                                              : 486164, 122740
-
-Inflow location                                                               : 486164, 122740
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : going WSW along Stedham Lane (5)
-Outflow location                                                              : 486209, 122656
-
-
-# FIELD 44
+# FIELD 44 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 485792, 123622
 Type                                                                          : path
 Behaviour                                                                     : across
@@ -249,14 +219,8 @@ Behaviour                                                                     : 
 Description                                                                   : Stanwater Lane
 Outflow location                                                              :
 
-#Inflow location                                                               : 485712, 123508
-#Type                                                                          : stream
-#Behaviour                                                                     : enter
-#Description                                                                   : Stanwater Lane Bridge
-#Outflow location                                                              :
 
-
-# FIELD 47
+# FIELD 47 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 486363, 123569
 Type                                                                          : boundary
 Behaviour                                                                     : across
@@ -300,7 +264,7 @@ Description                                                                   : 
 Outflow location                                                              : 486326, 123142
 
 
-# FIELD 52
+# FIELD 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 486518, 123371
 Type                                                                          : boundary
 Behaviour                                                                     : across
@@ -324,7 +288,6 @@ Type                                                                          : 
 Behaviour                                                                     : across
 Description                                                                   : next to Rother
 Outflow location                                                              : 486518, 123294
-
 
 END OF FIELD OBSERVATIONS =============================================================================================
 
