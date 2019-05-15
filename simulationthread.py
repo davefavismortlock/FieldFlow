@@ -53,7 +53,7 @@ class SimulationThread(QThread):
       # OK, off we go. First determine the flow start points
       #===================================================================================================================
       shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-      shared.fpOut.write("FLOW START POINTS\n\n")
+      shared.fpOut.write("FIELDS OMITTED\n\n")
 
       fieldCodesStartPointFound = []
       for layerNum in range(len(shared.vectorInputLayersCategory)):
@@ -178,7 +178,6 @@ class SimulationThread(QThread):
          shared.thisFieldFlowLineFieldCode = []
          shared.thisFieldRoadSegIDsTried = []
          shared.thisFieldPathSegIDsTried = []
-         shared.thisFieldBoundarySegIDsTried = []
          shared.thisFieldFieldObsAlreadyFollowed = []
 
          x = shared.flowStartPoints[field][0]
@@ -378,10 +377,10 @@ class SimulationThread(QThread):
                         continue
 
                #==========================================================================================================
-               # Search for a field observation of a landscape element near this point
+               # Search for a field observation of a landscape element-flow interaction near this point
                #==========================================================================================================
                #shared.fpOut.write("Searching for field observations for flow from field " + str(fieldCode) + " near " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
-               indx = FindNearbyFieldObservation(thisPoint) #**** NEED TO RETURN THISPOINT
+               indx = FindNearbyFieldObservation(thisPoint)
                if indx == -1:
                   # Did not find a field observation near this point
                   if viaLEAndHitBlindPit:

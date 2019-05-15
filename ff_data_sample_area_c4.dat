@@ -232,12 +232,65 @@ Behaviour                                                                     : 
 Description                                                                   : W edge of field 73
 Outflow location                                                              :
 
-Inflow location                                                               : 489492, 123632
+Inflow location                                                               : 489444, 123569
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : otherwise flows back to W boundary of field 73
+Outflow location                                                              : 489426, 123536
+
+Inflow location                                                               : 489382, 123458
 Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : SW edge of field 73
+Outflow location                                                              : 489383, 123459
+
+Inflow location                                                               : 489383, 123459
+Type                                                                          : path
+Behaviour                                                                     : across
+Description                                                                   : Unmetalled track to Winters Lane
+Outflow location                                                              : 489372, 123448
+
+Inflow location                                                               : 489372, 123448
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : NE edge of field 75
+Outflow location                                                              : 489379, 123453
+
+Inflow location                                                               : 489192, 123362
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : SW edge of field 75
+Outflow location                                                              : 489187, 123357
+
+Inflow location                                                               : 489168, 123348
+Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : NW edge of field 75
+Description                                                                   : Winter's Lane
 Outflow location                                                              :
 
+Inflow location                                                               : 489112, 123142
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : on Dodsley Lane, at Dodsley Cottage
+Outflow location                                                              : 489148, 123062
+
+Inflow location                                                               : 489148, 123062
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : on Dodsley Lane, south of Dodsley Cottage
+Outflow location                                                              : 489145, 122914
+
+Inflow location                                                               : 488917, 122171
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : at S end of Dodsley Lane, close to Easebourne Lane
+Outflow location                                                              : 488946, 122083
+
+Inflow location                                                               : 488946, 122083
+Type                                                                          : road
+Behaviour                                                                     : along
+Description                                                                   : Easebourne Lane, close to Nort Street bridge
+Outflow location                                                              :
 
 
 
@@ -282,64 +335,10 @@ Description                                                                   : 
 Outflow location                                                              :
 
 
+# FIELD 79 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#89942, 121882
 
 
 END OF FIELD OBSERVATIONS =============================================================================================
 
-
-
-
-
-#Inflow location                                                               : 489449, 123566
-#Type                                                                          : blindpit
-#Behaviour                                                                     : overtop
-#Description                                                                   : leave W edge of 73
-#Outflow location                                                              : 489436, 123545
-
-#Inflow location                                                               : 489384, 123460
-#Type                                                                          : boundary
-#Behaviour                                                                     : across
-#Description                                                                   : SW edge of field 73
-#Outflow location                                                              : 489383, 123459
-
-#Inflow location                                                               : 489383, 123459
-#Type                                                                          : path
-#Behaviour                                                                     : across
-#Description                                                                   : Unmetalled track to Winters Lane
-#Outflow location                                                              : 489382, 123458
-
-#Inflow location                                                               : 489382, 123458
-#Type                                                                          : boundary
-#Behaviour                                                                     : across
-#Description                                                                   : NE edge of field 75
-#Outflow location                                                              : 489379, 123453
-
-#Inflow location                                                               : 489164, 123326
-#Type                                                                          : blindpit
-#Behaviour                                                                     : overtop
-#Description                                                                   : out of blind pit on NW edge of field 75
-#Outflow location                                                              : 489156, 123306
-
-#Inflow location                                                               : 489156, 123306
-#Type                                                                          : boundary
-#Behaviour                                                                     : across
-#Description                                                                   : between field 75 and field 76
-#Outflow location                                                              : 489117, 123208
-
-#Inflow location                                                               : 489117, 123208
-#Type                                                                          : boundary
-#Behaviour                                                                     : across
-#Description                                                                   : NW edge of field 76
-#Outflow location                                                              : 489100, 123189
-
-#Inflow location                                                               : 489100, 123189
-#Type                                                                          : road
-#Behaviour                                                                     : along
-#Description                                                                   : S via Dodsley Lane (north part)
-#Outflow location                                                              :
-
-#Inflow location                                                               : 488952, 122086
-#Type                                                                          : blindpit
-#Behaviour                                                                     : overtop
-#Description                                                                   : into stream
-#Outflow location                                                              : 488931, 122066

@@ -386,7 +386,7 @@ def setUpSimulation():
       shared.fpOut.write("FIELD OBSERVATIONS (locations normalized to grid centroids)\n\n")
 
       for obs in range(len(shared.fieldObservationFlowTo)):
-         printStr = str(obs+1) + ": '" + shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y(), False)
+         printStr = str(obs+1) + ": '" + shared.fieldObservationBehaviour[obs] + " " + shared.fieldObservationCategory[obs] + ", " + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y(), False)
 
          if shared.fieldObservationFlowTo[obs]:
             printStr += (" to " + DisplayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y(), False))
