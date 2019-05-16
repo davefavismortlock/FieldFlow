@@ -589,6 +589,8 @@ def FindSegmentIntersectionWithStream(featGeom):
 
    # Does the object's geometry intersect any stream segments? First construct a bounding box around the road, then see if any streams intersect this
    roadBoundingBox = featGeom.boundingBox()
+   shared.fpOut.write("\t" + str(roadBoundingBox) + "\n")
+
    intersectingStreams = shared.vectorInputLayerIndex[layerNum].intersects(roadBoundingBox)
 
    if not intersectingStreams:
@@ -608,7 +610,7 @@ def FindSegmentIntersectionWithStream(featGeom):
          geomIntersect = featGeom.intersection(geomStreamSeg)
 
          intersectPoint = geomIntersect.asPoint()
-         #shared.fpOut.write("intersectPoint = " + DisplayOS(intersectPoint.x(), intersectPoint.y()) + "\n")
+         shared.fpOut.write("intersectPoint = " + DisplayOS(intersectPoint.x(), intersectPoint.y()) + "\n")
 
          intersectPoints.append(intersectPoint)
 
@@ -626,7 +628,7 @@ def FindNearbyStream(point, flowFieldCode):
    # pylint: disable=too-many-branches
    # pylint: disable=too-many-statements
 
-   #print("Entered FindNearbyStream at point " + DisplayOS(point.x(), point.y()))
+   #shared.fpOut.write("Entered FindNearbyStream at point " + DisplayOS(point.x(), point.y()) + "\n")
    layerNum = -1
    geomPoint = QgsGeometry.fromPointXY(point)
 
@@ -654,10 +656,10 @@ def FindNearbyStream(point, flowFieldCode):
    #inStream = False
    while True:
       # Find the nearest stream segments
-      #print("At start of FindNearbyStream loop: " + DisplayOS(point.x(), point.y()))
+      #shared.fpOut.write("At start of FindNearbyStream loop: " + DisplayOS(point.x(), point.y()) + "\n")
       nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(point, numberToSearchFor)
       #if len(nearestIDs) > 0:
-         #print("Nearest stream segment IDs = " + str(nearestIDs))
+         #shared.fpOut.write("Nearest stream segment IDs = " + str(nearestIDs) + "\n")
       request = QgsFeatureRequest().setFilterFids(nearestIDs)
       features = shared.vectorInputLayers[layerNum].getFeatures(request)
 
@@ -670,16 +672,16 @@ def FindNearbyStream(point, flowFieldCode):
          nearPoint = geomSeg.nearestPoint(geomPoint)
          distanceToSeg = geomPoint.distance(nearPoint)
          segID = streamSeg.id()
-         #print("Trying nearby stream segment with segID = " + str(segID) + " distanceToSeg = " + str(distanceToSeg))
+         #shared.fpOut.write("Trying nearby stream segment with segID = " + str(segID) + " and distanceToSeg = " + "{:0.1f}".format(distanceToSeg) + " m\n")
 
          if distanceToSeg > shared.searchDist:
             # Too far away, so forget about this stream segment
-            #print("Too far away, max is " + "{:0.1f}".format(shared.searchDist) + " m, abandoning")
+            #shared.fpOut.write("Too far away, max is " + "{:0.1f}".format(shared.searchDist) + " m, abandoning\n")
             continue
 
          if segID in streamSegIDsFollowed:
             # Already travelled, so forget about this stream segment
-            #print("Already travelled, abandoning")
+            #shared.fpOut.write("Already travelled, abandoning\n")
             continue
 
          # Is OK, so save the stream segment feature, the nearest point, and the distance
@@ -688,25 +690,25 @@ def FindNearbyStream(point, flowFieldCode):
       # Did we find suitable stream segments?
       if not distToPoint:
          # Nope
-         #print("No suitable stream segments found")
+         #shared.fpOut.write("No suitable stream segments found\n")
          return 0
 
       # OK we have some possibly suitable stream segments
       #for n in range(len(distToPoint)):
-         #print("Before " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
+         #shared.fpOut.write("Before " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
       # Sort the list of untravelled stream segments, shortest distance first
       distToPoint.sort(key = lambda distPoint: distPoint[2])
 
       #for n in range(len(distToPoint)):
-         #print"After " + (str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m")
+         #shared.fpOut.write("After " + (str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
       flowRouted = False
       for thisStreamSeg in distToPoint:
          # Go through this list of untravelled stream segments till we find a suitable one
          feature = thisStreamSeg[0]
          featID = feature.id()
-         #print("Trying stream segment with feature ID " + str(featID))
+         shared.fpOut.write("Trying nearby stream segment with feature ID " + str(featID) + "\n")
 
          localID = feature[OS_WATER_NETWORK_LOCAL_ID]
          #print(localID)
@@ -717,23 +719,24 @@ def FindNearbyStream(point, flowFieldCode):
 
          # Is this the Rother?
          streamName = feature[OS_WATER_NETWORK_NAME]
-         #print("streamName = '" + str(streamName) + "'")
-         #print("TARGET_RIVER = '" + str(TARGET_RIVER) + "'")
-         # Is this a string?
-         if isinstance(streamName, str):
-            streamName = streamName.upper()
-            if streamName.find(TARGET_RIVER) >= 0:
-               # Yes, flow has entered the Rother
-               shared.fpOut.write("Flow from field " + flowFieldCode + " enters the River Rother at " + DisplayOS(point.x(), point.y()) + "\n")
-               AddFlowMarkerPoint(point, MARKER_ENTER_RIVER, flowFieldCode, -1)
 
-               # We are done here
-               return 1
+         streamName = str(streamName)  # Make sure that this is a string
+         streamName = streamName.upper()
+         shared.fpOut.write("streamName = '" + streamName + "'\n")
+
+#         if streamName.find(TARGET_RIVER) >= 0:
+         if streamName.find(TARGET_RIVER) >= 0 or streamName == "M":
+            # Yes, flow has entered the Rother
+            shared.fpOut.write("Flow from field " + flowFieldCode + " enters the River Rother at " + DisplayOS(point.x(), point.y()) + "\n")
+            AddFlowMarkerPoint(point, MARKER_ENTER_RIVER, flowFieldCode, -1)
+
+            # We are done here
+            return 1
 
          # This stream segment is not the Rother. Are we considering streams?
          if not shared.considerStreams:
             # We are not, so don't try to route flow along this stream segment
-            #print("Stream not considered")
+            #shared.fpOut.write("Stream not considered\n")
             continue
 
          # We are considering streams
@@ -755,24 +758,24 @@ def FindNearbyStream(point, flowFieldCode):
          # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
          nearPoint, numNearpoint, _beforeNearpoint, _afterNearpoint, sqrDist = geomFeat.closestVertex(thisStreamSeg[1])
 
-         #print("At " + DisplayOS(point.x(), point.y()) + ", an untravelled stream segment " + str(localID) + " found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away")
+         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled stream segment " + str(localID) + " found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
 
-         #print("\tFirst point of stream segment is " + DisplayOS(firstPoint.x(), firstPoint.y()))
-         #print("\tNearest point of stream segment is " + DisplayOS(nearPoint.x(), nearPoint.y()))
-         #print("\tLast point of stream segment is " + DisplayOS(lastPoint.x(), lastPoint.y()))
+         #shared.fpOut.write("\tFirst point of stream segment is " + DisplayOS(firstPoint.x(), firstPoint.y()) + "\n")
+         #shared.fpOut.write("\tNearest point of stream segment is " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
+         #shared.fpOut.write("\tLast point of stream segment is " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
 
          # Check the flow direction
          flowDirection = feature["flowDirection"]
-         #print("\tFlow direction of this stream segment is " + flowDirection)
+         shared.fpOut.write("\tFlow direction of this stream segment is " + flowDirection + "\n")
 
          if nearPoint == firstPoint and flowDirection != "inDirection":
-            #print("Flow going wrong way in stream segment " + str(localID))
+            #shared.fpOut.write("Flow going wrong way in stream segment " + str(localID) + "\n")
 
             # Try the next stream segment
             continue
 
          elif nearPoint == lastPoint and flowDirection == "inDirection":
-            #print("Flow going wrong way in stream segment " + str(localID))
+            #shared.fpOut.write("Flow going wrong way in stream segment " + str(localID) + "\n")
 
             # Try the next stream segment
             continue
@@ -784,14 +787,14 @@ def FindNearbyStream(point, flowFieldCode):
                nextPoint = linePoints[m+1]
 
                AddFlowLine(thisPoint, nextPoint, FLOW_VIA_STREAM, flowFieldCode, -1)
-               #print("AddFlowLine 1", thisPoint.x(), thisPoint.y())
+               #shared.fpOut.write("AddFlowLine 1 from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
          else:
             for m in range(numNearpoint, 1, -1):
                thisPoint = linePoints[m]
                nextPoint = linePoints[m-1]
 
                AddFlowLine(thisPoint, nextPoint, FLOW_VIA_STREAM, flowFieldCode, -1)
-               #shared.fpOut.write("AddFlowLine 2", thisPoint.x(), thisPoint.y())
+               #shared.fpOut.write("AddFlowLine 2 from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
 
          # OK we have flow routed along this stream segment
          streamSegIDsFollowed.append(featID)
@@ -815,7 +818,7 @@ def FindNearbyStream(point, flowFieldCode):
             if streamName == NULL:
                streamName = "stream"
 
-         #shared.fpOut.write("Flow from field " + flowFieldCode + " enters the OS " + streamName + " segment " + str(localID) + " at " + DisplayOS(point.x(), point.y()) + " and leaves it at " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
+         shared.fpOut.write("Flow from field " + flowFieldCode + " enters the OS " + streamName + " segment " + str(localID) + " at " + DisplayOS(point.x(), point.y()) + " and leaves it at " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
          #shared.fpOut.write("======")
 
          AddFlowMarkerPoint(point, typeName, flowFieldCode, -1)
@@ -827,9 +830,9 @@ def FindNearbyStream(point, flowFieldCode):
          break
 
       if not flowRouted:
-         #printStr = "No suitable stream segment found"
-         #shared.fpOut.write(printStr)
-         #print(printStr)
+         printStr = "No suitable stream segment found"
+         shared.fpOut.write(printStr)
+         print(printStr)
 
          return 0
 

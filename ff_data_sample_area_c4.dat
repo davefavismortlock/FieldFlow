@@ -5,7 +5,7 @@
 #======================================================================================================================
 Run title                                                                     : West Sussex: Sample Area C. CONSIDER ALL FIELD OBERVATIONS
 
-Fields which generate flow (comma-separated list, blank for auto)             : 67, 69, 71, 73, 77, 79
+Fields which generate flow (comma-separated list, blank for auto)             : 69, 71, 73, 77, 79
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
 Consider field observations?                                                  : Y
@@ -224,7 +224,7 @@ Inflow location                                                               : 
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : N edge of field 73
-Outflow location                                                              : 489552, 123672
+Outflow location                                                              : 489550, 123670
 
 Inflow location                                                               : 489492, 123632
 Type                                                                          : boundary
@@ -286,12 +286,17 @@ Behaviour                                                                     : 
 Description                                                                   : at S end of Dodsley Lane, close to Easebourne Lane
 Outflow location                                                              : 488946, 122083
 
-Inflow location                                                               : 488946, 122083
+Inflow location                                                               : 488948, 122082
 Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : Easebourne Lane, close to Nort Street bridge
+Description                                                                   : Dodsley Lane, close to Rother
 Outflow location                                                              :
 
+Inflow location                                                               : 488938, 122073
+Type                                                                          : road
+Behaviour                                                                     : leave
+Description                                                                   : just before North Street bridge over Rother
+Outflow location                                                              : 488936, 122073
 
 
 # FIELD 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -322,12 +327,6 @@ Behaviour                                                                     : 
 Description                                                                   : S edge of 77
 Outflow location                                                              : 489617, 122803
 
-Inflow location                                                               : 489972, 121916
-Type                                                                          : boundary
-Behaviour                                                                     : across
-Description                                                                   : SE edge of 79
-Outflow location                                                              : 489972, 121898
-
 Inflow location                                                               : 489602, 122682
 Type                                                                          : road
 Behaviour                                                                     : along
@@ -337,7 +336,11 @@ Outflow location                                                              :
 
 # FIELD 79 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#89942, 121882
+#Inflow location                                                               : 489972, 121916
+#Type                                                                          : boundary
+#Behaviour                                                                     : across
+#Description                                                                   : SE edge of 79
+#Outflow location                                                              : 489972, 121898
 
 
 END OF FIELD OBSERVATIONS =============================================================================================

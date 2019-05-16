@@ -77,7 +77,7 @@ def readInput():
    # Before reading the data file, do some initialisation
    shared.extentRect = QgsRectangle()
 
-   shared.fieldsWithFlow = []
+   shared.sourceFields = []
 
    shared.outFlowMarkerPointLayer = QgsVector()
    shared.outFlowLineLayer = QgsVector()
@@ -138,7 +138,7 @@ def readInput():
          if data:
             dataSplit = data.split(',')
             for fld in dataSplit:
-               shared.fieldsWithFlow.append(fld.strip())
+               shared.sourceFields.append(fld.strip())
          dataLine += 1
 
       elif dataLine == 2:
@@ -509,9 +509,24 @@ def readInput():
 
                      return -1
 
-                  shared.fieldObservationFlowTo.append(QgsPointXY(float(xCoord), float(yCoord)))
+                  xCoord = float(xCoord)
+                  yCoord = float(yCoord)
+
+                  testXFrom = "{:08.1f}".format(shared.fieldObservationFlowFrom[-1].x())
+                  testYFrom = "{:08.1f}".format(shared.fieldObservationFlowFrom[-1].y())
+                  testXTo = "{:08.1f}".format(xCoord)
+                  testYTo = "{:08.1f}".format(yCoord)
+
+                  if testXFrom == testXTo and testYFrom == testYTo:
+                     printStr = "ERROR: identical 'From' and 'To' coordinates '" + str(data) + "' for field observation '" + shared.fieldObservationDescription[-1] + "'"
+                     print(printStr)
+
+                     return -1
+
+
+                  shared.fieldObservationFlowTo.append(QgsPointXY(xCoord, yCoord))
                else:
-                  # We do not have an outflow location. This is only allowable if the category is "along road", "along path", or "boundary blocked"
+                  # We do not have an outflow location. This is only allowable if the category is "along road", "along path", or "along boundary"
                   if not ((shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_ROAD and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_PATH and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_BOUNDARY and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG)):
                      printStr = "ERROR: for field observation '" + shared.fieldObservationCategory[-1] + "' '" + shared.fieldObservationBehaviour[-1] + "' '" + shared.fieldObservationDescription[-1] + "', the outflow location must be specified"
                      print(printStr)

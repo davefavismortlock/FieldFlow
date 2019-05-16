@@ -34,7 +34,7 @@ class MainApp(QgsApplication):
       # Get the input parameters
       rtn = readInput()
       if rtn == -1:
-         print("ERROR: see output file")
+         print("ERROR: in input file")
          exit(rtn)
 
       # Initialise variables and read the GIS layers

@@ -287,7 +287,7 @@ class MainWindow(QMainWindow):
       print("Thread done")
 
       self.myThread.quit()
-      self.myThread = None
+      #self.myThread = None
 
       self.statusBar.progress.setValue(100)
 

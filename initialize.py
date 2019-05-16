@@ -39,11 +39,11 @@ def setUpSimulation():
 
    printStr = shared.runTitle + "\n" + "Input data read from " + shared.dataInputFile + "\n"
 
-   n = len(shared.fieldsWithFlow)
+   n = len(shared.sourceFields)
    if n > 0:
       printStr += "Flow from source fields "
       for m in range(n):
-         printStr += shared.fieldsWithFlow[m]
+         printStr += shared.sourceFields[m]
          if m < n-1:
             printStr += ", "
    else:

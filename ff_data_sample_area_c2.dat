@@ -5,7 +5,7 @@
 #======================================================================================================================
 Run title                                                                     : West Sussex: Sample Area C. SIMPLE MODE, FILL BLIND PITS
 
-Fields which generate flow (comma-separated list, blank for auto)             : 67, 69, 71, 73, 77, 79
+Fields which generate flow (comma-separated list, blank for auto)             : 69, 71, 73, 77, 79
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
 Consider field observations?                                                  : N

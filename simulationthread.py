@@ -46,7 +46,7 @@ class SimulationThread(QThread):
       shared.flowStartPoints = []
 
       doAllFields = True
-      if shared.fieldsWithFlow:
+      if shared.sourceFields:
          doAllFields = False
 
       #===================================================================================================================
@@ -87,7 +87,7 @@ class SimulationThread(QThread):
                # Ignore any duplicate fields
                if fieldCode not in fieldCodesStartPointFound:
                   # Calculate the start-of-flow location only for fields which generate runoff
-                  if not doAllFields and fieldCode not in shared.fieldsWithFlow:
+                  if not doAllFields and fieldCode not in shared.sourceFields:
                      shared.fpOut.write("Not calculating start of flow for field " + str(fieldCode) + ", is not a source field\n")
                      continue
 
@@ -136,6 +136,31 @@ class SimulationThread(QThread):
                   # Refresh the display
                   self.refresh.emit()
 
+      # Have we missed any fields? If so, give an error message but carry on with the simulation
+      nSourceFieldsFound = len(shared.flowStartPoints)
+      nSourceFieldsSpecified = len(shared.sourceFields)
+      if nSourceFieldsFound != nSourceFieldsSpecified:
+         printStr = "ERROR: " + str(nSourceFieldsFound) + " fields found but " + str(nSourceFieldsSpecified) + " fields specified"
+         print(printStr)
+         shared.fpOut.write(printStr + "\n")
+
+         startFldCode = []
+         for startFld in shared.flowStartPoints:
+            startFldCode.append(startFld[3])
+
+         missingFlds = []
+         for fld in shared.sourceFields:
+            if fld not in startFldCode:
+               missingFlds.append(fld)
+
+         for missedFld in missingFlds:
+            printStr = "\tField " + str(missedFld) + " omitted, is this field within the displayed extent?"
+            print(printStr)
+            shared.fpOut.write(printStr + "\n")
+
+         print("\n")
+         shared.fpOut.write("\n")
+
       # Next, sort the list of flow start points so that we first process the highest i.e. we work downhill
       shared.flowStartPoints.sort(key = lambda fieldPoint: fieldPoint[2], reverse = True)
       #for field in shared.flowStartPoints:
@@ -157,7 +182,7 @@ class SimulationThread(QThread):
          # Are we simulating flow from this field?
          fieldCode = shared.flowStartPoints[field][3]
          if not doAllFields:
-            if fieldCode not in shared.fieldsWithFlow:
+            if fieldCode not in shared.sourceFields:
                # Nope
                continue
 
