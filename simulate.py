@@ -158,7 +158,7 @@ def FlowViaFieldObservation(indx, fieldCode, thisPoint, elev):
 
       elif shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_PATH:
          if shared.fieldObservationBehaviour[indx] == FIELD_OBS_BEHAVIOUR_ALONG:
-            shared.fpOut.write("Flow along path")
+            #shared.fpOut.write("Flow along path\n")
             AddFlowMarkerPoint(thisPoint, MARKER_PATH, fieldCode, -1)
 
             rtn, point = FlowAlongVectorPath(indx, fieldCode, thisPoint)
@@ -580,7 +580,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                   shared.fpOut.write("\tFlow from field " + str(fieldCode) + " at last vertex of road segment " + fullDesc + " " + DisplayOS(lineVert[nn].x(), lineVert[nn].y()) + "\n")
                   return 4, lineVert[nn]
 
-               # Are we doing the first line, which joins nearPoint to either the 'previous' vertex of the 'after' vertex?
+               # Are we doing the first line, which joins nearPoint to the 'after' vertex?
                if nn == startVert:
                   thisPoint = firstPoint
                   nextPoint = secondPoint
@@ -626,7 +626,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                   return 1, thisPoint
 
                # Check for pre-existing flow lines near the next point
-               adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(QgsPointXY(nextPoint))
+               adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(nextPoint)
                if adjX != -1:
                   # There is an adjacent flow line, so merge the two and finish with this flow line
                   adjPoint = QgsPointXY(adjX, adjY)
@@ -690,12 +690,18 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
                   shared.fpOut.write("\tFlow from field " + str(fieldCode) + " at first vertex of road segment " + fullDesc + " " + DisplayOS(lineVert[0].x(), lineVert[0].y()) + "\n")
                   return 4, lineVert[0]
 
-               # Not at the first point on the line
-               thisPoint = lineVert[nn]
-               nextPoint = lineVert[nn-1]
+               # Are we doing the first line, which joins nearPoint to the 'previous' vertex?
+               if nn == startVert:
+                  thisPoint = firstPoint
+                  nextPoint = secondPoint
+               else:
+                  thisPoint = lineVert[nn]
+                  nextPoint = lineVert[nn+1]
+
+               #shared.fpOut.write("\tthisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + ", nextPoint = " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
 
                # This can happen sometimes
-               if thisPoint.x() == nextPoint.x() and thisPoint.y() == nextPoint.y():
+               if isclose(thisPoint.x(), nextPoint.x()) and isclose(thisPoint.y(), nextPoint.y()):
                   continue
 
                thisPointElev = GetRasterElev(thisPoint.x(), thisPoint.y())
@@ -1094,7 +1100,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                   shared.fpOut.write("\tAt last vertex of path segment " + fullDesc + " " + DisplayOS(lineVert[nn].x(), lineVert[nn].y()) + "\n")
                   return 4, lineVert[nn]
 
-               # Are we doing the first line, which joins nearPoint to either the 'previous' vertex of the 'after' vertex?
+               # Are we doing the first line, which joins nearPoint to the 'after' vertex?
                if nn == startVert:
                   thisPoint = firstPoint
                   nextPoint = secondPoint
@@ -1102,7 +1108,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                   thisPoint = lineVert[nn]
                   nextPoint = lineVert[nn+1]
 
-               #shared.fpOut.write("\tthisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + ", nextPoint = " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
+               shared.fpOut.write("\tthisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + ", nextPoint = " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
 
                # This can happen sometimes
                if isclose(thisPoint.x(), nextPoint.x()) and isclose(thisPoint.y(), nextPoint.y()):
@@ -1140,7 +1146,7 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                   return 1, thisPoint
 
                # Check for pre-existing flow lines near the next point
-               adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(QgsPointXY(nextPoint))
+               adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(nextPoint)
                if adjX != -1:
                   # There is an adjacent flow line, so merge the two and finish with this flow line
                   adjPoint = QgsPointXY(adjX, adjY)
@@ -1203,12 +1209,18 @@ def FlowAlongVectorPath(indx, fieldCode, thisPoint):
                   shared.fpOut.write("\tAt first vertex of path segment " + fullDesc + " " + DisplayOS(lineVert[0].x(), lineVert[0].y()) + "\n")
                   return 4, lineVert[0]
 
-               # Not at the first point on the line
-               thisPoint = lineVert[nn]
-               nextPoint = lineVert[nn-1]
+               # Are we doing the first line, which joins nearPoint to the 'previous' vertex?
+               if nn == startVert:
+                  thisPoint = firstPoint
+                  nextPoint = secondPoint
+               else:
+                  thisPoint = lineVert[nn]
+                  nextPoint = lineVert[nn+1]
+
+               shared.fpOut.write("\tthisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + ", nextPoint = " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
 
                # This can happen sometimes
-               if thisPoint.x() == nextPoint.x() and thisPoint.y() == nextPoint.y():
+               if isclose(thisPoint.x(), nextPoint.x()) and isclose(thisPoint.y(), nextPoint.y()):
                   continue
 
                thisPointElev = GetRasterElev(thisPoint.x(), thisPoint.y())

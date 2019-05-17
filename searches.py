@@ -200,6 +200,7 @@ def FindNearbyFlowLine(thisPoint):
 
    #shared.fpOut.write("Entered FindNearbyFlowLine() at point " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
    #layerNum = -1
+   thisPoint = QgsPointXY(thisPoint)
    geomThisPoint = QgsGeometry.fromPointXY(thisPoint)
 
    # TODO make this a user setting

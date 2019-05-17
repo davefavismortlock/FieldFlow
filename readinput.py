@@ -1,3 +1,5 @@
+from math import isclose
+
 from qgis.core import QgsVector, QgsRectangle, QgsPointXY
 
 import shared
@@ -512,12 +514,7 @@ def readInput():
                   xCoord = float(xCoord)
                   yCoord = float(yCoord)
 
-                  testXFrom = "{:08.1f}".format(shared.fieldObservationFlowFrom[-1].x())
-                  testYFrom = "{:08.1f}".format(shared.fieldObservationFlowFrom[-1].y())
-                  testXTo = "{:08.1f}".format(xCoord)
-                  testYTo = "{:08.1f}".format(yCoord)
-
-                  if testXFrom == testXTo and testYFrom == testYTo:
+                  if isclose(shared.fieldObservationFlowFrom[-1].x(), xCoord) and isclose(shared.fieldObservationFlowFrom[-1].y(), yCoord):
                      printStr = "ERROR: identical 'From' and 'To' coordinates '" + str(data) + "' for field observation '" + shared.fieldObservationDescription[-1] + "'"
                      print(printStr)
 

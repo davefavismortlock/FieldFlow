@@ -217,12 +217,12 @@ Inflow location                                                               : 
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : S edge of field F
-Outflow location                                                              : 491506, 123330
+Outflow location                                                              : 491503, 123333
 
-Inflow location                                                               : 491506, 123330
+Inflow location                                                               : 491503, 123333
 Type                                                                          : path
 Behaviour                                                                     : along
-Description                                                                   : to Loves Farm
+Description                                                                   : to Love's Farm
 Outflow location                                                              :
 
 

@@ -88,7 +88,7 @@ class SimulationThread(QThread):
                if fieldCode not in fieldCodesStartPointFound:
                   # Calculate the start-of-flow location only for fields which generate runoff
                   if not doAllFields and fieldCode not in shared.sourceFields:
-                     shared.fpOut.write("Not calculating start of flow for field " + str(fieldCode) + ", is not a source field\n")
+                     shared.fpOut.write("Not calculating start of flow for field " + str(fieldCode) + ", this is not a source field\n")
                      continue
 
                   #print("Finding flow start point for field " + str(fieldCode))

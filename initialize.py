@@ -346,7 +346,7 @@ def setUpSimulation():
             # We have a 'To' location, so check it
             centroidToPoint = GetCentroidOfContainingDEMCell(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y())
 
-            #if centroidFromPoint == centroidToPoint:
+            #if isclose(centroidFromPoint, centroidToPoint):
                #if not (shared.fieldObservationCategory[obs] == FIELD_OBS_CATEGORY_STREAM and shared.fieldObservationBehaviour[obs] == FIELD_OBS_BEHAVIOUR_ENTER):
                   #printStr = "ERROR: after adjustment, we have identical inflow and outflow locations " + DisplayOS(centroidFromPoint.x(), centroidFromPoint.y()) + " for field observation '" +  shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "'. The adjusted inflow location is " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y()) + " and the adjusted outflow location is " + DisplayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y()) + "\n*** Please change inflow and/or outflow coordinates\n"
                   #shared.fpOut.write(printStr)
