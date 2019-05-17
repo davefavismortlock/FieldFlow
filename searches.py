@@ -3,7 +3,7 @@ from math import sqrt
 from qgis.core import NULL, QgsGeometry, QgsFeatureRequest, QgsPointXY
 
 import shared
-from shared import INPUT_PATH_NETWORK, PATH_DESC, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, INPUT_WATER_NETWORK, OS_WATER_NETWORK_LOCAL_ID, OS_WATER_NETWORK_NAME, TARGET_RIVER, MARKER_ENTER_RIVER, FLOW_VIA_STREAM, OS_WATER_NETWORK_LEVEL, MARKER_ENTER_CULVERT, MARKER_ENTER_STREAM, OUTPUT_FIELD_CODE
+from shared import INPUT_PATH_NETWORK, PATH_DESC, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, INPUT_WATER_NETWORK, OS_WATER_NETWORK_LOCAL_ID, OS_WATER_NETWORK_NAME, TARGET_RIVER, TARGET_RIVER_NAME, MARKER_ENTER_RIVER, FLOW_VIA_STREAM, OS_WATER_NETWORK_LEVEL, MARKER_ENTER_CULVERT, MARKER_ENTER_STREAM, OUTPUT_FIELD_CODE
 from utils import GetRasterElev, DisplayOS
 from layers import AddFlowMarkerPoint, AddFlowLine
 
@@ -589,7 +589,7 @@ def FindSegmentIntersectionWithStream(featGeom):
 
    # Does the object's geometry intersect any stream segments? First construct a bounding box around the road, then see if any streams intersect this
    roadBoundingBox = featGeom.boundingBox()
-   shared.fpOut.write("\t" + str(roadBoundingBox) + "\n")
+   #shared.fpOut.write("\t" + str(roadBoundingBox) + "\n")
 
    intersectingStreams = shared.vectorInputLayerIndex[layerNum].intersects(roadBoundingBox)
 
@@ -610,7 +610,7 @@ def FindSegmentIntersectionWithStream(featGeom):
          geomIntersect = featGeom.intersection(geomStreamSeg)
 
          intersectPoint = geomIntersect.asPoint()
-         shared.fpOut.write("intersectPoint = " + DisplayOS(intersectPoint.x(), intersectPoint.y()) + "\n")
+         #shared.fpOut.write("intersectPoint = " + DisplayOS(intersectPoint.x(), intersectPoint.y()) + "\n")
 
          intersectPoints.append(intersectPoint)
 
@@ -722,12 +722,13 @@ def FindNearbyStream(point, flowFieldCode):
 
          streamName = str(streamName)  # Make sure that this is a string
          streamName = streamName.upper()
-         shared.fpOut.write("streamName = '" + streamName + "'\n")
+         #shared.fpOut.write("streamName = '" + streamName + "'\n")
 
-#         if streamName.find(TARGET_RIVER) >= 0:
+         #if streamName.find(TARGET_RIVER) >= 0:
+         # NOTE have no idea why some branches of the Rother are called "M" in the OS watercourse layer, maybe "M"  is "main channel"?
          if streamName.find(TARGET_RIVER) >= 0 or streamName == "M":
             # Yes, flow has entered the Rother
-            shared.fpOut.write("Flow from field " + flowFieldCode + " enters the River Rother at " + DisplayOS(point.x(), point.y()) + "\n")
+            shared.fpOut.write("Flow from field " + flowFieldCode + " enters the " + TARGET_RIVER_NAME + " at " + DisplayOS(point.x(), point.y()) + " (" + str(streamName) + ")\n")
             AddFlowMarkerPoint(point, MARKER_ENTER_RIVER, flowFieldCode, -1)
 
             # We are done here
@@ -766,7 +767,7 @@ def FindNearbyStream(point, flowFieldCode):
 
          # Check the flow direction
          flowDirection = feature["flowDirection"]
-         shared.fpOut.write("\tFlow direction of this stream segment is " + flowDirection + "\n")
+         #shared.fpOut.write("\tFlow direction of this stream segment is " + flowDirection + "\n")
 
          if nearPoint == firstPoint and flowDirection != "inDirection":
             #shared.fpOut.write("Flow going wrong way in stream segment " + str(localID) + "\n")
@@ -818,7 +819,7 @@ def FindNearbyStream(point, flowFieldCode):
             if streamName == NULL:
                streamName = "stream"
 
-         shared.fpOut.write("Flow from field " + flowFieldCode + " enters the OS " + streamName + " segment " + str(localID) + " at " + DisplayOS(point.x(), point.y()) + " and leaves it at " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
+         shared.fpOut.write("\tFlow from field " + flowFieldCode + " along stream segment with feature ID " + str(featID) + " '" + streamName + " " + str(localID) + "', from " + DisplayOS(point.x(), point.y()) + " to " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
          #shared.fpOut.write("======")
 
          AddFlowMarkerPoint(point, typeName, flowFieldCode, -1)

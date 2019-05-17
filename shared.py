@@ -3,6 +3,7 @@ COMMENT1                      = '#'
 COMMENT2                      = ';'
 
 TARGET_RIVER                  = "ROTHER"
+TARGET_RIVER_NAME             = "River Rother"
 
 EOF_VECTOR_DATA               = "END OF VECTOR LAYERS"
 EOF_RASTER_DATA               = "END OF RASTER LAYERS"

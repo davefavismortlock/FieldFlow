@@ -617,7 +617,7 @@ class SimulationThread(QThread):
                hitBoundary, hitPoint, hitFieldCode = FlowHitFieldBoundary(thisPoint, adjPoint, fieldCode)
                if hitBoundary:
                   # Yes, flow hits a field boundary, we have set a switch
-                  shared.fpOut.write("Hit boundary at " + DisplayOS(hitPoint.x(), hitPoint.y()) + " which is between " + DisplayOS(thisPoint.x(), thisPoint.y()) + " and " + DisplayOS(adjPoint.x(), adjPoint.y()) + "\n")
+                  shared.fpOut.write("Flow from field " + str(fieldCode) + " hits a field boundary at " + DisplayOS(hitPoint.x(), hitPoint.y()) + ", this is between vertices at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " and " + DisplayOS(adjPoint.x(), adjPoint.y()) + "\n")
 
                   AddFlowLine(thisPoint, hitPoint, FLOW_TO_FIELD_BOUNDARY, fieldCode, -1)
                   thisPoint = hitPoint

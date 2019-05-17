@@ -292,11 +292,6 @@ Behaviour                                                                     : 
 Description                                                                   : Dodsley Lane, close to Rother
 Outflow location                                                              :
 
-Inflow location                                                               : 488938, 122073
-Type                                                                          : road
-Behaviour                                                                     : leave
-Description                                                                   : just before North Street bridge over Rother
-Outflow location                                                              : 488936, 122073
 
 
 # FIELD 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -336,11 +331,11 @@ Outflow location                                                              :
 
 # FIELD 79 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#Inflow location                                                               : 489972, 121916
-#Type                                                                          : boundary
-#Behaviour                                                                     : across
-#Description                                                                   : SE edge of 79
-#Outflow location                                                              : 489972, 121898
+Inflow location                                                               : 489972, 121916
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : SE edge of 79
+Outflow location                                                              : 489972, 121898
 
 
 END OF FIELD OBSERVATIONS =============================================================================================
