@@ -645,7 +645,8 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
                   shared.fpOut.write("\tFlow along road segment " + fullDesc + " from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to field observation at " + DisplayOS(fieldObsStartPoint.x(), fieldObsStartPoint.y()) + ", nn = " + str(nn) + ", nVert = " + str(nVert) + "\n")
 
-                  # Now route flow via the field observation                  rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, nextPoint, nextPointElev)
+                  # Now route flow via the field observation
+                  rtn, adjPoint = FlowViaFieldObservation(indx, fieldCode, nextPoint, nextPointElev)
                   if rtn == 0:
                      # Flow has passed through the field observation
                      #shared.fpOut.write("Left FlowViaFieldObservation() called in FlowAlongVectorRoad() 1, rtn = " + str(rtn) + "\n")

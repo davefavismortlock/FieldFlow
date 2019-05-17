@@ -181,7 +181,7 @@ Behaviour                                                                     : 
 Description                                                                   : negotiate Stedham Lane junction
 Outflow location                                                              : 486008, 123372
 
-Inflow location                                                               : 486104, 123167
+Inflow location                                                               : 486008, 123372
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
 Description                                                                   : out of road blind pit by Meadowhills Cottage on Stedham Lane
@@ -236,19 +236,19 @@ Outflow location                                                              : 
 Inflow location                                                               : 486312, 123377
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : at north edge of field ??
+Description                                                                   : at north edge of field 50
 Outflow location                                                              : 486312, 123370
 
 Inflow location                                                               : 486257, 123262
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : out of blind pit in field ??
+Description                                                                   : out of blind pit in field 50
 Outflow location                                                              : 486291, 123256
 
 Inflow location                                                               : 486297, 123252
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : at eastern edge of field ??
+Description                                                                   : at eastern edge of field 50
 Outflow location                                                              : 486300, 123251
 
 Inflow location                                                               : 486305, 123249
