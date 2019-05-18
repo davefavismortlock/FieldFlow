@@ -239,7 +239,7 @@ class SimulationThread(QThread):
             # Refresh the display
             self.refresh.emit()
 
-            #shared.fpOut.write("At start of inner loop, thisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
+            shared.fpOut.write("At start of inner loop, thisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
             # Safety check
             nStepsAfterStart += 1
@@ -279,11 +279,11 @@ class SimulationThread(QThread):
             #=============================================================================================================
             # Flow did not merge with a pre-existing flowline. Make sure that this point is at the centroid of a DEM cell
             #=============================================================================================================
-            tempPoint = GetCentroidOfContainingDEMCell(thisPoint.x(), thisPoint.y())
-            if not (inBlindPit or viaLEAndHitBlindPit or viaLEAndHitStream) and tempPoint != thisPoint:
-               # We had to shift the location slightly, so show a connecting line
-               AddFlowLine(thisPoint, tempPoint, FLOW_ADJUSTMENT_DUMMY, fieldCode, -1)
-               thisPoint = tempPoint
+            #tempPoint = GetCentroidOfContainingDEMCell(thisPoint.x(), thisPoint.y())
+            #if not (inBlindPit or viaLEAndHitBlindPit or viaLEAndHitStream) and tempPoint != thisPoint:
+               ## We had to shift the location slightly, so show a connecting line
+               #AddFlowLine(thisPoint, tempPoint, FLOW_ADJUSTMENT_DUMMY, fieldCode, -1)
+               #thisPoint = tempPoint
 
             #=============================================================================================================
             #  OK, we are now considering field observations
@@ -303,7 +303,7 @@ class SimulationThread(QThread):
 
                      # And try to flow along this road
                      rtn, point = FlowAlongVectorRoad(-1, fieldCode, thisPoint)
-                     shared.fpOut.write("\tFinished flow along road at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
+                     shared.fpOut.write("\tFinished flow along road B at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
                      if rtn == -1:
                         # A problem! Exit the program
                         exit (-1)
@@ -467,7 +467,7 @@ class SimulationThread(QThread):
 
                   elif rtn == 4:
                      # Flow has passed through the field observation and is flowing along a road
-                     #shared.fpOut.write("Setting viaLEAndAlongRoad to True\n")
+                     shared.fpOut.write("Returned with rtn = 4 and adjPoint = " + DisplayOS(adjPoint.x(), adjPoint.y()) + " from FlowViaFieldObservation()\n")
                      viaLEAndAlongRoad = True
 
                      # Reset this switch

@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-# TODO flow along road segments does not look for nearby pre-existing flow
-
 from sys import argv
 
 from qgis.core import QgsApplication

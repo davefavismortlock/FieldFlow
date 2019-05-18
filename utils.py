@@ -1,3 +1,5 @@
+from math import isclose
+
 from qgis.core import QgsPointXY, QgsRaster
 
 import shared
@@ -97,7 +99,7 @@ def toSentenceCase(s):
 #======================================================================================================================
 def GetPointsOnLine(startPoint, endPoint, spacing):
    # Safety check, in case the two points are identical (could happen due to rounding errors)
-   if startPoint == endPoint:
+   if isclose(startPoint.x(), endPoint.x()) and isclose(startPoint.y(), endPoint.y()):
       return []
 
    # Interpolate between cells by a simple DDA line algorithm, see http://en.wikipedia.org/wiki/Digital_differential_analyzer_(graphics_algorithm) Note that Bresenham's algorithm gave occasional gaps

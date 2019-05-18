@@ -268,25 +268,13 @@ Behaviour                                                                     : 
 Description                                                                   : Winter's Lane
 Outflow location                                                              :
 
-Inflow location                                                               : 489112, 123142
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : on Dodsley Lane, at Dodsley Cottage
-Outflow location                                                              : 489148, 123062
-
-Inflow location                                                               : 489148, 123062
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : on Dodsley Lane, south of Dodsley Cottage
-Outflow location                                                              : 489145, 122914
-
-Inflow location                                                               : 489099, 122697
+Inflow location                                                               : 488917, 122171
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
 Description                                                                   : at S end of Dodsley Lane, close to Easebourne Lane
-Outflow location                                                              : 488946, 122083
+Outflow location                                                              : 488952, 122087
 
-Inflow location                                                               : 488948, 122082
+Inflow location                                                               : 488952, 122087
 Type                                                                          : road
 Behaviour                                                                     : along
 Description                                                                   : Dodsley Lane, close to Rother
@@ -339,4 +327,42 @@ Outflow location                                                              : 
 
 
 END OF FIELD OBSERVATIONS =============================================================================================
+
+
+
+Inflow location                                                               : 489112, 123142
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : on Dodsley Lane, at Dodsley Cottage
+Outflow location                                                              : 489148, 123062
+
+Inflow location                                                               : 489148, 123062
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : on Dodsley Lane, south of Dodsley Cottage
+Outflow location                                                              : 489145, 122914
+
+Inflow location                                                               : 489099, 122697
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : on Dodsley Lane 1
+Outflow location                                                              : 489041, 122469
+
+Inflow location                                                               : 489041, 122469
+Type                                                                          : road
+Behaviour                                                                     : along
+Description                                                                   : on Dodsley Lane 1
+Outflow location                                                              :
+
+Inflow location                                                               : 488985, 122348
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : on Dodsley Lane 2
+Outflow location                                                              : 488924, 122228
+
+Inflow location                                                               : 488924, 122228
+Type                                                                          : road
+Behaviour                                                                     : along
+Description                                                                   : on Dodsley Lane 2
+Outflow location                                                              :
 
