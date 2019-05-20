@@ -2002,7 +2002,7 @@ def FillBlindPit(thisPoint, fieldCode):
       #print("Start of FillBlindPit loop at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " startElev = " +str(startElev) + " topElev = " + str(topElev))
       for cell in pondedCells:
          #print("pondedCell " + DisplayOS(cell.x(), cell.y()))
-         AddFlowLine(thisPoint, cell, BLIND_PIT, fieldCode, -1)
+         AddFlowLine(thisPoint, cell, FLOW_INTO_BLIND_PIT, fieldCode, -1)
 
       newOverflowCells = []
       for point in pondedCells:
