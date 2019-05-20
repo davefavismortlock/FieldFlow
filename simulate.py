@@ -1,4 +1,5 @@
 from math import sqrt, isclose
+from operator import itemgetter
 
 from qgis.core import QgsRaster, QgsFeature, QgsFeatureRequest, QgsGeometry, QgsPointXY, QgsRectangle, QgsPoint
 
@@ -289,7 +290,7 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
    # pylint: disable=too-many-branches
    # pylint: disable=too-many-statements
 
-   TOLERANCE = 0.5
+   TOLERANCE = 0.5   # Vertical tolerance in metres
 
    if indx >= 0:
       shared.thisFieldFieldObsAlreadyFollowed.append(indx)
@@ -330,10 +331,11 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
       for roadSeg in features:
          # Is this road segment both close enough, and has not already been tried?
          geomSeg = roadSeg.geometry()
-         nearPoint = geomSeg.nearestPoint(geomPoint)
-         distanceToSeg = geomPoint.distance(nearPoint)
+         geomNearPoint = geomSeg.nearestPoint(geomPoint)
+         nearPoint = geomNearPoint.asPoint()
+         distanceToSeg = geomPoint.distance(geomNearPoint)
          segID = roadSeg.id()
-         #shared.fpOut.write("\tRoad segID = " + str(segID) + ", nearest point = " + DisplayOS(nearPoint.asPoint().x(), nearPoint.asPoint().y()) + ", distanceToSeg = " + str(distanceToSeg) + "\n")
+         #shared.fpOut.write("\tRoad segID = " + str(segID) + ", nearest point = " + DisplayOS(nearPoint.x(), nearPoint.y()) + ", distanceToSeg = " + str(distanceToSeg) + "\n")
 
          if distanceToSeg > shared.searchDist:
             # Too far away, so forget about this road segment
@@ -347,8 +349,55 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
 
             continue
 
-         # Is OK, so save the road segment feature, the nearest point, and the distance
-         distToPoint.append([roadSeg, nearPoint.asPoint(), distanceToSeg])
+         # Is OK, so calculate the gradient that flow would take along this road segment
+         nearPointElev = GetRasterElev(nearPoint.x(), nearPoint.y())
+
+         if geomSeg.isMultipart():
+            lineVertAll = geomSeg.asMultiPolyline()
+         else:
+            lineVertAll = [geomSeg.asPolyline()]
+
+         # We only consider the first polyline here
+         lineVert = lineVertAll[0]
+
+         #shared.fpOut.write("Points in lineVert\n")
+         #for pt in lineVert:
+            #shared.fpOut.write(DisplayOS(pt.x(), pt.y()) + "\n")
+
+         # Find the closest segment of the road polyline
+         _sqrDist, _minDistPoint, afterVertex, _leftOf = geomSeg.closestSegmentWithContext(nearPoint)
+
+         afterVertexPoint = geomSeg.vertexAt(afterVertex)
+         afterVertexElev = GetRasterElev(afterVertexPoint.x(), afterVertexPoint.y())
+
+         prevVertex = afterVertex - 1
+         prevVertexPoint = geomSeg.vertexAt(prevVertex)
+         prevVertexElev = GetRasterElev(prevVertexPoint.x(), prevVertexPoint.y())
+
+         xDistPrevToNear = abs(prevVertexPoint.x() - nearPoint.x())
+         yDistPrevToNear = abs(prevVertexPoint.y() - nearPoint.y())
+         xDistAfterToNear = abs(afterVertexPoint.x() - nearPoint.x())
+         yDistAfterToNear = abs(afterVertexPoint.y() - nearPoint.y())
+
+         distPrevToNear = sqrt((xDistPrevToNear * xDistPrevToNear) + (yDistPrevToNear * yDistPrevToNear))
+         distAfterToNear = sqrt((xDistAfterToNear * xDistAfterToNear) + (yDistAfterToNear * yDistAfterToNear))
+
+         elevDiffPrevToNear = nearPointElev - prevVertexElev
+         elevDiffAfterToNear = nearPointElev - afterVertexElev
+
+         gradientPrevToNear = gradientAfterToNear = 0
+
+         if distPrevToNear > 0:
+            gradientPrevToNear = elevDiffPrevToNear / distPrevToNear
+
+         if distAfterToNear > 0:
+            gradientAfterToNear = elevDiffAfterToNear / distAfterToNear
+
+         shared.fpOut.write("\tRoad segment " + str(segID) + ", gradientPrevToNear = " + str(gradientPrevToNear) + ", gradientAfterToNear = " + str(gradientAfterToNear) + "\n")
+         maxGradient = max(gradientPrevToNear, gradientAfterToNear)
+
+         # save the road segment feature, the nearest point, and the distance
+         distToPoint.append([roadSeg, nearPoint, distanceToSeg, 1 - maxGradient])
          #shared.fpOut.write("\t" + str(distToPoint[-1]) + "\n")
 
       # Did we any find suitable road segments?
@@ -358,14 +407,14 @@ def FlowAlongVectorRoad(indx, fieldCode, thisPoint):
          return 1, thisPoint
 
       # OK we have some possibly suitable road segments
-      #for n in range(len(distToPoint)):
-         #shared.fpOut.write("\tBefore " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+      for n in range(len(distToPoint)):
+         shared.fpOut.write("\tBefore " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m " + str(distToPoint[n][3]) + "\n")
 
       # Sort the list of untravelled road segments, shortest distance first
-      distToPoint.sort(key = lambda distPoint: distPoint[2])
+      distToPoint.sort(key = itemgetter(2, 3))
 
-      #for n in range(len(distToPoint)):
-         #shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+      for n in range(len(distToPoint)):
+         shared.fpOut.write("\tAfter " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m " + str(distToPoint[n][3]) + "\n")
 
       flowRouted = False
       flowTowardsAfterVertex = None

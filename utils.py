@@ -191,7 +191,7 @@ def CalcZCrossProduct(prevPoint, thisPoint, nextPoint):
 
 #======================================================================================================================
 #
-# Given three non-coincident points A, B, and C with their elevations, elevA < elevB and elevC < elevB, determines which of the two downhill paths A-B or BC is steeper
+# Given three non-coincident points A, B, and C with their elevations, elevA < elevB and elevC < elevB, determines which of the two downhill paths A-B or B-C is steeper
 #
 #======================================================================================================================
 def GetSteeperOfTwoLines(pointA, elevA, pointB, elevB, pointC, elevC):

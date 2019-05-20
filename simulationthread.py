@@ -239,7 +239,7 @@ class SimulationThread(QThread):
             # Refresh the display
             self.refresh.emit()
 
-            shared.fpOut.write("At start of inner loop, thisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
+            #shared.fpOut.write("At start of inner loop, thisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
             # Safety check
             nStepsAfterStart += 1
