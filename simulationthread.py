@@ -3,9 +3,9 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from qgis.core import QgsPointXY, QgsFeatureRequest
 
 import shared
-from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_BLIND_PIT, MARKER_AT_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_ROAD, MARKER_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID
+from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_BLIND_PIT, MARKER_AT_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_ROAD, MARKER_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
 from layers import AddFlowMarkerPoint, AddFlowLine, WriteVector
-from simulate import GetHighestAndLowestPointsOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoad, FlowAlongVectorPath
+from simulate import GetHighestAndLowestPointsOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoute
 from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
 from utils import GetRasterElev, GetCentroidOfContainingDEMCell, DisplayOS
 
@@ -302,7 +302,7 @@ class SimulationThread(QThread):
                      AddFlowMarkerPoint(thisPoint, MARKER_ROAD, fieldCode, -1)
 
                      # And try to flow along this road
-                     rtn, point = FlowAlongVectorRoad(-1, fieldCode, thisPoint)
+                     rtn, point = FlowAlongVectorRoute(ROUTE_ROAD, -1, fieldCode, thisPoint)
                      shared.fpOut.write("\tFinished flow along road B at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
                      if rtn == -1:
                         # A problem! Exit the program
@@ -358,8 +358,8 @@ class SimulationThread(QThread):
                      AddFlowMarkerPoint(thisPoint, MARKER_PATH, fieldCode, -1)
 
                      # And try to flow along this path
-                     rtn, point = FlowAlongVectorPath(-1, fieldCode, thisPoint)
-                     shared.fpOut.write("\tFinished flow along path/track at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
+                     rtn, point = FlowAlongVectorRoute(ROUTE_PATH, -1, fieldCode, thisPoint)
+                     shared.fpOut.write("\tFinished flow along path B at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
                      if rtn == -1:
                         # A problem! Exit the program
                         exit (-1)

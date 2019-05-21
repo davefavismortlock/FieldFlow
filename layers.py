@@ -4,7 +4,7 @@ from PyQt5.QtCore import QFileInfo     #, QVariant
 
 import shared
 from shared import OUTPUT_TYPE, OUTPUT_FIELD_CODE, OUTPUT_ELEVATION
-from utils import toSentenceCase, DisplayOS
+from utils import ToSentenceCase, DisplayOS
 
 
 #======================================================================================================================
@@ -416,7 +416,7 @@ def AddFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
    fields = shared.outFlowMarkerPointLayer.fields()
    feature.setFields(fields)
 
-   feature[OUTPUT_TYPE] = toSentenceCase(desc)
+   feature[OUTPUT_TYPE] = ToSentenceCase(desc)
    feature[OUTPUT_FIELD_CODE] = fieldCode
    feature[OUTPUT_ELEVATION] = elev
 
@@ -440,7 +440,7 @@ def AddFlowLine(lineStartPoint, lineEndPoint, desc, fieldCode, elev):
    fields = shared.outFlowLineLayer.fields()
    feature.setFields(fields)
 
-   feature[OUTPUT_TYPE] = toSentenceCase(desc)
+   feature[OUTPUT_TYPE] = ToSentenceCase(desc)
    feature[OUTPUT_FIELD_CODE] = fieldCode
    feature[OUTPUT_ELEVATION] = elev
 

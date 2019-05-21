@@ -78,7 +78,7 @@ def DisplayOS(x, y, rounding = True):
       #return "{" + "{:08.1f}, {:08.1f}".format(x, y) + "}"
       return "{" + "{:06.0f}, {:06.0f}".format(x, y) + "}"
 
-   return "{" + str(x) + "," + str(y) + "}"
+   return "{" + str(x) + ", " + str(y) + "}"
 #======================================================================================================================
 
 
@@ -87,7 +87,7 @@ def DisplayOS(x, y, rounding = True):
 # Capitalizes the first character of a string, leaves the rest untouched (from https://stackoverflow.com/questions/40454141/capitalize-first-letter-only-of-a-string-in-python)
 #
 #======================================================================================================================
-def toSentenceCase(s):
+def ToSentenceCase(s):
    return s[:1].upper() + s[1:]
 #======================================================================================================================
 

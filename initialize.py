@@ -327,69 +327,25 @@ def setUpSimulation():
          break
 
    shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-   #shared.fpOut.write("FIELD OBSERVATIONS\n\n")
 
    if shared.considerFieldObservations:
-      # The user-supplied OS coords for field observations are unlikely to be the coords of the raster DEM centroids. This is a problem for flow routing, after flow has passed through a landscape element which has an associated field observation. So we need to modify the 'To' coord of all field observations: check all field observations and adjust if necessary
-      #shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-
       for obs in range(len(shared.fieldObservationFlowTo)):
-         centroidFromPoint = GetCentroidOfContainingDEMCell(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y())
-         if not shared.fieldObservationFlowTo[obs]:
-            # 'To' location is blank
-            #if centroidFromPoint != shared.fieldObservationFlowFrom[obs]:
-               #shared.fpOut.write("Field observation " + str(obs) + " '" + shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "' changed to align with DEM centroids:\n\tinflow location (was " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y(), False) + ", now " + DisplayOS(centroidFromPoint.x(), centroidFromPoint.y(), False) + "\n\toutflow location is unknown\n")
+         centroidFromPoint = shared.fieldObservationFlowFrom[obs]
+         if shared.fieldObservationFlowTo[obs]:
+            centroidToPoint = shared.fieldObservationFlowTo[obs]
 
-            shared.fieldObservationFlowFrom[obs] = centroidFromPoint
 
-         else:
-            # We have a 'To' location, so check it
-            centroidToPoint = GetCentroidOfContainingDEMCell(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y())
-
-            #if isclose(centroidFromPoint, centroidToPoint):
-               #if not (shared.fieldObservationCategory[obs] == FIELD_OBS_CATEGORY_STREAM and shared.fieldObservationBehaviour[obs] == FIELD_OBS_BEHAVIOUR_ENTER):
-                  #printStr = "ERROR: after adjustment, we have identical inflow and outflow locations " + DisplayOS(centroidFromPoint.x(), centroidFromPoint.y()) + " for field observation '" +  shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "'. The adjusted inflow location is " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y()) + " and the adjusted outflow location is " + DisplayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y()) + "\n*** Please change inflow and/or outflow coordinates\n"
-                  #shared.fpOut.write(printStr)
-                  #print(printStr)
-
-                  #return (-1, -1)
-
-            #changedFrom = False
-            #changedTo = False
-            #if centroidFromPoint != shared.fieldObservationFlowFrom[obs]:
-               #changedFrom = True
-            #if centroidToPoint != shared.fieldObservationFlowTo[obs]:
-               #changedTo = True
-
-            #if changedFrom or changedTo:
-               #printStr = "Field observation " + str(obs) + " '" + shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "' changed to align with DEM centroids:\n"
-
-               #if changedFrom:
-                  #printStr += "\tinflow location was "
-                  #printStr += DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y(), False)
-                  #printStr += ", now "
-                  #printStr += DisplayOS(centroidFromPoint.x(), centroidFromPoint.y(), False)
-                  #printStr += "\n"
-
-               #if changedTo:
-                  #printStr += "\toutflow location was "
-                  #printStr += DisplayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y(), False)
-                  #printStr += ", now " + DisplayOS(centroidToPoint.x(), centroidToPoint.y(), False)
-                  #printStr += "\n"
-
-               #shared.fpOut.write(printStr)
-
-            shared.fieldObservationFlowFrom[obs] = centroidFromPoint
-            shared.fieldObservationFlowTo[obs] = centroidToPoint
+            #shared.fieldObservationFlowFrom[obs] = centroidFromPoint
+            #shared.fieldObservationFlowTo[obs] = centroidToPoint
 
       # Print out the revised field observations
-      shared.fpOut.write("FIELD OBSERVATIONS (locations normalized to grid centroids)\n\n")
+      shared.fpOut.write("FIELD OBSERVATIONS\n\n")
 
       for obs in range(len(shared.fieldObservationFlowTo)):
-         printStr = str(obs+1) + ": '" + shared.fieldObservationBehaviour[obs] + " " + shared.fieldObservationCategory[obs] + ", " + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y(), False)
+         printStr = str(obs+1) + ": '" + shared.fieldObservationBehaviour[obs] + " " + shared.fieldObservationCategory[obs] + ", " + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y())
 
          if shared.fieldObservationFlowTo[obs]:
-            printStr += (" to " + DisplayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y(), False))
+            printStr += (" to " + DisplayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y()))
 
          printStr += "\n"
          shared.fpOut.write(printStr)

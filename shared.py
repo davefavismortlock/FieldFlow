@@ -13,6 +13,9 @@ PREV_POINT                    = 0
 THIS_POINT                    = 1
 POST_POINT                    = 2
 
+ROUTE_ROAD                    = 0
+ROUTE_PATH                    = 1
+
 # Input datasets ======================================================================================================
 INPUT_OBSERVED_FLOW_LINES     = 1
 INPUT_FIELD_BOUNDARIES        = 2
@@ -104,7 +107,7 @@ MARKER_AT_STREAM              = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "20 May 2019 QGIS3 version"
+progVer = "21 May 2019 QGIS3 version"
 runTitle = ""
 
 considerFieldObservations = ""

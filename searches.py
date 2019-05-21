@@ -478,14 +478,14 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
    geomPoint = QgsGeometry.fromPointXY(point)
 
    # Find the road network layer
-   roadLayerFound = False
+   routeLayerFound = False
    for layerNum in range(len(shared.vectorInputLayersCategory)):
       if shared.vectorInputLayersCategory[layerNum] == INPUT_ROAD_NETWORK:
-         roadLayerFound = True
+         routeLayerFound = True
          break
 
    # Safety check
-   if not roadLayerFound:
+   if not routeLayerFound:
       printStr = "ERROR: opening road network layer\n"
       shared.fpOut.write(printStr)
       print(printStr)

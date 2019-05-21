@@ -206,9 +206,9 @@ Inflow location                                                               : 
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : S edge of field 71
-Outflow location                                                              : 489668, 123767
+Outflow location                                                              : 489667, 123767
 
-Inflow location                                                               : 489668, 123767
+Inflow location                                                               : 489667, 123767
 Type                                                                          : road
 Behaviour                                                                     : across
 Description                                                                   : Wick Lane
@@ -218,7 +218,7 @@ Inflow location                                                               : 
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : N edge of field 72
-Outflow location                                                              : 489663, 123763
+Outflow location                                                              : 489662, 123761
 
 Inflow location                                                               : 489552, 123672
 Type                                                                          : boundary
@@ -260,9 +260,9 @@ Inflow location                                                               : 
 Type                                                                          : boundary
 Behaviour                                                                     : across
 Description                                                                   : SW edge of field 75
-Outflow location                                                              : 489187, 123357
+Outflow location                                                              : 489163, 123349
 
-Inflow location                                                               : 489168, 123348
+Inflow location                                                               : 489163, 123349
 Type                                                                          : road
 Behaviour                                                                     : along
 Description                                                                   : Winter's Lane
