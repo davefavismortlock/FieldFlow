@@ -194,7 +194,6 @@ END OF RASTER LAYERS ===========================================================
 # Field observations ==================================================================================================
 
 # FLOW FROM FIELD A5 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 Inflow location                                                               : 491527, 123659
 Type                                                                          : boundary
 Behaviour                                                                     : across
@@ -237,16 +236,32 @@ Behaviour                                                                     : 
 Description                                                                   : N edge of field 85
 Outflow location                                                              : 491585, 123293
 
-Inflow location                                                               : 491594, 123114
+Inflow location                                                               : 491590, 123168
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : TO FORCE FLOW eastwards at S end of field 85
+Outflow location                                                              : 491697, 123105
+
+Inflow location                                                               : 491697, 123102
 Type                                                                          : boundary
 Behaviour                                                                     : along
 Description                                                                   : S edge of field 85
 Outflow location                                                              :
 
+Inflow location                                                               : 491741, 123088
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : S edge of field 85
+Outflow location                                                              : 491741, 123081
+
+Inflow location                                                               : 491706, 122930
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : S edge of field 87
+Outflow location                                                              : 491708, 122923
 
 
 # FLOW FROM FIELD 86 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 Inflow location                                                               : 491837, 123217
 Type                                                                          : boundary
 Behaviour                                                                     : across
@@ -271,20 +286,11 @@ Behaviour                                                                     : 
 Description                                                                   : between field 85 and field 87
 Outflow location                                                              : 491747, 123080
 
-Inflow location                                                               : 491712, 122928
-Type                                                                          : boundary
-Behaviour                                                                     : across
-Description                                                                   : between field 87 and field 88
-Outflow location                                                              : 491712, 122922
-
-
 
 # FLOW FROM FIELD F +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-
 # FLOW FROM FIELD 88 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 Inflow location                                                               : 491722, 122478
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop

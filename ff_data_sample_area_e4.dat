@@ -149,7 +149,7 @@ END OF RASTER LAYERS ===========================================================
 
 # Field observations ==================================================================================================
 
-# FLOW FROM FIELD M
+# FLOW FROM FIELD M +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 495242, 121477
 Type                                                                          : boundary
 Behaviour                                                                     : across
@@ -181,7 +181,7 @@ Description                                                                   : 
 Outflow location                                                              :
 
 
-# FLOW FROM FIELD N
+# FLOW FROM FIELD N +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 495468, 121518
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
@@ -201,10 +201,10 @@ Description                                                                   : 
 Outflow location                                                              : 495372, 121409
 
 
-# FLOW FROM FIELD O
+# FLOW FROM FIELD O +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-# FLOW FROM FIELD P
+# FLOW FROM FIELD P +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 495154, 120804
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
@@ -212,8 +212,8 @@ Description                                                                   : 
 Outflow location                                                              : 495166, 120778
 
 
-# FLOW FROM FIELD H
-Inflow location                                                               : 495452, 120422
+# FLOW FROM FIELD H +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Inflow location                                                               : 495454, 120429
 Type                                                                          : boundary
 Behaviour                                                                     : along
 Description                                                                   : E edge of field H
