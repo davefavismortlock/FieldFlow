@@ -193,7 +193,7 @@ END OF RASTER LAYERS ===========================================================
 
 # Field observations ==================================================================================================
 
-# FLOW FROM FIELD A5
+# FLOW FROM FIELD A5 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Inflow location                                                               : 491527, 123659
 Type                                                                          : boundary
@@ -213,21 +213,39 @@ Behaviour                                                                     : 
 Description                                                                   : N edge of field F
 Outflow location                                                              : 491528, 123645
 
-Inflow location                                                               : 491504, 123334
+Inflow location                                                               : 491503, 123335
 Type                                                                          : boundary
 Behaviour                                                                     : across
-Description                                                                   : S edge of field F
-Outflow location                                                              : 491503, 123333
+Description                                                                   : S edge of field F (HAD TO FORCE ALONG_PATH DOWNHILL FLOW)
+Outflow location                                                              : 491517, 123325
 
-Inflow location                                                               : 491503, 123333
+Inflow location                                                               : 491517, 123325
 Type                                                                          : path
 Behaviour                                                                     : along
 Description                                                                   : to Love's Farm
 Outflow location                                                              :
 
+Inflow location                                                               : 491580, 123300
+Type                                                                          : path
+Behaviour                                                                     : leave
+Description                                                                   : to Love's Farm (HAD TO FORCE THIS)
+Outflow location                                                              : 491581, 123298
+
+Inflow location                                                               : 491581, 123298
+Type                                                                          : boundary
+Behaviour                                                                     : across
+Description                                                                   : N edge of field 85
+Outflow location                                                              : 491585, 123293
+
+Inflow location                                                               : 491594, 123114
+Type                                                                          : boundary
+Behaviour                                                                     : along
+Description                                                                   : S edge of field 85
+Outflow location                                                              :
 
 
-# FLOW FROM FIELD 86
+
+# FLOW FROM FIELD 86 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Inflow location                                                               : 491837, 123217
 Type                                                                          : boundary
@@ -261,11 +279,11 @@ Outflow location                                                              : 
 
 
 
-# FLOW FROM FIELD F
+# FLOW FROM FIELD F +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 
-# FLOW FROM FIELD 88
+# FLOW FROM FIELD 88 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Inflow location                                                               : 491722, 122478
 Type                                                                          : blindpit
@@ -284,7 +302,6 @@ Type                                                                          : 
 Behaviour                                                                     : overtop
 Description                                                                   : out of blind pit in field 88a
 Outflow location                                                              : 491605, 122343
-
 
 
 END OF FIELD OBSERVATIONS =============================================================================================

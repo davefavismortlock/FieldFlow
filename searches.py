@@ -201,13 +201,13 @@ def FindNearbyFlowLine(thisPoint):
    #shared.fpOut.write("Entered FindNearbyFlowLine() at point " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
    #layerNum = -1
    thisPoint = QgsPointXY(thisPoint)
-   geomThisPoint = QgsGeometry.fromPointXY(thisPoint)
+   geomThisPoint = QgsGeometry.fromPointXY(QgsPointXY(thisPoint))
 
    # TODO make this a user setting
    numberToSearchFor = 3
 
    # Now search for the nearest flowline segments
-   nearestIDs = shared.outFlowLineLayerIndex.nearestNeighbor(thisPoint, numberToSearchFor)
+   nearestIDs = shared.outFlowLineLayerIndex.nearestNeighbor(QgsPointXY(thisPoint), numberToSearchFor)
    #if len(nearestIDs) > 0:
       #print("Nearest flowline segment IDs = " + str(nearestIDs))
 
@@ -342,7 +342,7 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
 
    #shared.fpOut.write("\tEntered FindNearbyPath at point " + DisplayOS(point.x(), point.y()))
    layerNum = -1
-   geomPoint = QgsGeometry.fromPointXY(point)
+   geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
 
    # Find the path network layer
    pathLayerFound = False
@@ -363,7 +363,7 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
    numberToSearchFor = 3
 
    # Now search for the nearest path segments
-   nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(point, numberToSearchFor)
+   nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(QgsPointXY(point), numberToSearchFor)
    #if len(nearestIDs) > 0:
       #print("Nearest path segment IDs (2) = " + str(nearestIDs))
 
@@ -371,7 +371,7 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
    features = shared.vectorInputLayers[layerNum].getFeatures(request)
 
    distToPoint = []
-   geomPoint = QgsGeometry.fromPointXY(point)
+   geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
 
    for pathSeg in features:
       # Is this path segment both close enough, and has not already been followed?
@@ -423,7 +423,7 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
          #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this path? Please add a field observation\n")
 
          if not alreadyAlongPath:
-            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path/track segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(pathSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path/track? Please add a field observation\n")
+            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(pathSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path? Please add a field observation\n")
 
    return 1
 #======================================================================================================================
@@ -475,7 +475,7 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
 
    #shared.fpOut.write("\tEntered FindNearbyRoad at point " + DisplayOS(point.x(), point.y()))
    layerNum = -1
-   geomPoint = QgsGeometry.fromPointXY(point)
+   geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
 
    # Find the road network layer
    routeLayerFound = False
@@ -496,7 +496,7 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
    numberToSearchFor = 3
 
    # Now search for the nearest road segments
-   nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(point, numberToSearchFor)
+   nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(QgsPointXY(point), numberToSearchFor)
    #if len(nearestIDs) > 0:
       #print("Nearest road segment IDs (2) = " + str(nearestIDs))
 
@@ -504,7 +504,7 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
    features = shared.vectorInputLayers[layerNum].getFeatures(request)
 
    distToPoint = []
-   geomPoint = QgsGeometry.fromPointXY(point)
+   geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
 
    for roadSeg in features:
       # Is this road segment both close enough, and has not already been followed?
@@ -570,7 +570,7 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
 # Checks to see if an object's geometry intersects a stream segment: if it does, then return the point(s) of intersection
 #
 #======================================================================================================================
-def FindSegmentIntersectionWithStream(featGeom):
+def FindSegmentIntersectionWithWatercourse(featGeom):
    layerNum = -1
 
    # Find the water network layer
@@ -631,7 +631,7 @@ def FindNearbyStream(point, flowFieldCode):
 
    #shared.fpOut.write("Entered FindNearbyStream at point " + DisplayOS(point.x(), point.y()) + "\n")
    layerNum = -1
-   geomPoint = QgsGeometry.fromPointXY(point)
+   geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
 
    streamSegIDsFollowed = []
 
@@ -658,14 +658,14 @@ def FindNearbyStream(point, flowFieldCode):
    while True:
       # Find the nearest stream segments
       #shared.fpOut.write("At start of FindNearbyStream loop: " + DisplayOS(point.x(), point.y()) + "\n")
-      nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(point, numberToSearchFor)
+      nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(QgsPointXY(point), numberToSearchFor)
       #if len(nearestIDs) > 0:
          #shared.fpOut.write("Nearest stream segment IDs = " + str(nearestIDs) + "\n")
       request = QgsFeatureRequest().setFilterFids(nearestIDs)
       features = shared.vectorInputLayers[layerNum].getFeatures(request)
 
       distToPoint = []
-      geomPoint = QgsGeometry.fromPointXY(point)
+      geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
 
       for streamSeg in features:
          # Is this stream segment both close enough, and has not already been followed?
@@ -848,9 +848,9 @@ def FindNearbyStream(point, flowFieldCode):
 #
 #======================================================================================================================
 def FindSteepestSegment(firstPoint, nearPoint, lastPoint, elevDiffNearToFirst, elevDiffNearToLast):
-   geomFirstPoint = QgsGeometry.fromPointXY(firstPoint)
-   geomNearPoint = QgsGeometry.fromPointXY(nearPoint)
-   geomLastPoint = QgsGeometry.fromPointXY(lastPoint)
+   geomFirstPoint = QgsGeometry.fromPointXY(QgsPointXY(firstPoint))
+   geomNearPoint = QgsGeometry.fromPointXY(QgsPointXY(nearPoint))
+   geomLastPoint = QgsGeometry.fromPointXY(QgsPointXY(lastPoint))
 
    # Note that this calculates the straight-line distance, which will not be appropriate if the roads are very twisty
    distAlongRoadNearToFirst = geomNearPoint.distance(geomFirstPoint)

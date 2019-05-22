@@ -347,7 +347,7 @@ class SimulationThread(QThread):
 
                if viaLEAndAlongPath:
                   #==========================================================================================================
-                  # Was flowing along a path/track but reached the beginning or end of that path/track, so search for another nearby path/track
+                  # Was flowing along a path but reached the beginning or end of that path, so search for another nearby path
                   #==========================================================================================================
                   rtn = FindNearbyPath(thisPoint, fieldCode, viaLEAndAlongPath)
                   if rtn == -1:
@@ -366,7 +366,7 @@ class SimulationThread(QThread):
 
                      elif rtn == 1:
                         # Flow has hit a blind pit
-                        shared.fpOut.write("Flow from field " + str(fieldCode) + " hit a blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " while flowing along a path/track\n*** Please add a field observation\n")
+                        shared.fpOut.write("Flow from field " + str(fieldCode) + " hit a blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " while flowing along a path\n*** Please add a field observation\n")
 
                         # Move on to next field
                         self.refresh.emit()
@@ -474,7 +474,7 @@ class SimulationThread(QThread):
                      viaLEAndHitBlindPit = False
 
                   elif rtn == 5:
-                     # Flow has passed through the field observation and is flowing along a path/track
+                     # Flow has passed through the field observation and is flowing along a path
                      #shared.fpOut.write("Setting viaLEAndAlongPath to True\n")
                      viaLEAndAlongPath = True
 
@@ -536,7 +536,7 @@ class SimulationThread(QThread):
                      # Back to the start of the inner loop
                      continue
 
-                  # No path/track found
+                  # No path found
 
                #==========================================================================================================
                # Has flow hit a field boundary?

@@ -103,8 +103,8 @@ def GetPointsOnLine(startPoint, endPoint, spacing):
       return []
 
    # Interpolate between cells by a simple DDA line algorithm, see http://en.wikipedia.org/wiki/Digital_differential_analyzer_(graphics_algorithm) Note that Bresenham's algorithm gave occasional gaps
-   XInc = endPoint.x() - startPoint.x()
-   YInc = endPoint.y() - startPoint.y()
+   XInc = float(endPoint.x() - startPoint.x())
+   YInc = float(endPoint.y() - startPoint.y())
    length = max(abs(XInc), abs(YInc))
 
    XInc = XInc / length

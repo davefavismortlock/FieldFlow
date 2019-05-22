@@ -169,7 +169,7 @@ Behaviour                                                                     : 
 Description                                                                   : out of blind pit in field 48
 Outflow location                                                              : 486021, 123415
 
-Inflow location                                                               : 486022, 123418
+Inflow location                                                               : 486021, 123415
 Type                                                                          : road
 Behaviour                                                                     : along
 Description                                                                   : onto Stedham Lane
@@ -179,15 +179,27 @@ Inflow location                                                               : 
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
 Description                                                                   : negotiate Stedham Lane junction
-Outflow location                                                              : 486008, 123372
+Outflow location                                                              : 486005, 123393
 
-Inflow location                                                               : 486008, 123372
+Inflow location                                                               : 486005, 123393
+Type                                                                          : road
+Behaviour                                                                     : along
+Description                                                                   : S of Stedham Lane junction
+Outflow location                                                              :
+
+Inflow location                                                               : 486106, 123164
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
 Description                                                                   : out of road blind pit by Meadowhills Cottage on Stedham Lane
-Outflow location                                                              : 486118, 123138
+Outflow location                                                              : 486133, 123102
 
-Inflow location                                                               : 486118, 123138
+Inflow location                                                               : 486133, 123102
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : out of road blind pit by Meadowhills Cottage on Stedham Lane
+Outflow location                                                              : 486140, 123027
+
+Inflow location                                                               : 486140, 123027
 Type                                                                          : road
 Behaviour                                                                     : along
 Description                                                                   : WSW along Stedham Lane
@@ -214,6 +226,18 @@ Description                                                                   : 
 Outflow location                                                              : 485708, 123538
 
 Inflow location                                                               : 485708, 123538
+Type                                                                          : road
+Behaviour                                                                     : along
+Description                                                                   : Stanwater Lane
+Outflow location                                                              :
+
+Inflow location                                                               : 485706, 123532
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : south of Stanwater Lane bend
+Outflow location                                                              : 485702, 123519
+
+Inflow location                                                               : 485702, 123519
 Type                                                                          : road
 Behaviour                                                                     : along
 Description                                                                   : Stanwater Lane

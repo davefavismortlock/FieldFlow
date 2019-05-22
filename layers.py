@@ -1,4 +1,4 @@
-from qgis.core import QgsProject, QgsRasterLayer, QgsVectorLayer, QgsDataSourceUri, QgsFeatureRequest, QgsWkbTypes, QgsVectorFileWriter, QgsFeature, QgsGeometry, QgsRectangle, QgsCoordinateReferenceSystem, QgsPoint, QgsField
+from qgis.core import QgsProject, QgsRasterLayer, QgsVectorLayer, QgsDataSourceUri, QgsFeatureRequest, QgsWkbTypes, QgsVectorFileWriter, QgsFeature, QgsGeometry, QgsRectangle, QgsCoordinateReferenceSystem, QgsPoint, QgsPointXY, QgsField
 
 from PyQt5.QtCore import QFileInfo     #, QVariant
 
@@ -411,7 +411,7 @@ def WriteVector(layer, fileName, CRS):
 def AddFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
    #print("In AddFlowMarkerPoint " + desc + " " + DisplayOS(thisPoint.x(), thisPoint.y()) + " for field " + str(fieldCode))
    feature = QgsFeature()
-   feature.setGeometry(QgsGeometry.fromPointXY(thisPoint))
+   feature.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(thisPoint)))
 
    fields = shared.outFlowMarkerPointLayer.fields()
    feature.setFields(fields)
