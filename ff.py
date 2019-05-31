@@ -8,6 +8,8 @@ from readinput import readInput
 from gui import MainWindow
 from initialize import setUpSimulation
 
+# TODO in future version, check for all vector intersections when drawing the flow line, if an intersection is found then only draw the flow line to the point of intersection
+
 
 #======================================================================================================================
 #

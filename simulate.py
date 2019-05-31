@@ -41,11 +41,11 @@ def GetHighestAndLowestPointsOnFieldBoundary(fieldBoundary):
 
    for point in polyBoundary:
       for j in range(len(point) - 1):
-         thisBoundaryPointX = point[j][0]
-         thisBoundaryPointY = point[j][1]
+         thisBoundaryPointX = point[j].x()
+         thisBoundaryPointY = point[j].y()
 
-         nextBoundaryPointX = point[j+1][0]
-         nextBoundaryPointY = point[j+1][1]
+         nextBoundaryPointX = point[j+1].x()
+         nextBoundaryPointY = point[j+1].y()
 
          inBetweenPoints = GetPointsOnLine(QgsPointXY(thisBoundaryPointX, thisBoundaryPointY), QgsPointXY(nextBoundaryPointX, nextBoundaryPointY), shared.resolutionOfDEM)
          #print("From " + DisplayOS(thisBoundaryPointX, thisBoundaryPointY) + " to " + DisplayOS(nextBoundaryPointX, nextBoundaryPointY))
@@ -86,13 +86,17 @@ def GetHighestAndLowestPointsOnFieldBoundary(fieldBoundary):
                   if elev != None:
                      if elev > maxElev:
                         maxElev = elev
-                        maxElevX = pixelCentroidPoint.x()
-                        maxElevY = pixelCentroidPoint.y()
+                        #maxElevX = pixelCentroidPoint.x()
+                        #maxElevY = pixelCentroidPoint.y()
+                        maxElevX = boundaryPoint.x()
+                        maxElevY = boundaryPoint.y()
 
                      if elev < minElev:
                         minElev = elev
-                        minElevX = pixelCentroidPoint.x()
-                        minElevY = pixelCentroidPoint.y()
+                        #minElevX = pixelCentroidPoint.x()
+                        #minElevY = pixelCentroidPoint.y()
+                        minElevX = boundaryPoint.x()
+                        minElevY = boundaryPoint.y()
 
    #print("Returning " + str(maxElevX) + ", " + str(maxElevY) + ", " + str(maxElev))
    return maxElevX, maxElevY, maxElev, minElevX, minElevY, minElev

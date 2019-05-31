@@ -215,3 +215,49 @@ def GetSteeperOfTwoLines(pointA, elevA, pointB, elevB, pointC, elevC):
       return False
 #======================================================================================================================
 
+
+#======================================================================================================================
+#
+# Determine whether a point is inside a given polygon. Adapted from http://www.ariel.com.au/a/python-point-int-poly.html. Note could use QGIS .contains() but this is more fun!
+#
+#======================================================================================================================
+def IsPointInPolygon(point, polygon):
+   x = point.x()
+   y = point.y()
+
+   polyGeom = polygon.geometry()
+   if polyGeom.isMultipart():
+      polygons = polyGeom.asMultiPolygon()
+   else:
+      polygons = [polyGeom.asPolygon()]
+
+   # If this is a multipolygon, we only consider the first polygon here
+   polyBoundary = polygons[0][0]
+   #print("polyBoundary = " + str(polyBoundary) + "\n\n")
+
+   n = len(polyBoundary)
+   inside = False
+
+   p1x = polyBoundary[0].x()
+   p1y = polyBoundary[0].y()
+
+   #print("p1x = " + str(p1x))
+   #print("p1y = " + str(p1y))
+
+   for i in range(n+1):
+      p2x = polyBoundary[i % n].x()
+      p2y = polyBoundary[i % n].y()
+      #print("p2x = " + str(p2x))
+      #print("p2y = " + str(p2y))
+
+      if y > min(p1y, p2y):
+         if y <= max(p1y, p2y):
+            if x <= max(p1x, p2x):
+               if p1y != p2y:
+                  xinters = (y-p1y) * (p2x-p1x) / (p2y-p1y) + p1x
+               if p1x == p2x or x <= xinters:
+                  inside = not inside
+      p1x, p1y = p2x, p2y
+
+   return inside
+#======================================================================================================================

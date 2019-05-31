@@ -1,13 +1,13 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from qgis.core import QgsPointXY, QgsFeatureRequest
+from qgis.core import QgsPointXY, QgsGeometry, QgsFeatureRequest
 
 import shared
 from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_BLIND_PIT, MARKER_AT_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_ROAD, MARKER_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
 from layers import AddFlowMarkerPoint, AddFlowLine, WriteVector
 from simulate import GetHighestAndLowestPointsOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoute
 from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
-from utils import GetRasterElev, GetCentroidOfContainingDEMCell, DisplayOS
+from utils import GetRasterElev, GetCentroidOfContainingDEMCell, DisplayOS, IsPointInPolygon
 
 
 #======================================================================================================================
@@ -53,7 +53,7 @@ class SimulationThread(QThread):
       # OK, off we go. First determine the flow start points
       #===================================================================================================================
       shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-      shared.fpOut.write("FIELDS OMITTED\n\n")
+      shared.fpOut.write("FIELDS START-OF-FLOW POINTS\n\n")
 
       fieldCodesStartPointFound = []
       for layerNum in range(len(shared.vectorInputLayersCategory)):
@@ -70,15 +70,15 @@ class SimulationThread(QThread):
                fieldCode = fieldBoundary[CONNECTED_FIELD_ID]
 
                # Is the centroid of this field within the coverage of one of the raster landscape element files which we have read in? TODO change to vector extent
-               isWithin = False
+               isWithinCoverage = False
                centroidPoint = fieldBoundary.geometry().centroid().asPoint()
                for n in range(len(shared.rasterInputLayersCategory)):
                   if shared.rasterInputLayersCategory[n] == INPUT_RASTER_BACKGROUND:
                      if shared.extentRect.contains(centroidPoint):
-                        isWithin = True
+                        isWithinCoverage = True
                         break
 
-               if not isWithin:
+               if not isWithinCoverage:
                   continue
 
                #print("fieldCode = " + str(fieldCode))
@@ -117,11 +117,21 @@ class SimulationThread(QThread):
                   xFlowStart = (xMaxBoundary * shared.weightBoundary) + (xCentroid * weightCentroid)
                   yFlowStart = (yMaxBoundary * shared.weightBoundary) + (yCentroid * weightCentroid)
 
-                  # Calculate the flow start point for this field, as a weighted average of the highest boundary point and the lowest boundary point
-                  #weightCentroid = 1 - shared.weightBoundary
-                  #xFlowStart = (xMaxBoundary * shared.weightBoundary) + (xMinBoundary * weightCentroid)
-                  #yFlowStart = (yMaxBoundary * shared.weightBoundary) + (yMinBoundary * weightCentroid)
+                  startPoint = QgsPointXY(xFlowStart, yFlowStart)
 
+                  # In some cases, the flow start point may not be within the field polygon. if it isn't, then find the nearest within-polygon point
+                  if not IsPointInPolygon(startPoint, fieldBoundary):
+                     nearPointGeom = fieldBoundary.geometry().nearestPoint(QgsGeometry.fromPointXY(startPoint))
+                     nearPoint = nearPointGeom.asPoint()
+
+                     printStr = "For field " + str(fieldCode) +", the flow start point " + DisplayOS(xFlowStart, yFlowStart) + " is not within the field, so changing the flow start point to " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n"
+                     shared.fpOut.write(printStr)
+
+                     startPoint = nearPoint
+                     xFlowStart = nearPoint.x()
+                     yFlowStart = nearPoint.y()
+
+                  # OK, we have an acceptable flow start point for this field, so get its elevation
                   flowStartElev = GetRasterElev(xFlowStart, yFlowStart)
 
                   # Save the flow start point for this field
@@ -130,7 +140,7 @@ class SimulationThread(QThread):
                   fieldCodesStartPointFound.append(fieldCode)
 
                   # And show it on the map
-                  #AddFlowMarkerPoint(QgsPointXY(xFlowStart, yFlowStart), MARKER_FLOW_START_POINT_1 + fieldCode + MARKER_FLOW_START_POINT_2, fieldCode, flowStartElev)
+                  #AddFlowMarkerPoint(startPoint, MARKER_FLOW_START_POINT_1 + fieldCode + MARKER_FLOW_START_POINT_2, fieldCode, flowStartElev)
                   #shared.fpOut.write("Flow from field " + fieldCode + " begins at " + DisplayOS(xFlowStart, yFlowStart) + "\n")
 
                   # Refresh the display

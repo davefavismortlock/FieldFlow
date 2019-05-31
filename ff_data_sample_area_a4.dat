@@ -214,12 +214,6 @@ Outflow location                                                              : 
 
 
 # FIELD 21 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Inflow location                                                               : 480052, 124608
-Type                                                                          : boundary
-Behaviour                                                                     : across
-Description                                                                   : bodge since start point outside field
-Outflow location                                                              : 480050, 124608
-
 Inflow location                                                               : 479938, 124482
 Type                                                                          : path
 Behaviour                                                                     : across
