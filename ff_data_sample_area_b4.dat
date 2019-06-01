@@ -243,6 +243,12 @@ Behaviour                                                                     : 
 Description                                                                   : Stanwater Lane
 Outflow location                                                              :
 
+Inflow location                                                               : 485587, 123484
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : Stanwater Lane, near stream
+Outflow location                                                              : 485533, 123468
+
 
 # FIELD 47 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 486363, 123569

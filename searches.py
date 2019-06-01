@@ -709,7 +709,7 @@ def FindNearbyStream(point, flowFieldCode):
          # Go through this list of untravelled stream segments till we find a suitable one
          feature = thisStreamSeg[0]
          featID = feature.id()
-         shared.fpOut.write("Trying nearby stream segment with feature ID " + str(featID) + "\n")
+         #shared.fpOut.write("Trying nearby stream segment with feature ID " + str(featID) + "\n")
 
          localID = feature[OS_WATER_NETWORK_LOCAL_ID]
          #print(localID)

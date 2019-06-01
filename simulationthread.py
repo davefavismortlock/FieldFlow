@@ -3,7 +3,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from qgis.core import QgsPointXY, QgsGeometry, QgsFeatureRequest
 
 import shared
-from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_BLIND_PIT, MARKER_AT_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_ROAD, MARKER_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
+from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_HIT_BLIND_PIT, MARKER_ENTER_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_HIT_ROAD, MARKER_HIT_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
 from layers import AddFlowMarkerPoint, AddFlowLine, WriteVector
 from simulate import GetHighestAndLowestPointsOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoute
 from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
@@ -140,8 +140,8 @@ class SimulationThread(QThread):
                   fieldCodesStartPointFound.append(fieldCode)
 
                   # And show it on the map
-                  #AddFlowMarkerPoint(startPoint, MARKER_FLOW_START_POINT_1 + fieldCode + MARKER_FLOW_START_POINT_2, fieldCode, flowStartElev)
-                  #shared.fpOut.write("Flow from field " + fieldCode + " begins at " + DisplayOS(xFlowStart, yFlowStart) + "\n")
+                  AddFlowMarkerPoint(startPoint, MARKER_FLOW_START_POINT_1 + fieldCode + MARKER_FLOW_START_POINT_2, fieldCode, flowStartElev)
+                  shared.fpOut.write("Flow from field " + fieldCode + " begins at " + DisplayOS(xFlowStart, yFlowStart) + "\n")
 
                   # Refresh the display
                   self.refresh.emit()
@@ -309,11 +309,11 @@ class SimulationThread(QThread):
                      exit (-1)
                   elif rtn == 1:
                      # We have found a road, so mark it
-                     AddFlowMarkerPoint(thisPoint, MARKER_ROAD, fieldCode, -1)
+                     AddFlowMarkerPoint(thisPoint, MARKER_HIT_ROAD, fieldCode, -1)
 
                      # And try to flow along this road
                      rtn, point = FlowAlongVectorRoute(ROUTE_ROAD, -1, fieldCode, thisPoint)
-                     shared.fpOut.write("\tFinished flow along road B at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
+                     #shared.fpOut.write("\tFinished flow along road B at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
                      if rtn == -1:
                         # A problem! Exit the program
                         exit (-1)
@@ -365,11 +365,11 @@ class SimulationThread(QThread):
                      exit (-1)
                   elif rtn == 1:
                      # We have found a path, so mark it
-                     AddFlowMarkerPoint(thisPoint, MARKER_PATH, fieldCode, -1)
+                     AddFlowMarkerPoint(thisPoint, MARKER_HIT_PATH, fieldCode, -1)
 
                      # And try to flow along this path
                      rtn, point = FlowAlongVectorRoute(ROUTE_PATH, -1, fieldCode, thisPoint)
-                     shared.fpOut.write("\tFinished flow along path B at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
+                     #shared.fpOut.write("\tFinished flow along path B at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
                      if rtn == -1:
                         # A problem! Exit the program
                         exit (-1)
@@ -419,7 +419,7 @@ class SimulationThread(QThread):
                if indx == -1:
                   # Did not find a field observation near this point
                   if viaLEAndHitBlindPit:
-                     #AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
+                     AddFlowMarkerPoint(thisPoint, MARKER_HIT_BLIND_PIT, fieldCode, -1)
                      shared.fpOut.write("Flow from field " + str(fieldCode) + " ends at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Please add a field observation\n")
 
                      # Move on to next field
@@ -427,7 +427,7 @@ class SimulationThread(QThread):
                      break
 
                   if viaRoadAndHitStream or viaPathAndHitStream or viaLEAndHitStream:
-                     AddFlowMarkerPoint(thisPoint, MARKER_AT_STREAM, fieldCode, -1)
+                     AddFlowMarkerPoint(thisPoint, MARKER_ENTER_STREAM, fieldCode, -1)
                      shared.fpOut.write("Flow from field " + str(fieldCode) + " hits a stream at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow enter the stream here?\n")
 
                      # Move on to next field
@@ -459,7 +459,7 @@ class SimulationThread(QThread):
 
                   elif rtn == 1:
                      # Flow has passed through the field observation and then hit a blind pit, so we need another field observation. Set a switch and go round the loop once more, since we may have a field observation which relates to this
-                     AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
+                     AddFlowMarkerPoint(thisPoint, MARKER_HIT_BLIND_PIT, fieldCode, -1)
                      #shared.fpOut.write("XXXX " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
                      viaLEAndHitBlindPit = True
 
@@ -477,7 +477,7 @@ class SimulationThread(QThread):
 
                   elif rtn == 4:
                      # Flow has passed through the field observation and is flowing along a road
-                     shared.fpOut.write("Returned with rtn = 4 and adjPoint = " + DisplayOS(adjPoint.x(), adjPoint.y()) + " from FlowViaFieldObservation()\n")
+                     #shared.fpOut.write("Returned with rtn = 4 and adjPoint = " + DisplayOS(adjPoint.x(), adjPoint.y()) + " from FlowViaFieldObservation()\n")
                      viaLEAndAlongRoad = True
 
                      # Reset this switch
@@ -522,7 +522,7 @@ class SimulationThread(QThread):
                      exit (-1)
                   elif rtn == 1:
                      # We have found a road, so mark it and set a switch since we don't know whether flow goes under, over or along the road
-                     AddFlowMarkerPoint(thisPoint, MARKER_ROAD, fieldCode, -1)
+                     AddFlowMarkerPoint(thisPoint, MARKER_HIT_ROAD, fieldCode, -1)
                      hitRoadBehaviourUnknown = True
 
                      # Back to the start of the inner loop
@@ -540,7 +540,7 @@ class SimulationThread(QThread):
                      exit (-1)
                   elif rtn == 1:
                      # We have found a path or track, so mark it and set a switch since we don't know whether flow goes under, over or along the path
-                     AddFlowMarkerPoint(thisPoint, MARKER_PATH, fieldCode, -1)
+                     AddFlowMarkerPoint(thisPoint, MARKER_HIT_PATH, fieldCode, -1)
                      hitPathBehaviourUnknown = True
 
                      # Back to the start of the inner loop
@@ -563,7 +563,7 @@ class SimulationThread(QThread):
             #=============================================================================================================
             if inBlindPit:
                if shared.FillBlindPits:
-                  #AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
+                  #AddFlowMarkerPoint(thisPoint, MARKER_HIT_BLIND_PIT, fieldCode, -1)
 
                   newPoint, flowDepth = FillBlindPit(thisPoint, fieldCode)
                   if newPoint == -1:
@@ -593,7 +593,7 @@ class SimulationThread(QThread):
                   continue
 
                else:
-                  AddFlowMarkerPoint(thisPoint, MARKER_BLIND_PIT, fieldCode, -1)
+                  AddFlowMarkerPoint(thisPoint, MARKER_HIT_BLIND_PIT, fieldCode, -1)
 
                   shared.fpOut.write("Flow from field " + fieldCode + " hits a blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
