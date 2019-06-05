@@ -109,7 +109,7 @@ MARKER_ENTER_STREAM           = "Enter stream"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "01 Jun 2019 QGIS3 version"
+progVer = "05 Jun 2019 QGIS3 version"
 runTitle = ""
 
 considerFieldObservations = ""

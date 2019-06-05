@@ -654,7 +654,7 @@ def FindNearbyStream(point, flowFieldCode):
    numberToSearchFor = 3
 
    # Loop until we either hit the Rother, or cannot find a suitable nearby stream segment
-   #inStream = False
+   inStream = False
    while True:
       # Find the nearest stream segments
       #shared.fpOut.write("At start of FindNearbyStream loop: " + DisplayOS(point.x(), point.y()) + "\n")
@@ -692,6 +692,7 @@ def FindNearbyStream(point, flowFieldCode):
       if not distToPoint:
          # Nope
          #shared.fpOut.write("No suitable stream segments found\n")
+         inStream = False
          return 0
 
       # OK we have some possibly suitable stream segments
@@ -801,7 +802,6 @@ def FindNearbyStream(point, flowFieldCode):
          # OK we have flow routed along this stream segment
          streamSegIDsFollowed.append(featID)
          flowRouted = True
-         #inStream = True
 
          #shared.fpOut.write(feature.attributes())
 
@@ -823,15 +823,19 @@ def FindNearbyStream(point, flowFieldCode):
          shared.fpOut.write("\tFlow from field " + flowFieldCode + " along stream segment with feature ID " + str(featID) + " '" + streamName + " " + str(localID) + "', from " + DisplayOS(point.x(), point.y()) + " to " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
          #shared.fpOut.write("======")
 
-         AddFlowMarkerPoint(point, typeName, flowFieldCode, -1)
+         if not inStream:
+            AddFlowMarkerPoint(point, typeName, flowFieldCode, -1)
 
          # Set the end point of this stream segment to be the start point, ready for next time round the loop
          point = lastPoint
 
          # Don't bother looking at other stream segments since flow was routed along this stream segment
+         inStream = True
          break
 
       if not flowRouted:
+         inStream = False
+
          printStr = "No suitable stream segment found"
          shared.fpOut.write(printStr)
          print(printStr)
