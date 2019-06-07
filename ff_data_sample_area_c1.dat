@@ -8,12 +8,12 @@ Run title                                                                     : 
 Fields which generate flow (comma-separated list, blank for auto)             : 69, 71, 73, 77, 79
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
-Consider field observations?                                                  : N
+Consider LE-flow interactions?                                                : N
 Fill blind pits?                                                              : N
 Consider streams?                                                             : N
-Consider roads? (is N if field observations not considered)                   : N
-Consider tracks and paths? (is N if field observations not considered)        : N
-Consider field boundaries (is N if field observations not considered)         : N
+Consider roads? (is N if LE-flow interactions not considered)                 : N
+Consider tracks and paths? (is N if LE-flow interactions not considered)      : N
+Consider field boundaries (is N if LE-flow interactions not considered)       : N
 
 DEM resolution or mean spacing of spot heights (metres)                       : 5
 Distance to search (metres)                                                   : 5
@@ -187,7 +187,7 @@ Type                                                                          : 
 
 END OF RASTER LAYERS ==================================================================================================
 
-# Field observations ==================================================================================================
+# LE-flow interactions ==================================================================================================
 
 END OF FIELD OBSERVATIONS =============================================================================================
 

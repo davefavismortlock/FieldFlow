@@ -3,7 +3,7 @@ from math import isclose
 from qgis.core import QgsVector, QgsRectangle, QgsPointXY
 
 import shared
-from shared import COMMENT1, COMMENT2, INPUT_FIELD_BOUNDARIES, INPUT_WATER_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_OBSERVED_FLOW_LINES, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_BLIND_PIT, FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_LEAVE, FIELD_OBS_BEHAVIOUR_OVERTOP, EOF_FIELD_OBSERVATIONS, EOF_VECTOR_DATA, EOF_RASTER_DATA
+from shared import COMMENT1, COMMENT2, INPUT_FIELD_BOUNDARIES, INPUT_WATER_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_OBSERVED_FLOW_LINES, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_BLIND_PIT, FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_LEAVE, FIELD_OBS_BEHAVIOUR_OVERTOP, FIELD_OBS_CATEGORY_FORCING, FIELD_OBS_BEHAVIOUR_FORCING, EOF_FIELD_OBSERVATIONS, EOF_VECTOR_DATA, EOF_RASTER_DATA
 from utils import DisplayOS
 
 #======================================================================================================================
@@ -105,13 +105,13 @@ def readInput():
    shared.rasterInputLayersCategory = []
    shared.rasterInputData = []
 
-   shared.fieldObservationFlowFrom = []
+   shared.LEFlowInteractionFlowFrom = []
    shared.fieldObservationCategory = []
-   shared.fieldObservationValidCategories = [FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_BLIND_PIT]
+   shared.fieldObservationValidCategories = [FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_BLIND_PIT, FIELD_OBS_CATEGORY_FORCING]
    shared.fieldObservationBehaviour = []
-   shared.fieldObservationValidBehaviours = [FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_LEAVE, FIELD_OBS_BEHAVIOUR_OVERTOP]
+   shared.fieldObservationValidBehaviours = [FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_LEAVE, FIELD_OBS_BEHAVIOUR_OVERTOP, FIELD_OBS_BEHAVIOUR_FORCING]
    shared.fieldObservationDescription = []
-   shared.fieldObservationFlowTo = []
+   shared.LEFlowInteractionFlowTo = []
 
    # Now open and read the data file TODO test for file opening
    fpData = open(shared.dataInputFile, "r")
@@ -153,14 +153,14 @@ def readInput():
          dataLine += 1
 
       elif dataLine == 3:
-         # Consider field observations?
+         # Consider LE-flow interactions?
          tempStr = data.upper().strip()
          if tempStr == "Y":
-            shared.considerFieldObservations = True
+            shared.considerLEFlowInteractions = True
          elif tempStr == "N":
-            shared.considerFieldObservations = False
+            shared.considerLEFlowInteractions = False
          else:
-            printStr = "ERROR: consider field observations = " + tempStr + ", it must be Y or N\n"
+            printStr = "ERROR: consider LE-flow interactions = " + tempStr + ", it must be Y or N\n"
             print(printStr)
 
             return -1
@@ -168,7 +168,7 @@ def readInput():
 
       elif dataLine == 4:
          # Fill blind pits?
-         if shared.considerFieldObservations:
+         if shared.considerLEFlowInteractions:
             shared.FillBlindPits = False
          else:
             tempStr = data.upper().strip()
@@ -185,7 +185,7 @@ def readInput():
 
       elif dataLine == 5:
          # Consider streams?
-         if shared.considerFieldObservations:
+         if shared.considerLEFlowInteractions:
             shared.considerStreams = True
          else:
             tempStr = data.upper().strip()
@@ -202,7 +202,7 @@ def readInput():
 
       elif dataLine == 6:
          # Consider roads?
-         if not shared.considerFieldObservations:
+         if not shared.considerLEFlowInteractions:
             shared.considerRoads = False
          else:
             tempStr = data.upper().strip()
@@ -219,7 +219,7 @@ def readInput():
 
       elif dataLine == 7:
          # Consider tracks and paths?
-         if not shared.considerFieldObservations:
+         if not shared.considerLEFlowInteractions:
             shared.considerTracks = False
          else:
             tempStr = data.upper().strip()
@@ -236,7 +236,7 @@ def readInput():
 
       elif dataLine == 8:
          # Consider field boundaries?
-         if not shared.considerFieldObservations:
+         if not shared.considerLEFlowInteractions:
             shared.considerFieldBoundaries = False
          else:
             tempStr = data.upper().strip()
@@ -414,8 +414,8 @@ def readInput():
          dataLine += 1
 
       elif dataLine == 26:
-         # Field observations, don't bother reading them if this is a topography-only run
-         if shared.considerFieldObservations == "T":
+         # LE-flow interactions, don't bother reading them if this is a topography-only run
+         if shared.considerLEFlowInteractions == "T":
             break
 
          first = True
@@ -462,12 +462,12 @@ def readInput():
 
                   return -1
 
-               shared.fieldObservationFlowFrom.append(QgsPointXY(float(xCoord), float(yCoord)))
+               shared.LEFlowInteractionFlowFrom.append(QgsPointXY(float(xCoord), float(yCoord)))
 
             elif obsLine == 1:
                # Category
                if data not in shared.fieldObservationValidCategories:
-                  printStr = "ERROR: unknown field observation category '" + str(data) + "' in field observation at " + DisplayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y())
+                  printStr = "ERROR: unknown field observation category '" + str(data) + "' in field observation at " + DisplayOS(shared.LEFlowInteractionFlowFrom[-1].x(), shared.LEFlowInteractionFlowFrom[-1].y())
                   print(printStr)
 
                   return -1
@@ -477,7 +477,7 @@ def readInput():
             elif obsLine == 2:
                # Behaviour
                if data not in shared.fieldObservationValidBehaviours:
-                  printStr = "ERROR: unknown field observation behaviour '" + str(data) + "' in field observation at " + DisplayOS(shared.fieldObservationFlowFrom[-1].x(), shared.fieldObservationFlowFrom[-1].y())
+                  printStr = "ERROR: unknown field observation behaviour '" + str(data) + "' in field observation at " + DisplayOS(shared.LEFlowInteractionFlowFrom[-1].x(), shared.LEFlowInteractionFlowFrom[-1].y())
                   print(printStr)
 
                   return -1
@@ -514,14 +514,14 @@ def readInput():
                   xCoord = float(xCoord)
                   yCoord = float(yCoord)
 
-                  if isclose(shared.fieldObservationFlowFrom[-1].x(), xCoord) and isclose(shared.fieldObservationFlowFrom[-1].y(), yCoord):
+                  if isclose(shared.LEFlowInteractionFlowFrom[-1].x(), xCoord) and isclose(shared.LEFlowInteractionFlowFrom[-1].y(), yCoord):
                      printStr = "ERROR: identical 'From' and 'To' coordinates '" + str(data) + "' for field observation '" + shared.fieldObservationDescription[-1] + "'"
                      print(printStr)
 
                      return -1
 
 
-                  shared.fieldObservationFlowTo.append(QgsPointXY(xCoord, yCoord))
+                  shared.LEFlowInteractionFlowTo.append(QgsPointXY(xCoord, yCoord))
                else:
                   # We do not have an outflow location. This is only allowable if the category is "along road", "along path", or "along boundary"
                   if not ((shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_ROAD and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_PATH and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_BOUNDARY and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG)):
@@ -530,7 +530,7 @@ def readInput():
 
                      return -1
 
-                  shared.fieldObservationFlowTo.append(None)
+                  shared.LEFlowInteractionFlowTo.append(None)
 
             obsLine += 1
             if obsLine == 5:

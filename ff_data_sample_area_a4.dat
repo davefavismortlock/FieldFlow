@@ -8,12 +8,12 @@ Run title                                                                     : 
 Fields which generate flow (comma-separated list, blank for auto)             : 22a, 21, B6
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
-Consider field observations?                                                  : Y
+Consider LE-flow interactions?                                                : Y
 Fill blind pits?                                                              : N
 Consider streams?                                                             : Y
-Consider roads? (is N if field observations not considered)                   : Y
-Consider tracks and paths? (is N if field observations not considered)        : Y
-Consider field boundaries (is N if field observations not considered)         : Y
+Consider roads? (is N if LE-flow interactions not considered)                 : Y
+Consider tracks and paths? (is N if LE-flow interactions not considered)      : Y
+Consider field boundaries (is N if LE-flow interactions not considered)       : Y
 
 DEM resolution or mean spacing of spot heights (metres)                       : 5
 Distance to search (metres)                                                   : 5
@@ -183,7 +183,7 @@ Type                                                                          : 
 
 END OF RASTER LAYERS ==================================================================================================
 
-# Field observations ==================================================================================================
+# LE-flow interactions ==================================================================================================
 
 # FIELD B6 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 480322, 124578

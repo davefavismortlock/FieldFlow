@@ -3,7 +3,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from qgis.core import QgsPointXY, QgsGeometry, QgsFeatureRequest
 
 import shared
-from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_HIT_BLIND_PIT, MARKER_ENTER_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_HIT_ROAD, MARKER_HIT_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
+from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_HIT_BLIND_PIT, MARKER_FORCE_FLOW, MARKER_ENTER_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_HIT_ROAD, MARKER_HIT_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
 from layers import AddFlowMarkerPoint, AddFlowLine, WriteVector
 from simulate import GetHighestAndLowestPointsOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoute
 from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
@@ -53,7 +53,7 @@ class SimulationThread(QThread):
       # OK, off we go. First determine the flow start points
       #===================================================================================================================
       shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-      shared.fpOut.write("FIELDS START-OF-FLOW POINTS\n\n")
+      shared.fpOut.write("SIMULATED FLOW START POINTS, PER FIELD\n\n")
 
       fieldCodesStartPointFound = []
       for layerNum in range(len(shared.vectorInputLayersCategory)):
@@ -204,8 +204,8 @@ class SimulationThread(QThread):
             for feature in shared.outFlowLineLayer.getFeatures():
                shared.outFlowLineLayerIndex.insertFeature(feature)
 
-         # If we are considering field observations, and flow for the last field travelled via at least one field observation, then save the last field's list of field observations
-         if shared.considerFieldObservations and shared.thisFieldFieldObsAlreadyFollowed:
+         # If we are considering LE-flow interactions, and flow for the last field travelled via at least one field observation, then save the last field's list of LE-flow interactions
+         if shared.considerLEFlowInteractions and shared.thisFieldFieldObsAlreadyFollowed:
             shared.allFieldsFieldObsAlreadyFollowed.extend(shared.thisFieldFieldObsAlreadyFollowed)
 
          # OK, do some initialization
@@ -296,9 +296,9 @@ class SimulationThread(QThread):
                #thisPoint = tempPoint
 
             #=============================================================================================================
-            #  OK, we are now considering field observations
+            #  OK, we are now considering LE-flow interactions
             #=============================================================================================================
-            if shared.considerFieldObservations:
+            if shared.considerLEFlowInteractions:
                if viaLEAndAlongRoad:
                   #==========================================================================================================
                   # Was flowing along a road but reached the beginning or end of that road, so search for another nearby road
@@ -414,7 +414,7 @@ class SimulationThread(QThread):
                #==========================================================================================================
                # Search for a field observation of a landscape element-flow interaction near this point
                #==========================================================================================================
-               #shared.fpOut.write("Searching for field observations for flow from field " + str(fieldCode) + " near " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
+               #shared.fpOut.write("Searching for LE-flow interactions for flow from field " + str(fieldCode) + " near " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
                indx = FindNearbyFieldObservation(thisPoint)
                if indx == -1:
                   # Did not find a field observation near this point
@@ -597,7 +597,7 @@ class SimulationThread(QThread):
 
                   shared.fpOut.write("Flow from field " + fieldCode + " hits a blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
-                  if shared.considerFieldObservations:
+                  if shared.considerLEFlowInteractions:
                      shared.fpOut.write("*** Please add a field observation\n")
 
                   # Move on to next field
@@ -622,8 +622,8 @@ class SimulationThread(QThread):
                # Back to the start of the inner loop, keep thisPoint unchanged
                continue
 
-            if shared.considerFieldObservations:
-               # If we are considering field observations: is there a field boundary between this point and the adjacent point?
+            if shared.considerLEFlowInteractions:
+               # If we are considering LE-flow interactions: is there a field boundary between this point and the adjacent point?
                hitBoundary, hitPoint, hitFieldCode = FlowHitFieldBoundary(thisPoint, adjPoint, fieldCode)
                if hitBoundary:
                   # Yes, flow hits a field boundary, we have set a switch
@@ -650,8 +650,8 @@ class SimulationThread(QThread):
       for feature in shared.outFlowLineLayer.getFeatures():
          shared.outFlowLineLayerIndex.insertFeature(feature)
 
-      # If we are considering field observations, and flow for the last field travelled via at least one field observation, then save the last field's list of field observations
-      if shared.considerFieldObservations and shared.thisFieldFieldObsAlreadyFollowed:
+      # If we are considering LE-flow interactions, and flow for the last field travelled via at least one field observation, then save the last field's list of LE-flow interactions
+      if shared.considerLEFlowInteractions and shared.thisFieldFieldObsAlreadyFollowed:
          shared.allFieldsFieldObsAlreadyFollowed.extend(shared.thisFieldFieldObsAlreadyFollowed)
 
       # Simulation finished, so update the extents of the vector output files
@@ -664,17 +664,17 @@ class SimulationThread(QThread):
          shared.fpOut.write("Area of filled blind pits = " + "{:0.1f}".format(shared.blindPitFillArea * shared.resolutionOfDEM * shared.resolutionOfDEM) + " m2\n")
          shared.fpOut.write("Maximum flow depth to fill any blind pit = " + "{:0.3f}".format(shared.blindPitFillMaxDepth) + " m\n")
 
-      # If we are considering field observations, are they any still unused?
-      if shared.considerFieldObservations:
+      # If we are considering LE-flow interactions, are they any still unused?
+      if shared.considerLEFlowInteractions:
          shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
          shared.fpOut.write("UNUSED FIELD OBSERVATIONS\n\n")
 
-         for obs in range(len(shared.fieldObservationFlowFrom)):
+         for obs in range(len(shared.LEFlowInteractionFlowFrom)):
             if not obs in shared.allFieldsFieldObsAlreadyFollowed:
-               printStr = str(obs+1) + ": '" + shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y(), False)
+               printStr = str(obs+1) + ": '" + shared.fieldObservationCategory[obs] + "' '" + shared.fieldObservationBehaviour[obs] + "' '" + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.LEFlowInteractionFlowFrom[obs].x(), shared.LEFlowInteractionFlowFrom[obs].y(), False)
 
-               if shared.fieldObservationFlowTo[obs]:
-                  printStr += (" to " + DisplayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y(), False))
+               if shared.LEFlowInteractionFlowTo[obs]:
+                  printStr += (" to " + DisplayOS(shared.LEFlowInteractionFlowTo[obs].x(), shared.LEFlowInteractionFlowTo[obs].y(), False))
 
                printStr += "\n"
                shared.fpOut.write(printStr)

@@ -50,10 +50,10 @@ def setUpSimulation():
       printStr += "Flow from all fields"
    shared.fpOut.write(printStr + "\n")
 
-   if shared.considerFieldObservations:
-      printStr = "Field observations considered\n"
+   if shared.considerLEFlowInteractions:
+      printStr = "LE-flow interactions considered\n"
    else:
-      printStr = "Field observations not considered\n"
+      printStr = "LE-flow interactions not considered\n"
    shared.fpOut.write(printStr)
 
    if shared.FillBlindPits:
@@ -328,24 +328,23 @@ def setUpSimulation():
 
    shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
 
-   if shared.considerFieldObservations:
-      for obs in range(len(shared.fieldObservationFlowTo)):
-         centroidFromPoint = shared.fieldObservationFlowFrom[obs]
-         if shared.fieldObservationFlowTo[obs]:
-            centroidToPoint = shared.fieldObservationFlowTo[obs]
+   if shared.considerLEFlowInteractions:
+      for obs in range(len(shared.LEFlowInteractionFlowTo)):
+         centroidFromPoint = shared.LEFlowInteractionFlowFrom[obs]
+         if shared.LEFlowInteractionFlowTo[obs]:
+            centroidToPoint = shared.LEFlowInteractionFlowTo[obs]
 
+            #shared.LEFlowInteractionFlowFrom[obs] = centroidFromPoint
+            #shared.LEFlowInteractionFlowTo[obs] = centroidToPoint
 
-            #shared.fieldObservationFlowFrom[obs] = centroidFromPoint
-            #shared.fieldObservationFlowTo[obs] = centroidToPoint
-
-      # Print out the revised field observations
+      # Print out the revised LE-flow interactions
       shared.fpOut.write("FIELD OBSERVATIONS\n\n")
 
-      for obs in range(len(shared.fieldObservationFlowTo)):
-         printStr = str(obs+1) + ": '" + shared.fieldObservationBehaviour[obs] + " " + shared.fieldObservationCategory[obs] + ", " + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.fieldObservationFlowFrom[obs].x(), shared.fieldObservationFlowFrom[obs].y())
+      for obs in range(len(shared.LEFlowInteractionFlowTo)):
+         printStr = str(obs+1) + ": '" + shared.fieldObservationBehaviour[obs] + " " + shared.fieldObservationCategory[obs] + ", " + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.LEFlowInteractionFlowFrom[obs].x(), shared.LEFlowInteractionFlowFrom[obs].y())
 
-         if shared.fieldObservationFlowTo[obs]:
-            printStr += (" to " + DisplayOS(shared.fieldObservationFlowTo[obs].x(), shared.fieldObservationFlowTo[obs].y()))
+         if shared.LEFlowInteractionFlowTo[obs]:
+            printStr += (" to " + DisplayOS(shared.LEFlowInteractionFlowTo[obs].x(), shared.LEFlowInteractionFlowTo[obs].y()))
 
          printStr += "\n"
          shared.fpOut.write(printStr)

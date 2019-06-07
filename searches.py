@@ -435,11 +435,11 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
 #
 #======================================================================================================================
 def FindNearbyFieldObservation(foundPoint):
-   numObs = len(shared.fieldObservationFlowFrom)
-   #shared.fpOut.write(shared.fieldObservationFlowFrom)
+   numObs = len(shared.LEFlowInteractionFlowFrom)
+   #shared.fpOut.write(shared.LEFlowInteractionFlowFrom)
 
    if numObs == 0:
-      # No field observations
+      # No LE-flow interactions
       return -1
 
    # Construct the bounding box
@@ -448,17 +448,17 @@ def FindNearbyFieldObservation(foundPoint):
    yMin = foundPoint.y() - shared.searchDist
    yMax = foundPoint.y() + shared.searchDist
 
-   #shared.fpOut.write("Searching for field observations between " + DisplayOS(xMin, yMin) + " and " + DisplayOS(xMax, yMax))
+   #shared.fpOut.write("Searching for LE-flow interactions between " + DisplayOS(xMin, yMin) + " and " + DisplayOS(xMax, yMax))
 
    for indx in range(numObs):
       if indx in shared.thisFieldFieldObsAlreadyFollowed:
          continue
 
-      xObs = shared.fieldObservationFlowFrom[indx].x()
-      yObs = shared.fieldObservationFlowFrom[indx].y()
+      xObs = shared.LEFlowInteractionFlowFrom[indx].x()
+      yObs = shared.LEFlowInteractionFlowFrom[indx].y()
 
       if xMin < xObs < xMax and yMin < yObs < yMax:
-         shared.fpOut.write("Field observation found for location " + DisplayOS(shared.fieldObservationFlowFrom[indx].x(), shared.fieldObservationFlowFrom[indx].y()) + " '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + ", " + shared.fieldObservationDescription[indx] + "'\n")
+         shared.fpOut.write("\tLE-flow interaction found for location " + DisplayOS(shared.LEFlowInteractionFlowFrom[indx].x(), shared.LEFlowInteractionFlowFrom[indx].y()) + " '" + shared.fieldObservationBehaviour[indx] + " " + shared.fieldObservationCategory[indx] + ", " + shared.fieldObservationDescription[indx] + "'\n")
 
          return indx
    return -1
@@ -820,8 +820,7 @@ def FindNearbyStream(point, flowFieldCode):
             if streamName == NULL:
                streamName = "stream"
 
-         shared.fpOut.write("\tFlow from field " + flowFieldCode + " along stream segment with feature ID " + str(featID) + " '" + streamName + " " + str(localID) + "', from " + DisplayOS(point.x(), point.y()) + " to " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
-         #shared.fpOut.write("======")
+         #shared.fpOut.write("\tFlow from field " + flowFieldCode + " along stream segment with feature ID " + str(featID) + " '" + streamName + " " + str(localID) + "', from " + DisplayOS(point.x(), point.y()) + " to " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
 
          if not inStream:
             AddFlowMarkerPoint(point, typeName, flowFieldCode, -1)

@@ -45,15 +45,16 @@ PATH_DESC                     = "desc"
 # Connected field boundaries
 CONNECTED_FIELD_ID            = "field_ID"
 
-# Field observation valid categories
+# LE-flow interaction valid categories
 FIELD_OBS_CATEGORY_BOUNDARY   = "boundary"
 FIELD_OBS_CATEGORY_CULVERT    = "culvert"
 FIELD_OBS_CATEGORY_PATH       = "path"
 FIELD_OBS_CATEGORY_ROAD       = "road"
 FIELD_OBS_CATEGORY_STREAM     = "stream"
 FIELD_OBS_CATEGORY_BLIND_PIT  = "blindpit"
+FIELD_OBS_CATEGORY_FORCING    = "forcing"
 
-# Field observation valid behaviours
+# LE-flow interaction valid behaviours
 FIELD_OBS_BEHAVIOUR_ALONG    = "along"
 FIELD_OBS_BEHAVIOUR_UNDER    = "under"
 FIELD_OBS_BEHAVIOUR_ACROSS   = "across"
@@ -61,6 +62,7 @@ FIELD_OBS_BEHAVIOUR_THROUGH  = "through"
 FIELD_OBS_BEHAVIOUR_ENTER    = "enter"
 FIELD_OBS_BEHAVIOUR_LEAVE    = "leave"
 FIELD_OBS_BEHAVIOUR_OVERTOP  = "overtop"
+FIELD_OBS_BEHAVIOUR_FORCING  = "unknown"
 
 # Output datasets =====================================================================================================
 OUTPUT_FLOW_MARKERS           = 0
@@ -95,24 +97,26 @@ MARKER_LOWEST_POINT           = " lowest point"
 MARKER_CENTROID               = " centroid"
 MARKER_FLOW_START_POINT_1     = "Field "
 MARKER_FLOW_START_POINT_2     = " flow start"
-MARKER_HIT_BLIND_PIT          = "Hit blind pit"
-MARKER_HIT_FIELD_BOUNDARY     = "Hit field boundary"
+MARKER_HIT_BLIND_PIT          = "Blind pit"
+MARKER_HIT_FIELD_BOUNDARY     = "Field boundary"
+MARKER_LEAVE_FIELD_BOUNDARY   = "Leave field boundary"
 MARKER_ENTER_STREAM           = "Enter stream"
 MARKER_ENTER_CULVERT          = "Enter culvert"
-MARKER_ENTER_RIVER            = "Enter River Rother"
-MARKER_HIT_ROAD               = "Hit road"
+MARKER_ENTER_RIVER            = "Enter river"
+MARKER_HIT_ROAD               = "Road"
 MARKER_LEAVE_ROAD             = "Leave road"
-MARKER_HIT_PATH               = "Hit path"
+MARKER_HIT_PATH               = "Path"
 MARKER_LEAVE_PATH             = "Leave path"
 MARKER_ENTER_STREAM           = "Enter stream"
+MARKER_FORCE_FLOW             = "Forced"
 
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "05 Jun 2019 QGIS3 version"
+progVer = "07 Jun 2019 QGIS3 version"
 runTitle = ""
 
-considerFieldObservations = ""
+considerLEFlowInteractions = ""
 FillBlindPits = ""
 considerStreams = ""
 considerFieldBoundaries = ""
@@ -181,13 +185,13 @@ rasterInputLayers = 0
 rasterInputLayersCategory = 0
 rasterInputData = 0
 
-fieldObservationFlowFrom = 0
+LEFlowInteractionFlowFrom = 0
 fieldObservationCategory = 0
 fieldObservationValidCategories = 0
 fieldObservationBehaviour = 0
 fieldObservationValidBehaviours = 0
 fieldObservationDescription = 0
-fieldObservationFlowTo = 0
+LEFlowInteractionFlowTo = 0
 
 rasterPathCodes = 0
 
