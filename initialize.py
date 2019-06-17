@@ -337,8 +337,8 @@ def setUpSimulation():
             #shared.LEFlowInteractionFlowFrom[obs] = centroidFromPoint
             #shared.LEFlowInteractionFlowTo[obs] = centroidToPoint
 
-      # Print out the revised LE-flow interactions
-      shared.fpOut.write("FIELD OBSERVATIONS\n\n")
+      # Print out the LE-flow interactions
+      shared.fpOut.write("LE-FLOW INTERACTIONS\n\n")
 
       for obs in range(len(shared.LEFlowInteractionFlowTo)):
          printStr = str(obs+1) + ": '" + shared.fieldObservationBehaviour[obs] + " " + shared.fieldObservationCategory[obs] + ", " + shared.fieldObservationDescription[obs] + "' from " + DisplayOS(shared.LEFlowInteractionFlowFrom[obs].x(), shared.LEFlowInteractionFlowFrom[obs].y())

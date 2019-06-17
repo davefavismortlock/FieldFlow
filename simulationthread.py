@@ -667,7 +667,7 @@ class SimulationThread(QThread):
       # If we are considering LE-flow interactions, are they any still unused?
       if shared.considerLEFlowInteractions:
          shared.fpOut.write("\n" + shared.dividerLen * shared.dividerChar + "\n\n")
-         shared.fpOut.write("UNUSED FIELD OBSERVATIONS\n\n")
+         shared.fpOut.write("UNUSED LE-FLOW INTERACTIONS\n\n")
 
          for obs in range(len(shared.LEFlowInteractionFlowFrom)):
             if not obs in shared.allFieldsFieldObsAlreadyFollowed:
