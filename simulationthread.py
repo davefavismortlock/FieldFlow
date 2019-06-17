@@ -3,7 +3,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from qgis.core import QgsPointXY, QgsGeometry, QgsFeatureRequest
 
 import shared
-from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_HIT_BLIND_PIT, MARKER_FORCE_FLOW, MARKER_ENTER_STREAM, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_PATH, MARKER_HIT_ROAD, MARKER_HIT_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
+from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_HIT_BLIND_PIT, MARKER_FORCE_FLOW, MARKER_ENTER_STREAM, LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_CATEGORY_PATH, MARKER_HIT_ROAD, MARKER_HIT_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
 from layers import AddFlowMarkerPoint, AddFlowLine, WriteVector
 from simulate import GetHighestAndLowestPointsOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoute
 from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
@@ -492,19 +492,19 @@ class SimulationThread(QThread):
                      viaLEAndHitBlindPit = False
 
                   # Turn off some switches
-                  if hitBoundary and shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_BOUNDARY:
+                  if hitBoundary and shared.fieldObservationCategory[indx] == LE_FLOW_INTERACTION_CATEGORY_BOUNDARY:
                      # We passed through the field boundary, so turn off the switch
                      hitBoundary = False
 
                   if hitRoadBehaviourUnknown:
                      #shared.fpOut.write("YYY")
-                     if shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_ROAD:
+                     if shared.fieldObservationCategory[indx] == LE_FLOW_INTERACTION_CATEGORY_ROAD:
                         # We passed across or along the road, so turn off the switch
                         hitRoadBehaviourUnknown = False
 
                   if hitPathBehaviourUnknown:
                      #shared.fpOut.write("ZZZ")
-                     if shared.fieldObservationCategory[indx] == FIELD_OBS_CATEGORY_PATH:
+                     if shared.fieldObservationCategory[indx] == LE_FLOW_INTERACTION_CATEGORY_PATH:
                         # We passed across or along the path, so turn off the switch
                         hitPathBehaviourUnknown = False
 

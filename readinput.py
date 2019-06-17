@@ -3,7 +3,7 @@ from math import isclose
 from qgis.core import QgsVector, QgsRectangle, QgsPointXY
 
 import shared
-from shared import COMMENT1, COMMENT2, INPUT_FIELD_BOUNDARIES, INPUT_WATER_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_OBSERVED_FLOW_LINES, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_BLIND_PIT, FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_LEAVE, FIELD_OBS_BEHAVIOUR_OVERTOP, FIELD_OBS_CATEGORY_FORCING, FIELD_OBS_BEHAVIOUR_FORCING, EOF_FIELD_OBSERVATIONS, EOF_VECTOR_DATA, EOF_RASTER_DATA
+from shared import COMMENT1, COMMENT2, INPUT_FIELD_BOUNDARIES, INPUT_WATER_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_OBSERVED_FLOW_LINES, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_CULVERT, LE_FLOW_INTERACTION_CATEGORY_PATH, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_CATEGORY_STREAM, LE_FLOW_INTERACTION_CATEGORY_BLIND_PIT, LE_FLOW_INTERACTION_BEHAVIOUR_ALONG, LE_FLOW_INTERACTION_BEHAVIOUR_UNDER, LE_FLOW_INTERACTION_BEHAVIOUR_ACROSS, LE_FLOW_INTERACTION_BEHAVIOUR_ENTER, LE_FLOW_INTERACTION_BEHAVIOUR_THROUGH, LE_FLOW_INTERACTION_BEHAVIOUR_LEAVE, LE_FLOW_INTERACTION_BEHAVIOUR_OVERTOP, LE_FLOW_INTERACTION_CATEGORY_FORCING, LE_FLOW_INTERACTION_BEHAVIOUR_FORCING, EOF_LE_FLOW_INTERACTIONS, EOF_VECTOR_DATA, EOF_RASTER_DATA
 from utils import DisplayOS
 
 #======================================================================================================================
@@ -107,9 +107,9 @@ def readInput():
 
    shared.LEFlowInteractionFlowFrom = []
    shared.fieldObservationCategory = []
-   shared.fieldObservationValidCategories = [FIELD_OBS_CATEGORY_BOUNDARY, FIELD_OBS_CATEGORY_CULVERT, FIELD_OBS_CATEGORY_PATH, FIELD_OBS_CATEGORY_ROAD, FIELD_OBS_CATEGORY_STREAM, FIELD_OBS_CATEGORY_BLIND_PIT, FIELD_OBS_CATEGORY_FORCING]
+   shared.fieldObservationValidCategories = [LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_CULVERT, LE_FLOW_INTERACTION_CATEGORY_PATH, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_CATEGORY_STREAM, LE_FLOW_INTERACTION_CATEGORY_BLIND_PIT, LE_FLOW_INTERACTION_CATEGORY_FORCING]
    shared.fieldObservationBehaviour = []
-   shared.fieldObservationValidBehaviours = [FIELD_OBS_BEHAVIOUR_ALONG, FIELD_OBS_BEHAVIOUR_UNDER, FIELD_OBS_BEHAVIOUR_ACROSS, FIELD_OBS_BEHAVIOUR_ENTER, FIELD_OBS_BEHAVIOUR_THROUGH, FIELD_OBS_BEHAVIOUR_LEAVE, FIELD_OBS_BEHAVIOUR_OVERTOP, FIELD_OBS_BEHAVIOUR_FORCING]
+   shared.fieldObservationValidBehaviours = [LE_FLOW_INTERACTION_BEHAVIOUR_ALONG, LE_FLOW_INTERACTION_BEHAVIOUR_UNDER, LE_FLOW_INTERACTION_BEHAVIOUR_ACROSS, LE_FLOW_INTERACTION_BEHAVIOUR_ENTER, LE_FLOW_INTERACTION_BEHAVIOUR_THROUGH, LE_FLOW_INTERACTION_BEHAVIOUR_LEAVE, LE_FLOW_INTERACTION_BEHAVIOUR_OVERTOP, LE_FLOW_INTERACTION_BEHAVIOUR_FORCING]
    shared.fieldObservationDescription = []
    shared.LEFlowInteractionFlowTo = []
 
@@ -125,7 +125,7 @@ def readInput():
       inData = inData.strip()
       #print(str(dataLine) + " '" + inData + "'")
 
-      if inData.find(EOF_FIELD_OBSERVATIONS) >= 0:
+      if inData.find(EOF_LE_FLOW_INTERACTIONS) >= 0:
          break
 
       data = checkDataLine(inData, shared.dataInputFile)
@@ -431,7 +431,7 @@ def readInput():
             if not inObsData:
                break
 
-            if inObsData.find(EOF_FIELD_OBSERVATIONS) >= 0:
+            if inObsData.find(EOF_LE_FLOW_INTERACTIONS) >= 0:
                break
 
             inObsData = inObsData.strip()
@@ -524,7 +524,7 @@ def readInput():
                   shared.LEFlowInteractionFlowTo.append(QgsPointXY(xCoord, yCoord))
                else:
                   # We do not have an outflow location. This is only allowable if the category is "along road", "along path", or "along boundary"
-                  if not ((shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_ROAD and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_PATH and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == FIELD_OBS_CATEGORY_BOUNDARY and shared.fieldObservationBehaviour[-1] == FIELD_OBS_BEHAVIOUR_ALONG)):
+                  if not ((shared.fieldObservationCategory[-1] == LE_FLOW_INTERACTION_CATEGORY_ROAD and shared.fieldObservationBehaviour[-1] == LE_FLOW_INTERACTION_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == LE_FLOW_INTERACTION_CATEGORY_PATH and shared.fieldObservationBehaviour[-1] == LE_FLOW_INTERACTION_BEHAVIOUR_ALONG) or (shared.fieldObservationCategory[-1] == LE_FLOW_INTERACTION_CATEGORY_BOUNDARY and shared.fieldObservationBehaviour[-1] == LE_FLOW_INTERACTION_BEHAVIOUR_ALONG)):
                      printStr = "ERROR: for field observation '" + shared.fieldObservationCategory[-1] + "' '" + shared.fieldObservationBehaviour[-1] + "' '" + shared.fieldObservationDescription[-1] + "', the outflow location must be specified"
                      print(printStr)
 

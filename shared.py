@@ -7,7 +7,7 @@ TARGET_RIVER_NAME             = "River Rother"
 
 EOF_VECTOR_DATA               = "END OF VECTOR LAYERS"
 EOF_RASTER_DATA               = "END OF RASTER LAYERS"
-EOF_FIELD_OBSERVATIONS        = "END OF FIELD OBSERVATIONS"
+EOF_LE_FLOW_INTERACTIONS      = "END OF LE-FLOW INTERACTIONS"
 
 PREV_POINT                    = 0
 THIS_POINT                    = 1
@@ -46,23 +46,23 @@ PATH_DESC                     = "desc"
 CONNECTED_FIELD_ID            = "field_ID"
 
 # LE-flow interaction valid categories
-FIELD_OBS_CATEGORY_BOUNDARY   = "boundary"
-FIELD_OBS_CATEGORY_CULVERT    = "culvert"
-FIELD_OBS_CATEGORY_PATH       = "path"
-FIELD_OBS_CATEGORY_ROAD       = "road"
-FIELD_OBS_CATEGORY_STREAM     = "stream"
-FIELD_OBS_CATEGORY_BLIND_PIT  = "blindpit"
-FIELD_OBS_CATEGORY_FORCING    = "forcing"
+LE_FLOW_INTERACTION_CATEGORY_BOUNDARY   = "boundary"
+LE_FLOW_INTERACTION_CATEGORY_CULVERT    = "culvert"
+LE_FLOW_INTERACTION_CATEGORY_PATH       = "path"
+LE_FLOW_INTERACTION_CATEGORY_ROAD       = "road"
+LE_FLOW_INTERACTION_CATEGORY_STREAM     = "stream"
+LE_FLOW_INTERACTION_CATEGORY_BLIND_PIT  = "blindpit"
+LE_FLOW_INTERACTION_CATEGORY_FORCING    = "forcing"
 
 # LE-flow interaction valid behaviours
-FIELD_OBS_BEHAVIOUR_ALONG    = "along"
-FIELD_OBS_BEHAVIOUR_UNDER    = "under"
-FIELD_OBS_BEHAVIOUR_ACROSS   = "across"
-FIELD_OBS_BEHAVIOUR_THROUGH  = "through"
-FIELD_OBS_BEHAVIOUR_ENTER    = "enter"
-FIELD_OBS_BEHAVIOUR_LEAVE    = "leave"
-FIELD_OBS_BEHAVIOUR_OVERTOP  = "overtop"
-FIELD_OBS_BEHAVIOUR_FORCING  = "unknown"
+LE_FLOW_INTERACTION_BEHAVIOUR_ALONG    = "along"
+LE_FLOW_INTERACTION_BEHAVIOUR_UNDER    = "under"
+LE_FLOW_INTERACTION_BEHAVIOUR_ACROSS   = "across"
+LE_FLOW_INTERACTION_BEHAVIOUR_THROUGH  = "through"
+LE_FLOW_INTERACTION_BEHAVIOUR_ENTER    = "enter"
+LE_FLOW_INTERACTION_BEHAVIOUR_LEAVE    = "leave"
+LE_FLOW_INTERACTION_BEHAVIOUR_OVERTOP  = "overtop"
+LE_FLOW_INTERACTION_BEHAVIOUR_FORCING  = "unknown"
 
 # Output datasets =====================================================================================================
 OUTPUT_FLOW_MARKERS           = 0
@@ -113,7 +113,7 @@ MARKER_FORCE_FLOW             = "Forced"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "07 Jun 2019 QGIS3 version"
+progVer = "17 Jun 2019 QGIS3 version"
 runTitle = ""
 
 considerLEFlowInteractions = ""

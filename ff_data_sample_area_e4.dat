@@ -152,7 +152,7 @@ END OF RASTER LAYERS ===========================================================
 # FLOW FROM FIELD M +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 495242, 121477
 Type                                                                          : boundary
-Behaviour                                                                     : across
+Behaviour                                                                     : through
 Description                                                                   : S edge of field M
 Outflow location                                                              : 495240, 121464
 
@@ -190,7 +190,7 @@ Outflow location                                                              : 
 
 Inflow location                                                               : 495422, 121437
 Type                                                                          : boundary
-Behaviour                                                                     : across
+Behaviour                                                                     : through
 Description                                                                   : S edge of field N
 Outflow location                                                              : 495418, 121428
 
@@ -213,11 +213,6 @@ Outflow location                                                              : 
 
 
 # FLOW FROM FIELD H +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Inflow location                                                               : 495454, 120429
-Type                                                                          : boundary
-Behaviour                                                                     : along
-Description                                                                   : E edge of field H
-Outflow location                                                              :
 
 
-END OF FIELD OBSERVATIONS =============================================================================================
+END OF LE-FLOW INTERACTIONS =============================================================================================
