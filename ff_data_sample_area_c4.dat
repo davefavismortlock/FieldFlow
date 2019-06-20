@@ -5,7 +5,7 @@
 #======================================================================================================================
 Run title                                                                     : West Sussex: Sample Area C. CONSIDER ALL FIELD OBERVATIONS
 
-Fields which generate flow (comma-separated list, blank for auto)             : 69, 71, 73, 77, 79
+Fields which generate flow (comma-separated list, blank for auto)             : 69, 71, 73, 77
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
 Consider LE-flow interactions?                                                : Y
@@ -193,13 +193,13 @@ END OF RASTER LAYERS ===========================================================
 Inflow location                                                               : 490108, 124066
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : between field 69 and field 70
+Description                                                                   : between fields 69 and 70
 Outflow location                                                              : 490107, 124064
 
 Inflow location                                                               : 489947, 123912
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : between field 70 and field 71
+Description                                                                   : between fields 70 and 71
 Outflow location                                                              : 489940, 123908
 
 Inflow location                                                               : 489670, 123770
@@ -223,7 +223,7 @@ Outflow location                                                              : 
 Inflow location                                                               : 489555, 123674
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : between field 72 and field 73
+Description                                                                   : between fields 72 and 73
 Outflow location                                                              : 489551, 123671
 
 Inflow location                                                               : 489490, 123631
@@ -233,8 +233,8 @@ Description                                                                   : 
 Outflow location                                                              :
 
 Inflow location                                                               : 489443, 123569
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
+Type                                                                          : forcing
+Behaviour                                                                     : unknown
 Description                                                                   : otherwise flows back to W boundary of field 73
 Outflow location                                                              : 489426, 123536
 
@@ -247,7 +247,7 @@ Outflow location                                                              : 
 Inflow location                                                               : 489383, 123459
 Type                                                                          : path
 Behaviour                                                                     : across
-Description                                                                   : path between field 73 and field 75
+Description                                                                   : path between fields 73 and 75
 Outflow location                                                              : 489382, 123458
 
 Inflow location                                                               : 489382, 123458
@@ -271,7 +271,7 @@ Outflow location                                                              : 
 Inflow location                                                               : 489154, 123306
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : between field 75 and field 76
+Description                                                                   : between fields 75 and 76
 Outflow location                                                              : 489153, 123304
 
 Inflow location                                                               : 489149, 123305
@@ -304,7 +304,7 @@ Outflow location                                                              : 
 Inflow location                                                               : 489394, 123449
 Type                                                                          : path
 Behaviour                                                                     : across
-Description                                                                   : path between field 73 and field 75
+Description                                                                   : path between fields 73 and 75
 Outflow location                                                              : 489393, 123448
 
 Inflow location                                                               : 489393, 123448
@@ -326,15 +326,6 @@ Type                                                                          : 
 Behaviour                                                                     : along
 Description                                                                   : Glaziers Lane
 Outflow location                                                              :
-
-
-# FIELD 79 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-Inflow location                                                               : 489972, 121916
-Type                                                                          : boundary
-Behaviour                                                                     : through
-Description                                                                   : SE edge of 79
-Outflow location                                                              : 489972, 121898
 
 
 END OF LE-FLOW INTERACTIONS =============================================================================================

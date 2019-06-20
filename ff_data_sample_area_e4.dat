@@ -159,7 +159,7 @@ Outflow location                                                              : 
 Inflow location                                                               : 495248, 121258
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : out of blind pit in field M
+Description                                                                   : out of blind pit in field O
 Outflow location                                                              : 495210, 121249
 
 Inflow location                                                               : 495208, 121242
@@ -169,8 +169,8 @@ Description                                                                   : 
 Outflow location                                                              :
 
 Inflow location                                                               : 495160, 121052
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
+Type                                                                          : forcing
+Behaviour                                                                     : unknown
 Description                                                                   : to prevent flow heading W at track junction
 Outflow location                                                              : 495162, 121035
 

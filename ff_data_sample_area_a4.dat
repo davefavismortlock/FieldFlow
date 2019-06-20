@@ -186,22 +186,34 @@ END OF RASTER LAYERS ===========================================================
 # LE-flow interactions ==================================================================================================
 
 # FIELD B6 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Inflow location                                                               : 480322, 124578
+Inflow location                                                               : 480322, 124580
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : at southern edge of field B6
-Outflow location                                                              : 480317, 124560
+Description                                                                   : S edge of field B6
+Outflow location                                                              : 480322, 124576
+
+Inflow location                                                               : 480322, 124576
+Type                                                                          : road
+Behaviour                                                                     : across
+Description                                                                   : Slade Lane, between fields B6 and 22
+Outflow location                                                              : 480322, 124573
+
+Inflow location                                                               : 480322, 124573
+Type                                                                          : boundary
+Behaviour                                                                     : through
+Description                                                                   : N edge of field 22
+Outflow location                                                              : 480322, 124570
 
 Inflow location                                                               : 480392, 123822
 Type                                                                          : path
 Behaviour                                                                     : across
-Description                                                                   : towards southern end of field 22
+Description                                                                   : towards S end of field 22
 Outflow location                                                              : 480392, 123812
 
 Inflow location                                                               : 480408, 123683
 Type                                                                          : culvert
 Behaviour                                                                     : through
-Description                                                                   : under road, south of field 22
+Description                                                                   : under road, S of field 22
 Outflow location                                                              : 480418, 123633
 
 
@@ -220,17 +232,23 @@ Behaviour                                                                     : 
 Description                                                                   : in field 21
 Outflow location                                                              : 479938, 124472
 
-Inflow location                                                               : 480054, 124292
-Type                                                                          : road
-Behaviour                                                                     : across
-Description                                                                   : between fields 21 and 22
-Outflow location                                                              : 480055, 124285
-
-Inflow location                                                               : 480055, 124285
+Inflow location                                                               : 480052, 124293
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : at north-west edge of field 22
-Outflow location                                                              : 480066, 124282
+Description                                                                   : SE edge of field 21
+Outflow location                                                              : 480055, 124290
+
+Inflow location                                                               : 480055, 124290
+Type                                                                          : road
+Behaviour                                                                     : across
+Description                                                                   : Slade Lane, between fields 21 and 22
+Outflow location                                                              : 480056, 124288
+
+Inflow location                                                               : 480056, 124288
+Type                                                                          : boundary
+Behaviour                                                                     : through
+Description                                                                   : NW edge of field 22
+Outflow location                                                              : 480060, 124286
 
 END OF LE-FLOW INTERACTIONS =============================================================================================
 

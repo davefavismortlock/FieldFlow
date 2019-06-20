@@ -237,9 +237,9 @@ Description                                                                   : 
 Outflow location                                                              : 491585, 123293
 
 Inflow location                                                               : 491590, 123168
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : TO FORCE FLOW eastwards at S end of field 85
+Type                                                                          : forcing
+Behaviour                                                                     : unknown
+Description                                                                   : to force flow eastwards at S end of field 85
 Outflow location                                                              : 491697, 123105
 
 Inflow location                                                               : 491697, 123102
@@ -283,7 +283,7 @@ Outflow location                                                              : 
 Inflow location                                                               : 491747, 123087
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : between field 85 and field 87
+Description                                                                   : between fields 85 and 87
 Outflow location                                                              : 491747, 123080
 
 
@@ -300,7 +300,7 @@ Outflow location                                                              : 
 Inflow location                                                               : 491680, 122450
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : between field 88 and field 88a
+Description                                                                   : between fields 88 and 88a
 Outflow location                                                              : 491680, 122443
 
 Inflow location                                                               : 491652, 122402

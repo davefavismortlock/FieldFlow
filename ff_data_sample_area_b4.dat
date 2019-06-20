@@ -148,19 +148,19 @@ END OF RASTER LAYERS ===========================================================
 Inflow location                                                               : 486406, 123941
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : at south edge of field 45
+Description                                                                   : between fields 45 and 46
 Outflow location                                                              : 486404, 123939
 
 Inflow location                                                               : 486305, 123835
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : at south edge of field 46
+Description                                                                   : between fields 46 and 47
 Outflow location                                                              : 486303, 123833
 
 Inflow location                                                               : 486248, 123645
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : at south edge of field 47
+Description                                                                   : between fields 47 and 48
 Outflow location                                                              : 486246, 123643
 
 Inflow location                                                               : 486082, 123442
@@ -184,7 +184,7 @@ Outflow location                                                              : 
 Inflow location                                                               : 486005, 123393
 Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : S of Stedham Lane junction
+Description                                                                   : needed because of Stedham Lane junction
 Outflow location                                                              :
 
 Inflow location                                                               : 486106, 123164
@@ -196,13 +196,13 @@ Outflow location                                                              : 
 Inflow location                                                               : 486133, 123102
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : out of road blind pit south of Meadowhills Cottage on Stedham Lane
+Description                                                                   : out of road blind pit S of Meadowhills Cottage on Stedham Lane
 Outflow location                                                              : 486140, 123027
 
 Inflow location                                                               : 486140, 123027
 Type                                                                          : road
 Behaviour                                                                     : along
-Description                                                                   : WSW along Stedham Lane
+Description                                                                   : needed because of blind pit S of Meadowhills Cottage on Stedham Lane
 Outflow location                                                              :
 
 
@@ -210,13 +210,13 @@ Outflow location                                                              :
 Inflow location                                                               : 485792, 123622
 Type                                                                          : path
 Behaviour                                                                     : across
-Description                                                                   : to east of former Talbots building
+Description                                                                   : to E of former Talbots building
 Outflow location                                                              : 485781, 123614
 
 Inflow location                                                               : 485728, 123558
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : south of former Talbots building
+Description                                                                   : S of former Talbots building
 Outflow location                                                              : 485723, 123544
 
 Inflow location                                                               : 485712, 123542
@@ -234,7 +234,7 @@ Outflow location                                                              :
 Inflow location                                                               : 485706, 123532
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : south of Stanwater Lane bend
+Description                                                                   : S of Stanwater Lane bend
 Outflow location                                                              : 485702, 123519
 
 Inflow location                                                               : 485702, 123519
@@ -254,7 +254,7 @@ Outflow location                                                              : 
 Inflow location                                                               : 486363, 123569
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : at south edge of field 47
+Description                                                                   : S edge of field 47
 Outflow location                                                              : 486361, 123564
 
 Inflow location                                                               : 486312, 123386
@@ -266,39 +266,39 @@ Outflow location                                                              : 
 Inflow location                                                               : 486312, 123382
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : at north edge of field 50
+Description                                                                   : N edge of field 50
 Outflow location                                                              : 486312, 123370
 
-Inflow location                                                               : 486257, 123262
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : out of blind pit in field 50
-Outflow location                                                              : 486291, 123256
+Inflow location                                                               : 486301, 123336
+Type                                                                          : forcing
+Behaviour                                                                     : unknown
+Description                                                                   : to get moving S towards wood
+Outflow location                                                              : 486301, 123302
 
-Inflow location                                                               : 486297, 123252
+Inflow location                                                               : 486304, 123298
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : at eastern edge of field 50
-Outflow location                                                              : 486300, 123251
+Description                                                                   : E edge of field 50
+Outflow location                                                              : 486306, 123292
 
-Inflow location                                                               : 486305, 123249
+Inflow location                                                               : 486306, 123292
 Type                                                                          : forcing
 Behaviour                                                                     : unknown
-Description                                                                   : to get moving southward in wood
-Outflow location                                                              : 486283, 123175
+Description                                                                   : to get moving S in wood
+Outflow location                                                              : 486285, 123178
 
-Inflow location                                                               : 486291.5, 123174.5
+Inflow location                                                               : 486289, 123174
 Type                                                                          : forcing
 Behaviour                                                                     : unknown
-Description                                                                   : to prevent moving NE into blind pit
-Outflow location                                                              : 486326, 123142
+Description                                                                   : to get moving SE in wood
+Outflow location                                                              : 486312, 123156
 
 
 # FIELD 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Inflow location                                                               : 486518, 123371
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : at southern edge of field 52
+Description                                                                   : S edge of field 52
 Outflow location                                                              : 486518, 123369
 
 Inflow location                                                               : 486517, 123367

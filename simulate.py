@@ -591,7 +591,7 @@ def FlowAlongVectorRoute(RoadOrPath, indx, fieldCode, thisPoint):
 
             if not (isclose(thisPoint.x(), nearPoint.x()) and isclose(thisPoint.y(), nearPoint.y())):
                shared.fpOut.write("Flow from field " + str(fieldCode) + " onto " + routeType + ", from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nearPoint.x(), nearPoint.y()) + " D\n")
-               AddFlowLine(thisPoint, nearPoint, FlowMarker, fieldCode, thisPointElev)
+               AddFlowLine(thisPoint, nearPoint, flowMarker, fieldCode, thisPointElev)
 
             startVert = afterVertex
             firstPoint = nearPoint
