@@ -9,11 +9,12 @@ Fields which generate flow (comma-separated list, blank for auto)             : 
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
 Consider LE-flow interactions?                                                : Y
-Fill blind pits?                                                              : N
-Consider streams?                                                             : Y
-Consider roads? (is N if LE-flow interactions not considered)                 : Y
-Consider tracks and paths? (is N if LE-flow interactions not considered)      : Y
-Consider field boundaries (is N if LE-flow interactions not considered)       : Y
+Fill blind pits? (is N if LE-flow interactions considered)                    :
+Consider watercourses? (is Y if LE-flow interactions considered)              :
+Consider ditches? (is Y if LE-flow interactions considered)                   :
+Consider roads? (is Y if LE-flow interactions considered)                     :
+Consider tracks and paths? (is Y if LE-flow interactions considered)          :
+Consider field boundaries (is Y if LE-flow interactions considered)           :
 
 DEM resolution or mean spacing of spot heights (metres)                       : 5
 Distance to search (metres)                                                   : 5
@@ -57,7 +58,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Type                                                                          : INPUT_WATER_NETWORK
+Type                                                                          : INPUT_WATERCOURSE_NETWORK
 
 # OS Mastermap Water Network file
 File for vector water network (with extension)                                : MasterMap Water Network_1718110/su/SU7520.gml|layerid=1
@@ -66,7 +67,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Type                                                                          : INPUT_WATER_NETWORK
+Type                                                                          : INPUT_WATERCOURSE_NETWORK
 
 # Roads REQUIRED ======================================================================================================
 File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su72se_Road_Centreline.shp
@@ -93,6 +94,15 @@ File type                                                                     : 
 Style file (with extension, blank for default style)                          : paths.qml
 Transparency (0-100)                                                          : 50
 Type                                                                          : INPUT_PATH_NETWORK
+
+# Ditches REQUIRED ======================================================================================================
+File for vector path network (with extension)                                 : ditches.shp
+Table name                                                                    : Ditches
+Title                                                                         : Centrelines of ditches
+File type                                                                     : ogr
+Style file (with extension, blank for default style)                          : ditches.qml
+Transparency (0-100)                                                          : 50
+Type                                                                          : INPUT_DITCH_NETWORK
 
 # Observed flow lines OPTIONAL ========================================================================================
 File for observed flow lines (with extension)                                 : Connectivity/flow_lines_a.sqlite

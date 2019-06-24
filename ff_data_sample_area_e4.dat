@@ -9,11 +9,12 @@ Fields which generate flow (comma-separated list, blank for auto)             : 
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
 Consider LE-flow interactions?                                                : Y
-Fill blind pits?                                                              : N
-Consider streams?                                                             : Y
-Consider roads? (is N if LE-flow interactions not considered)                 : Y
-Consider tracks and paths? (is N if LE-flow interactions not considered)      : Y
-Consider field boundaries (is N if LE-flow interactions not considered)       : Y
+Fill blind pits? (is N if LE-flow interactions considered)                    :
+Consider watercourses? (is Y if LE-flow interactions considered)              :
+Consider ditches? (is Y if LE-flow interactions considered)                   :
+Consider roads? (is Y if LE-flow interactions considered)                     :
+Consider tracks and paths? (is Y if LE-flow interactions considered)          :
+Consider field boundaries (is Y if LE-flow interactions considered)           :
 
 DEM resolution or mean spacing of spot heights (metres)                       : 5
 Distance to search (metres)                                                   : 5
@@ -57,7 +58,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Type                                                                          : INPUT_WATER_NETWORK
+Type                                                                          : INPUT_WATERCOURSE_NETWORK
 
 # OS Mastermap Water Network file
 File for vector water network (with extension)                                : MasterMap Water Network_1718110/su/SU9520.gml|layerid=1
@@ -66,7 +67,7 @@ Title                                                                         : 
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
 Transparency (0-100)                                                          : 0
-Type                                                                          : INPUT_WATER_NETWORK
+Type                                                                          : INPUT_WATERCOURSE_NETWORK
 
 # Roads REQUIRED ======================================================================================================
 File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su92sw_Road_Centreline.shp
@@ -93,6 +94,15 @@ File type                                                                     : 
 Style file (with extension, blank for default style)                          : paths.qml
 Transparency (0-100)                                                          : 50
 Type                                                                          : INPUT_PATH_NETWORK
+
+# Ditches REQUIRED ======================================================================================================
+File for vector path network (with extension)                                 : ditches.shp
+Table name                                                                    : Ditches
+Title                                                                         : Centrelines of ditches
+File type                                                                     : ogr
+Style file (with extension, blank for default style)                          : ditches.qml
+Transparency (0-100)                                                          : 50
+Type                                                                          : INPUT_DITCH_NETWORK
 
 # Observed flow lines OPTIONAL ========================================================================================
 File for observed flow lines (with extension)                                 : Connectivity/flow_lines_e.sqlite
@@ -150,35 +160,11 @@ END OF RASTER LAYERS ===========================================================
 # LE-flow interactions ==================================================================================================
 
 # FLOW FROM FIELD M +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Inflow location                                                               : 495242, 121477
+Inflow location                                                               : 495242, 121478
 Type                                                                          : boundary
-Behaviour                                                                     : through
+Behaviour                                                                     : along
 Description                                                                   : S edge of field M
-Outflow location                                                              : 495240, 121464
-
-Inflow location                                                               : 495248, 121258
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : out of blind pit in field O
-Outflow location                                                              : 495210, 121249
-
-Inflow location                                                               : 495208, 121242
-Type                                                                          : path
-Behaviour                                                                     : along
-Description                                                                   : track from Southdean Farm
-Outflow location                                                              :
-
-Inflow location                                                               : 495160, 121052
-Type                                                                          : forcing
-Behaviour                                                                     : unknown
-Description                                                                   : to prevent flow heading W at track junction
-Outflow location                                                              : 495162, 121035
-
-Inflow location                                                               : 495162, 121038
-Type                                                                          : path
-Behaviour                                                                     : along
-Description                                                                   : track to W of field P
-Outflow location                                                              :
+Outflow location                                                              : 495235, 121476
 
 
 # FLOW FROM FIELD N +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -197,19 +183,26 @@ Outflow location                                                              : 
 Inflow location                                                               : 495398, 121428
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : out of blind pit in field O
+Description                                                                   : out of first blind pit in field O
 Outflow location                                                              : 495372, 121409
+
+Inflow location                                                               : 495247, 121259
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : out of second blind pit in field O
+Outflow location                                                              : 495194, 121256
 
 
 # FLOW FROM FIELD O +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 # FLOW FROM FIELD P +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Inflow location                                                               : 495154, 120804
-Type                                                                          : blindpit
-Behaviour                                                                     : overtop
-Description                                                                   : out of blind pit at S end of track to W of field P
-Outflow location                                                              : 495166, 120778
+
+Inflow location                                                               : 495160, 120958
+Type                                                                          : path
+Behaviour                                                                     : across
+Description                                                                   : track to W of field P
+Outflow location                                                              : 495152, 120954
 
 
 # FLOW FROM FIELD H +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

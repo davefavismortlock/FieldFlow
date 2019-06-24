@@ -20,10 +20,11 @@ ROUTE_PATH                    = 1
 INPUT_OBSERVED_FLOW_LINES     = 1
 INPUT_FIELD_BOUNDARIES        = 2
 INPUT_DIGITAL_ELEVATION_MODEL = 3
-INPUT_WATER_NETWORK           = 4
+INPUT_WATERCOURSE_NETWORK           = 4
 INPUT_ROAD_NETWORK            = 5
 INPUT_PATH_NETWORK            = 6
-INPUT_RASTER_BACKGROUND       = 7
+INPUT_DITCH_NETWORK           = 7
+INPUT_RASTER_BACKGROUND       = 8
 
 # OS TERRAIN 5 XYZ FIELD NAME
 OS_TERRAIN_5_XYZ_ELEVATION    = "field_3"
@@ -44,6 +45,10 @@ PATH_DESC                     = "desc"
 
 # Connected field boundaries
 CONNECTED_FIELD_ID            = "field_ID"
+
+# Ditches
+DITCH_NETWORK_LOCAL_ID        = "id"
+DITCH_NETWORK_DESC            = "desc"
 
 # LE-flow interaction valid categories
 LE_FLOW_INTERACTION_CATEGORY_BOUNDARY   = "boundary"
@@ -81,8 +86,8 @@ OUTPUT_ELEVATION              = "Elev"
 # Flow lines
 FLOW_DOWN_STEEPEST            = "Steepest"
 MERGED_WITH_ADJACENT_FLOWLINE = "Merged"
-#FLOW_VIA_LANDSCAPE_ELEMENT    = "LE"
-FLOW_VIA_STREAM               = "Stream"
+FLOW_VIA_WATERCOURSE          = "Stream"
+FLOW_VIA_DITCH                = "Ditch"
 FLOW_VIA_ROAD                 = "Road"
 FLOW_VIA_PATH                 = "Path"
 FLOW_VIA_BOUNDARY             = "Boundary"
@@ -100,25 +105,26 @@ MARKER_FLOW_START_POINT_2     = " flow start"
 MARKER_HIT_BLIND_PIT          = "Blind pit"
 MARKER_HIT_FIELD_BOUNDARY     = "Field boundary"
 MARKER_LEAVE_FIELD_BOUNDARY   = "Leave field boundary"
-MARKER_ENTER_STREAM           = "Enter stream"
+MARKER_ENTER_WATERCOURSE      = "Enter stream"
+MARKER_ENTER_DITCH            = "Enter ditch"
 MARKER_ENTER_CULVERT          = "Enter culvert"
 MARKER_ENTER_RIVER            = "Enter river"
 MARKER_HIT_ROAD               = "Road"
 MARKER_LEAVE_ROAD             = "Leave road"
 MARKER_HIT_PATH               = "Path"
 MARKER_LEAVE_PATH             = "Leave path"
-MARKER_ENTER_STREAM           = "Enter stream"
 MARKER_FORCE_FLOW             = "Forced"
 
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "20 Jun 2019 QGIS3 version"
+progVer = "24 Jun 2019 QGIS3 version"
 runTitle = ""
 
 considerLEFlowInteractions = ""
 FillBlindPits = ""
-considerStreams = ""
+considerWatercourses = ""
+considerDitches = ""
 considerFieldBoundaries = ""
 considerRoads = ""
 considerTracks = ""

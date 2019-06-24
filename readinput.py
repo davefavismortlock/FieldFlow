@@ -3,7 +3,7 @@ from math import isclose
 from qgis.core import QgsVector, QgsRectangle, QgsPointXY
 
 import shared
-from shared import COMMENT1, COMMENT2, INPUT_FIELD_BOUNDARIES, INPUT_WATER_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_OBSERVED_FLOW_LINES, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_CULVERT, LE_FLOW_INTERACTION_CATEGORY_PATH, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_CATEGORY_STREAM, LE_FLOW_INTERACTION_CATEGORY_BLIND_PIT, LE_FLOW_INTERACTION_BEHAVIOUR_ALONG, LE_FLOW_INTERACTION_BEHAVIOUR_UNDER, LE_FLOW_INTERACTION_BEHAVIOUR_ACROSS, LE_FLOW_INTERACTION_BEHAVIOUR_ENTER, LE_FLOW_INTERACTION_BEHAVIOUR_THROUGH, LE_FLOW_INTERACTION_BEHAVIOUR_LEAVE, LE_FLOW_INTERACTION_BEHAVIOUR_OVERTOP, LE_FLOW_INTERACTION_CATEGORY_FORCING, LE_FLOW_INTERACTION_BEHAVIOUR_FORCING, EOF_LE_FLOW_INTERACTIONS, EOF_VECTOR_DATA, EOF_RASTER_DATA
+from shared import COMMENT1, COMMENT2, INPUT_FIELD_BOUNDARIES, INPUT_WATERCOURSE_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_DITCH_NETWORK, INPUT_OBSERVED_FLOW_LINES, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_CULVERT, LE_FLOW_INTERACTION_CATEGORY_PATH, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_CATEGORY_STREAM, LE_FLOW_INTERACTION_CATEGORY_BLIND_PIT, LE_FLOW_INTERACTION_BEHAVIOUR_ALONG, LE_FLOW_INTERACTION_BEHAVIOUR_UNDER, LE_FLOW_INTERACTION_BEHAVIOUR_ACROSS, LE_FLOW_INTERACTION_BEHAVIOUR_ENTER, LE_FLOW_INTERACTION_BEHAVIOUR_THROUGH, LE_FLOW_INTERACTION_BEHAVIOUR_LEAVE, LE_FLOW_INTERACTION_BEHAVIOUR_OVERTOP, LE_FLOW_INTERACTION_CATEGORY_FORCING, LE_FLOW_INTERACTION_BEHAVIOUR_FORCING, EOF_LE_FLOW_INTERACTIONS, EOF_VECTOR_DATA, EOF_RASTER_DATA
 from utils import DisplayOS
 
 #======================================================================================================================
@@ -184,26 +184,43 @@ def readInput():
          dataLine += 1
 
       elif dataLine == 5:
-         # Consider streams?
+         # Consider watercourses?
          if shared.considerLEFlowInteractions:
-            shared.considerStreams = True
+            shared.considerWatercourses = True
          else:
             tempStr = data.upper().strip()
             if tempStr == "Y":
-               shared.considerStreams = True
+               shared.considerWatercourses = True
             elif tempStr == "N":
-               shared.considerStreams = False
+               shared.considerWatercourses = False
             else:
-               printStr = "ERROR: consider ditches and streams = " + tempStr + ", it must be Y or N\n"
+               printStr = "ERROR: consider watercourses = " + tempStr + ", it must be Y or N\n"
                print(printStr)
 
                return -1
          dataLine += 1
 
       elif dataLine == 6:
+         # Consider ditches?
+         if shared.considerLEFlowInteractions:
+            shared.considerDitches = True
+         else:
+            tempStr = data.upper().strip()
+            if tempStr == "Y":
+               shared.considerDitches = True
+            elif tempStr == "N":
+               shared.considerDitches = False
+            else:
+               printStr = "ERROR: consider ditches = " + tempStr + ", it must be Y or N\n"
+               print(printStr)
+
+               return -1
+         dataLine += 1
+
+      elif dataLine == 7:
          # Consider roads?
-         if not shared.considerLEFlowInteractions:
-            shared.considerRoads = False
+         if shared.considerLEFlowInteractions:
+            shared.considerRoads = True
          else:
             tempStr = data.upper().strip()
             if tempStr == "Y":
@@ -217,10 +234,10 @@ def readInput():
                return -1
          dataLine += 1
 
-      elif dataLine == 7:
+      elif dataLine == 8:
          # Consider tracks and paths?
-         if not shared.considerLEFlowInteractions:
-            shared.considerTracks = False
+         if shared.considerLEFlowInteractions:
+            shared.considerTracks = True
          else:
             tempStr = data.upper().strip()
             if tempStr == "Y":
@@ -234,10 +251,10 @@ def readInput():
                return -1
          dataLine += 1
 
-      elif dataLine == 8:
+      elif dataLine == 9:
          # Consider field boundaries?
-         if not shared.considerLEFlowInteractions:
-            shared.considerFieldBoundaries = False
+         if shared.considerLEFlowInteractions:
+            shared.considerFieldBoundaries = True
          else:
             tempStr = data.upper().strip()
             if tempStr == "Y":
@@ -251,81 +268,81 @@ def readInput():
                return -1
          dataLine += 1
 
-      elif dataLine == 9:
+      elif dataLine == 10:
          # The resolution of the DEM layer (m)
          shared.resolutionOfDEM = float(data)
          dataLine += 1
 
-      elif dataLine == 10:
+      elif dataLine == 11:
          # Distance to search (metres)
          shared.searchDist = float(data)
          dataLine += 1
 
-      elif dataLine == 11:
+      elif dataLine == 12:
          # Path to all GIS data
          shared.GISPath = data
          dataLine += 1
 
-      elif dataLine == 12:
+      elif dataLine == 13:
          # Output shapefile for flow marker points
          shared.outFileFlowMarkerPoints = shared.GISPath + data
          dataLine += 1
 
-      elif dataLine == 13:
+      elif dataLine == 14:
          # Style for Output shapefile for flow marker points
          shared.outFileFlowMarkerPointsStyle = shared.GISPath + data
          dataLine += 1
 
-      elif dataLine == 14:
+      elif dataLine == 15:
          shared.outFileFlowMarkerPointsOpacity = (100.0 - int(data)) / 100.0
          dataLine += 1
 
-      elif dataLine == 15:
+      elif dataLine == 16:
           # Output shapefile for flow lines
          shared.outFileFlowLines = shared.GISPath + data
          dataLine += 1
 
-      elif dataLine == 16:
+      elif dataLine == 17:
           # Style for output shapefile for flow lines
          shared.outFileFlowLinesStyle = shared.GISPath + data
          dataLine += 1
 
-      elif dataLine == 17:
+      elif dataLine == 18:
          shared.outFileFlowLinesOpacity = (100.0 - int(data)) / 100.0
          dataLine += 1
 
-      elif dataLine == 18:
+      elif dataLine == 19:
          shared.windowWidth = int(data)
          dataLine += 1
 
-      elif dataLine == 19:
+      elif dataLine == 20:
          shared.windowHeight = int(data)
          dataLine += 1
 
-      elif dataLine == 20:
+      elif dataLine == 21:
          shared.windowMagnification = float(data)
          dataLine += 1
 
-      elif dataLine == 21:
+      elif dataLine == 22:
          # External coordinate reference system
          shared.externalCRS = data
          dataLine += 1
 
-      elif dataLine == 22:
+      elif dataLine == 23:
          # Coordinates of SW corner of area displayed
          coords = data.split(',')
          shared.extentRect.setXMinimum(int(coords[0]))
          shared.extentRect.setYMinimum(int(coords[1]))
          dataLine += 1
 
-      elif dataLine == 23:
+      elif dataLine == 24:
          # Coordinates of NE corner of area displayed
          coords = data.split(',')
          shared.extentRect.setXMaximum(int(coords[0]))
          shared.extentRect.setYMaximum(int(coords[1]))
          dataLine += 1
 
-      elif dataLine == 24:
+      elif dataLine == 25:
          # Vector files
          first = True
          vecLine = 0
@@ -371,7 +388,7 @@ def readInput():
 
          dataLine += 1
 
-      elif dataLine == 25:
+      elif dataLine == 26:
          # Raster files
          first = True
          rasLine = 0
@@ -413,7 +430,7 @@ def readInput():
 
          dataLine += 1
 
-      elif dataLine == 26:
+      elif dataLine == 27:
          # LE-flow interactions, don't bother reading them if this is a topography-only run
          if shared.considerLEFlowInteractions == "T":
             break

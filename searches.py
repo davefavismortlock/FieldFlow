@@ -3,7 +3,7 @@ from math import sqrt
 from qgis.core import NULL, QgsGeometry, QgsFeatureRequest, QgsPointXY
 
 import shared
-from shared import INPUT_PATH_NETWORK, PATH_DESC, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, INPUT_WATER_NETWORK, OS_WATER_NETWORK_LOCAL_ID, OS_WATER_NETWORK_NAME, TARGET_RIVER, TARGET_RIVER_NAME, MARKER_ENTER_RIVER, FLOW_VIA_STREAM, OS_WATER_NETWORK_LEVEL, MARKER_ENTER_CULVERT, MARKER_ENTER_STREAM, OUTPUT_FIELD_CODE
+from shared import INPUT_PATH_NETWORK, PATH_DESC, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, INPUT_WATERCOURSE_NETWORK, OS_WATER_NETWORK_LOCAL_ID, OS_WATER_NETWORK_NAME, TARGET_RIVER, TARGET_RIVER_NAME, MARKER_ENTER_RIVER, FLOW_VIA_WATERCOURSE, OS_WATER_NETWORK_LEVEL, MARKER_ENTER_CULVERT, MARKER_ENTER_WATERCOURSE, INPUT_DITCH_NETWORK, DITCH_NETWORK_LOCAL_ID, DITCH_NETWORK_DESC, FLOW_VIA_DITCH, MARKER_ENTER_DITCH, OUTPUT_FIELD_CODE
 from utils import GetRasterElev, DisplayOS
 from layers import AddFlowMarkerPoint, AddFlowLine
 
@@ -250,7 +250,7 @@ def FindNearbyFlowLine(thisPoint):
       #print("Leaving loop")
       return -1, -1, -1
 
-   # OK we have some suitable flow line segments, sort the list of stream segments, shortest distance first
+   # OK we have some suitable flow line segments, sort the list of watercourse segments, shortest distance first
    distToPoint.sort(key = lambda distPoint: distPoint[2])
 
    #for n in range(len(distToPoint)):
@@ -267,10 +267,10 @@ def FindNearbyFlowLine(thisPoint):
          featIDTried.append(featID)
          geomFeat = feature.geometry()
 
-         # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
+         # The nearest point is an approximation: it is not necessarily a vertex of the line. So get the closest vertex of the line
          nearPoint, _numNearpoint, _beforeNearpoint, _afterNearpoint, sqrDist = geomFeat.closestVertex(flowLineSeg[1])
 
-         #shared.fpOut.write("At " + DisplayOS(flowLineSeg[1].x(), flowLineSeg[1].y()) + ", flow line stream segment '" + str(featID) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
+         #shared.fpOut.write("At " + DisplayOS(flowLineSeg[1].x(), flowLineSeg[1].y()) + ", flow line watercourse segment '" + str(featID) + "' was found with nearest vertex " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
 
          return nearPoint.x(), nearPoint.y(), flowLineSeg[3]
 
@@ -334,7 +334,7 @@ def FindNearbyFlowLine(thisPoint):
 
 #======================================================================================================================
 #
-# Is there a path near here?
+# Is there a path near here? Returns -1 for a problem, 0 for no path found, 1 for path found, 2 for path found but need field observation
 #
 #======================================================================================================================
 def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
@@ -417,13 +417,15 @@ def FindNearbyPath(point, flowFieldCode, alreadyAlongPath):
          #linePoints = geomFeat.asPolyline()
          #nPoints = len(linePoints)
 
-         # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
+         # The nearest point is an approximation: it is not necessarily a vertex of the line. So get the closest vertex of the line
 #         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(pathSeg[1])
 
-         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this path? Please add a field observation\n")
+         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest vertex " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this path? Please add a field observation\n")
 
          if not alreadyAlongPath:
-            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest point " + "{:0.1f}".format(pathSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path? Please add a field observation\n")
+            shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled path segment '" + str(featDesc) + "' was found with nearest vertex " + "{:0.1f}".format(pathSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this path? Please add a field observation YYY\n")
+
+            return 0
 
    return 1
 #======================================================================================================================
@@ -553,13 +555,13 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
          #linePoints = geomFeat.asPolyline()
          #nPoints = len(linePoints)
 
-         # The nearest point may or may not be a vertex of the line. So get the closest vertex in the line
+         # The nearest point is an approximation: it is not necessarily a vertex of the line. So get the closest vertex of the line
 #         nearPoint, numNearpoint, beforeNearpoint, afterNearpoint, sqrDist = geomFeat.closestVertex(roadSeg[1])
 
-         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
+         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest vertex " + "{:0.1f}".format(sqrt(sqrDist)) + " m away" + "\n*** Does flow go over, under or along this road? Please add a field observation\n")
 
          #if not alreadyAlongRoad:
-            #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest point " + "{:0.1f}".format(roadSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
+            #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled road segment '" + str(featCode) + "' '" + str(featDesc) + "' '" + str(roadName) + "' '" + str(roadNumber) + "' was found with nearest vertex " + "{:0.1f}".format(roadSeg[2]) + " m away" + "\n*** Does flow from field " + str(flowFieldCode) + " go over, under or along this road? Please add a field observation\n")
 
    return 1
 #======================================================================================================================
@@ -567,28 +569,28 @@ def FindNearbyRoad(point, flowFieldCode, alreadyAlongRoad):
 
 #======================================================================================================================
 #
-# Checks to see if an object's geometry intersects a stream segment: if it does, then return the point(s) of intersection
+# Checks to see if an object's geometry intersects a watercourse segment: if it does, then return the point(s) of intersection
 #
 #======================================================================================================================
 def FindSegmentIntersectionWithWatercourse(featGeom):
    layerNum = -1
 
    # Find the water network layer
-   waterLayerFound = False
+   watercourseLayerFound = False
    for layerNum in range(len(shared.vectorInputLayersCategory)):
-      if shared.vectorInputLayersCategory[layerNum] == INPUT_WATER_NETWORK:
-         waterLayerFound = True
+      if shared.vectorInputLayersCategory[layerNum] == INPUT_WATERCOURSE_NETWORK:
+         watercourseLayerFound = True
          break
 
    # Safety check
-   if not waterLayerFound:
+   if not watercourseLayerFound:
       printStr = "ERROR: opening stream flow network layer\n"
       shared.fpOut.write(printStr)
       print(printStr)
 
       return -1, -1
 
-   # Does the object's geometry intersect any stream segments? First construct a bounding box around the road, then see if any streams intersect this
+   # Does the object's geometry intersect any watercourse segments? First construct a bounding box around the road, then see if any streams intersect this
    roadBoundingBox = featGeom.boundingBox()
    #shared.fpOut.write("\t" + str(roadBoundingBox) + "\n")
 
@@ -603,9 +605,9 @@ def FindSegmentIntersectionWithWatercourse(featGeom):
    features = shared.vectorInputLayers[layerNum].getFeatures(request)
 
    intersectPoints = []
-   for streamSeg in features:
+   for watercourseSeg in features:
       # Get the point of intersection
-      geomStreamSeg = streamSeg.geometry()
+      geomStreamSeg = watercourseSeg.geometry()
       if featGeom.intersects(geomStreamSeg):
          # Yes, they do intersect
          geomIntersect = featGeom.intersection(geomStreamSeg)
@@ -621,30 +623,30 @@ def FindSegmentIntersectionWithWatercourse(featGeom):
 
 #======================================================================================================================
 #
-# Is there a stream near this location? If so, route flow into this stream until it reaches the Rother
+# Is there a watercourse near this location? If so, route flow into this watercourse until it reaches the Rother
 #
 #======================================================================================================================
-def FindNearbyStream(point, flowFieldCode):
+def FindNearbyWatercourse(point, flowFieldCode):
    # pylint: disable=too-many-locals
    # pylint: disable=too-many-branches
    # pylint: disable=too-many-statements
 
-   #shared.fpOut.write("Entered FindNearbyStream at point " + DisplayOS(point.x(), point.y()) + "\n")
+   #shared.fpOut.write("Entered FindNearbyWatercourse at point " + DisplayOS(point.x(), point.y()) + "\n")
    layerNum = -1
    geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
 
-   streamSegIDsFollowed = []
+   watercourseSegIDsFollowed = []
 
-   # Find the water network layer
-   waterLayerFound = False
+   # Find the watercourse network layer
+   watercourseLayerFound = False
    for layerNum in range(len(shared.vectorInputLayersCategory)):
-      if shared.vectorInputLayersCategory[layerNum] == INPUT_WATER_NETWORK:
-         waterLayerFound = True
+      if shared.vectorInputLayersCategory[layerNum] == INPUT_WATERCOURSE_NETWORK:
+         watercourseLayerFound = True
          break
 
    # Safety check
-   if not waterLayerFound:
-      printStr = "ERROR: opening stream flow network layer\n"
+   if not watercourseLayerFound:
+      printStr = "ERROR: opening watercourse network layer\n"
       shared.fpOut.write(printStr)
       print(printStr)
 
@@ -653,64 +655,64 @@ def FindNearbyStream(point, flowFieldCode):
    # TODO make this a user setting
    numberToSearchFor = 3
 
-   # Loop until we either hit the Rother, or cannot find a suitable nearby stream segment
-   inStream = False
+   # Loop until we either hit the Rother, or cannot find a suitable nearby watercourse segment
+   inWatercourse = False
    while True:
-      # Find the nearest stream segments
-      #shared.fpOut.write("At start of FindNearbyStream loop: " + DisplayOS(point.x(), point.y()) + "\n")
+      # Find the nearest watercourse segments
+      #shared.fpOut.write("At start of FindNearbyWatercourse loop: " + DisplayOS(point.x(), point.y()) + "\n")
       nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(QgsPointXY(point), numberToSearchFor)
       #if len(nearestIDs) > 0:
-         #shared.fpOut.write("Nearest stream segment IDs = " + str(nearestIDs) + "\n")
+         #shared.fpOut.write("Nearest watercourse segment IDs = " + str(nearestIDs) + "\n")
       request = QgsFeatureRequest().setFilterFids(nearestIDs)
       features = shared.vectorInputLayers[layerNum].getFeatures(request)
 
       distToPoint = []
       geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
 
-      for streamSeg in features:
-         # Is this stream segment both close enough, and has not already been followed?
-         geomSeg = streamSeg.geometry()
+      for watercourseSeg in features:
+         # Is this watercourse segment both close enough, and has not already been followed?
+         geomSeg = watercourseSeg.geometry()
          nearPoint = geomSeg.nearestPoint(geomPoint)
          distanceToSeg = geomPoint.distance(nearPoint)
-         segID = streamSeg.id()
-         #shared.fpOut.write("Trying nearby stream segment with segID = " + str(segID) + " and distanceToSeg = " + "{:0.1f}".format(distanceToSeg) + " m\n")
+         segID = watercourseSeg.id()
+         #shared.fpOut.write("Trying nearby watercourse segment with segID = " + str(segID) + " and distanceToSeg = " + "{:0.1f}".format(distanceToSeg) + " m\n")
 
          if distanceToSeg > shared.searchDist:
-            # Too far away, so forget about this stream segment
-            #shared.fpOut.write("Too far away, max is " + "{:0.1f}".format(shared.searchDist) + " m, abandoning\n")
+            # Too far away, so forget about this watercourse segment
+            #shared.fpOut.write("Watercourse segment is too far away, max is " + "{:0.1f}".format(shared.searchDist) + " m, abandoning\n")
             continue
 
-         if segID in streamSegIDsFollowed:
-            # Already travelled, so forget about this stream segment
+         if segID in watercourseSegIDsFollowed:
+            # Already travelled, so forget about this watercourse segment
             #shared.fpOut.write("Already travelled, abandoning\n")
             continue
 
-         # Is OK, so save the stream segment feature, the nearest point, and the distance
-         distToPoint.append([streamSeg, nearPoint.asPoint(), distanceToSeg])
+         # Is OK, so save the watercourse segment feature, the nearest point, and the distance
+         distToPoint.append([watercourseSeg, nearPoint.asPoint(), distanceToSeg])
 
-      # Did we find suitable stream segments?
+      # Did we find suitable a watercourse segments?
       if not distToPoint:
          # Nope
-         #shared.fpOut.write("No suitable stream segments found\n")
-         inStream = False
+         #shared.fpOut.write("No suitable watercourse segments found\n")
+         inWatercourse = False
          return 0
 
-      # OK we have some possibly suitable stream segments
+      # OK we have some possibly suitable watercourse segments
       #for n in range(len(distToPoint)):
          #shared.fpOut.write("Before " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
-      # Sort the list of untravelled stream segments, shortest distance first
+      # Sort the list of untravelled watercourse segments, shortest distance first
       distToPoint.sort(key = lambda distPoint: distPoint[2])
 
       #for n in range(len(distToPoint)):
          #shared.fpOut.write("After " + (str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
 
       flowRouted = False
-      for thisStreamSeg in distToPoint:
-         # Go through this list of untravelled stream segments till we find a suitable one
-         feature = thisStreamSeg[0]
+      for thisWatercourseSeg in distToPoint:
+         # Go through this list of untravelled watercourse segments till we find a suitable one
+         feature = thisWatercourseSeg[0]
          featID = feature.id()
-         #shared.fpOut.write("Trying nearby stream segment with feature ID " + str(featID) + "\n")
+         #shared.fpOut.write("Trying nearby watercourse segment with feature ID " + str(featID) + "\n")
 
          localID = feature[OS_WATER_NETWORK_LOCAL_ID]
          #print(localID)
@@ -720,29 +722,29 @@ def FindNearbyStream(point, flowFieldCode):
          #print(attrs)
 
          # Is this the Rother?
-         streamName = feature[OS_WATER_NETWORK_NAME]
+         watercourseName = feature[OS_WATER_NETWORK_NAME]
 
-         streamName = str(streamName)  # Make sure that this is a string
-         streamName = streamName.upper()
-         #shared.fpOut.write("streamName = '" + streamName + "'\n")
+         watercourseName = str(watercourseName)  # Make sure that this is a string
+         watercourseName = watercourseName.upper()
+         #shared.fpOut.write("watercourseName = '" + watercourseName + "'\n")
 
-         #if streamName.find(TARGET_RIVER) >= 0:
+         #if watercourseName.find(TARGET_RIVER) >= 0:
          # NOTE have no idea why some branches of the Rother are called "M" in the OS watercourse layer, maybe "M"  is "main channel"?
-         if streamName.find(TARGET_RIVER) >= 0 or streamName == "M":
+         if watercourseName.find(TARGET_RIVER) >= 0 or watercourseName == "M":
             # Yes, flow has entered the Rother
-            shared.fpOut.write("Flow from field " + flowFieldCode + " enters the " + TARGET_RIVER_NAME + " at " + DisplayOS(point.x(), point.y()) + " (" + str(streamName) + ")\n")
+            shared.fpOut.write("Flow from field " + flowFieldCode + " enters the " + TARGET_RIVER_NAME + " at " + DisplayOS(point.x(), point.y()) + " (" + str(watercourseName) + ")\n")
             AddFlowMarkerPoint(point, MARKER_ENTER_RIVER, flowFieldCode, -1)
 
             # We are done here
             return 1
 
-         # This stream segment is not the Rother. Are we considering streams?
-         if not shared.considerStreams:
-            # We are not, so don't try to route flow along this stream segment
-            #shared.fpOut.write("Stream not considered\n")
+         # This watercourse segment is not the Rother. Are we considering watercourses?
+         if not shared.considerWatercourses:
+            # We are not, so don't try to route flow along this watercourse segment
+            #shared.fpOut.write("Watercourse not considered\n")
             continue
 
-         # We are considering streams
+         # We are considering watercourses
          #geomFeat = feature.geometry()
          #linePoints = geomFeat.asPolyline()
          ##nPoints = len(linePoints)
@@ -758,49 +760,47 @@ def FindNearbyStream(point, flowFieldCode):
          firstPoint = linePoints[0]
          lastPoint = linePoints[-1]
 
-         # OK, the nearest point is an approximation: it is not necessarily a point in the line. So get the actual point in the line which is closest
-         nearPoint, numNearpoint, _beforeNearpoint, _afterNearpoint, sqrDist = geomFeat.closestVertex(thisStreamSeg[1])
+         # The nearest point is an approximation: it is not necessarily a vertex of the line. So get the closest vertex of the line
+         nearPoint, numNearpoint, _beforeNearpoint, _afterNearpoint, sqrDist = geomFeat.closestVertex(thisWatercourseSeg[1])
 
-         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled stream segment " + str(localID) + " found with nearest point " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
+         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", an untravelled watercourse segment " + str(localID) + " found with nearest vertex " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
 
-         #shared.fpOut.write("\tFirst point of stream segment is " + DisplayOS(firstPoint.x(), firstPoint.y()) + "\n")
-         #shared.fpOut.write("\tNearest point of stream segment is " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n")
-         #shared.fpOut.write("\tLast point of stream segment is " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
+         #shared.fpOut.write("\tFirst vertex of watercourse segment is " + DisplayOS(firstPoint.x(), firstPoint.y()) + ", nearest vertex of watercourse segment is " + DisplayOS(nearPoint.x(), nearPoint.y()) + ", last vertex of watercourse segment is " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
 
          # Check the flow direction
          flowDirection = feature["flowDirection"]
-         #shared.fpOut.write("\tFlow direction of this stream segment is " + flowDirection + "\n")
+         #shared.fpOut.write("\tFlow direction of this watercourse segment is " + flowDirection + "\n")
 
          if nearPoint == firstPoint and flowDirection != "inDirection":
-            #shared.fpOut.write("Flow going wrong way in stream segment " + str(localID) + "\n")
+            #shared.fpOut.write("Flow going wrong way in watercourse segment " + str(localID) + "\n")
 
-            # Try the next stream segment
+            # Try the next watercourse segment
             continue
 
          elif nearPoint == lastPoint and flowDirection == "inDirection":
-            #shared.fpOut.write("Flow going wrong way in stream segment " + str(localID) + "\n")
+            #shared.fpOut.write("Flow going wrong way in watercourse segment " + str(localID) + "\n")
 
-            # Try the next stream segment
+            # Try the next watercourse segment
             continue
 
-         # We are flowing along at least part of this stream segment
+         # We are flowing along at least part of this watercourse segment
          if flowDirection == "inDirection":
             for m in range(numNearpoint, len(linePoints)-1):
                thisPoint = linePoints[m]
                nextPoint = linePoints[m+1]
 
-               AddFlowLine(thisPoint, nextPoint, FLOW_VIA_STREAM, flowFieldCode, -1)
+               AddFlowLine(thisPoint, nextPoint, FLOW_VIA_WATERCOURSE, flowFieldCode, -1)
                #shared.fpOut.write("AddFlowLine 1 from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
          else:
             for m in range(numNearpoint, 1, -1):
                thisPoint = linePoints[m]
                nextPoint = linePoints[m-1]
 
-               AddFlowLine(thisPoint, nextPoint, FLOW_VIA_STREAM, flowFieldCode, -1)
+               AddFlowLine(thisPoint, nextPoint, FLOW_VIA_WATERCOURSE, flowFieldCode, -1)
                #shared.fpOut.write("AddFlowLine 2 from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
 
-         # OK we have flow routed along this stream segment
-         streamSegIDsFollowed.append(featID)
+         # OK we have flow routed along this watercourse segment
+         watercourseSegIDsFollowed.append(featID)
          flowRouted = True
 
          #shared.fpOut.write(feature.attributes())
@@ -813,29 +813,29 @@ def FindNearbyStream(point, flowFieldCode):
          level = feature[OS_WATER_NETWORK_LEVEL]
          if level == "underground":
             typeName = MARKER_ENTER_CULVERT
-            if streamName == NULL:
-               streamName = "culvert"
+            if watercourseName == NULL:
+               watercourseName = "culvert"
          else:
-            typeName = MARKER_ENTER_STREAM
-            if streamName == NULL:
-               streamName = "stream"
+            typeName = MARKER_ENTER_WATERCOURSE
+            if watercourseName == NULL:
+               watercourseName = "stream"
 
-         #shared.fpOut.write("\tFlow from field " + flowFieldCode + " along stream segment with feature ID " + str(featID) + " '" + streamName + " " + str(localID) + "', from " + DisplayOS(point.x(), point.y()) + " to " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
+         #shared.fpOut.write("\tFlow from field " + flowFieldCode + " along watercourse segment with feature ID " + str(featID) + " '" + watercourseName + " " + str(localID) + "', from " + DisplayOS(point.x(), point.y()) + " to " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
 
-         if not inStream:
+         if not inWatercourse:
             AddFlowMarkerPoint(point, typeName, flowFieldCode, -1)
 
-         # Set the end point of this stream segment to be the start point, ready for next time round the loop
+         # Set the end point of this watercourse segment to be the start point, ready for next time round the loop
          point = lastPoint
 
-         # Don't bother looking at other stream segments since flow was routed along this stream segment
-         inStream = True
+         # Don't bother looking at other watercourse segments since flow was routed along this watercourse segment
+         inWatercourse = True
          break
 
       if not flowRouted:
-         inStream = False
+         inWatercourse = False
 
-         #printStr = "No suitable stream segment found"
+         #printStr = "No suitable watercourse segment found"
          #shared.fpOut.write(printStr + "\n")
          #print(printStr)
 
@@ -962,3 +962,226 @@ def CanOverflowTo(thisPoint, topElev, overflowCells):
 
    return newOverflowCells
 #======================================================================================================================
+
+
+#======================================================================================================================
+#
+# Is there a ditch near this location? If so, route flow into this ditch until it can't go any further, or it reaches a stream
+#
+#======================================================================================================================
+def FindNearbyDitch(point, flowFieldCode):
+   # pylint: disable=too-many-locals
+   # pylint: disable=too-many-branches
+   # pylint: disable=too-many-statements
+
+   #shared.fpOut.write("\tEntered FindNearbyDitch at point " + DisplayOS(point.x(), point.y()) + "\n")
+   layerNum = -1
+   geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
+
+   ditchSegIDsFollowed = []
+
+   # Find the ditch network layer
+   ditchLayerFound = False
+   for layerNum in range(len(shared.vectorInputLayersCategory)):
+      if shared.vectorInputLayersCategory[layerNum] == INPUT_DITCH_NETWORK:
+         ditchLayerFound = True
+         break
+
+   # Safety check
+   if not ditchLayerFound:
+      printStr = "ERROR: opening ditch network layer\n"
+      shared.fpOut.write(printStr)
+      print(printStr)
+
+      return -1
+
+   # TODO make this a user setting
+   numberToSearchFor = 3
+
+   inDitch = False
+   while True:
+      # Find the nearest ditch segments
+      #shared.fpOut.write("\tAt start of FindNearbyWatercourse loop: " + DisplayOS(point.x(), point.y()) + "\n")
+      nearestIDs = shared.vectorInputLayerIndex[layerNum].nearestNeighbor(QgsPointXY(point), numberToSearchFor)
+
+      #if len(nearestIDs) > 0:
+         #shared.fpOut.write("\tNearest ditch segment IDs = " + str(nearestIDs) + "\n")
+
+      request = QgsFeatureRequest().setFilterFids(nearestIDs)
+      features = shared.vectorInputLayers[layerNum].getFeatures(request)
+
+      distToPoint = []
+      geomPoint = QgsGeometry.fromPointXY(QgsPointXY(point))
+
+      for ditchSeg in features:
+         # Is this ditch segment both close enough, and has not already been followed?
+         geomSeg = ditchSeg.geometry()
+         nearPoint = geomSeg.nearestPoint(geomPoint)
+         distanceToSeg = geomPoint.distance(nearPoint)
+         segID = ditchSeg.id()
+         #shared.fpOut.write("\tTrying nearby ditch segment with segID = " + str(segID) + " and distanceToSeg = " + "{:0.1f}".format(distanceToSeg) + " m\n")
+
+         if distanceToSeg > shared.searchDist:
+            # Too far away, so forget about this ditch segment
+            #shared.fpOut.write("\tDitch segment is too far away, max is " + "{:0.1f}".format(shared.searchDist) + " m, abandoning\n")
+            continue
+
+         if segID in ditchSegIDsFollowed:
+            # Already travelled, so forget about this ditch segment
+            #shared.fpOut.write("Already travelled, abandoning\n")
+            continue
+
+         # Is OK, so save the ditch segment feature, the nearest point, and the distance
+         distToPoint.append([ditchSeg, nearPoint.asPoint(), distanceToSeg])
+
+      # Did we find a suitable ditch segment?
+      if not distToPoint:
+         # Nope
+         #shared.fpOut.write("\tNo suitable ditch segments found\n")
+         inDitch = False
+         return 0
+
+      # OK we have some possibly suitable ditch segments
+      #for n in range(len(distToPoint)):
+         #shared.fpOut.write("Before " + str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+
+      # Sort the list of untravelled ditch segments, shortest distance first
+      distToPoint.sort(key = lambda distPoint: distPoint[2])
+
+      #for n in range(len(distToPoint)):
+         #shared.fpOut.write("After " + (str(n) + " " + str(distToPoint[n][0].id()) + " " + DisplayOS(distToPoint[n][1].x(), distToPoint[n][1].y()) + " " + str(distToPoint[n][2]) + " m\n")
+
+      flowRouted = False
+      for thisDitchSeg in distToPoint:
+         # Go through this list of untravelled ditch segments till we find a suitable one
+         feature = thisDitchSeg[0]
+         featID = feature.id()
+         localID = feature[DITCH_NETWORK_LOCAL_ID]
+         desc = feature[DITCH_NETWORK_DESC]
+         #shared.fpOut.write("\tTrying nearby ditch segment with feature ID " + str(featID) + " '" + str(localID) + "' '" + str(desc) + "'\n")
+
+         #geomFeat = feature.geometry()
+         #linePoints = geomFeat.asPolyline()
+         ##nPoints = len(linePoints)
+
+         geomFeat = feature.geometry()
+         if geomFeat.isMultipart():
+            linePointsAll = geomFeat.asMultiPolyline()
+         else:
+            linePointsAll = [geomFeat.asPolyline()]
+
+         linePoints = linePointsAll[0]
+
+         firstPoint = linePoints[0]
+         lastPoint = linePoints[-1]
+
+         # The nearest point is an approximation: it is not necessarily a vertex of the line. So get the closest vertex of the line
+         nearPoint, numNearpoint, _numBeforeNearpoint, _numAfterNearpoint, sqrDist = geomFeat.closestVertex(thisDitchSeg[1])
+
+         #shared.fpOut.write("At " + DisplayOS(point.x(), point.y()) + ", untravelled ditch segment with feature ID " + str(featID) + " '" + str(localID) + "' '" + str(desc) + "' found with nearest vertex " + "{:0.1f}".format(sqrt(sqrDist)) + " m away\n")
+
+         #shared.fpOut.write("\tFirst vertex of ditch segment is " + DisplayOS(firstPoint.x(), firstPoint.y()) + ", nearest vertex of ditch segment is " + DisplayOS(nearPoint.x(), nearPoint.y()) + ", last vertex of ditch segment is " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
+
+         # Get the flow direction
+         firstPointElev = GetRasterElev(firstPoint.x(), firstPoint.y())
+         lastPointElev = GetRasterElev(lastPoint.x(), lastPoint.y())
+
+         flowFirstToLast = None
+         if lastPointElev < firstPointElev:
+            flowFirstToLast = True
+            #shared.fpOut.write("\tFlow direction in this ditch segment is first to last\n")
+
+         elif firstPointElev < lastPointElev:
+            flowFirstToLast = False
+            #shared.fpOut.write("\tFlow direction in this ditch segment is last to first\n")
+
+         else:
+            #shared.fpOut.write("\tThis ditch segment is level\n")
+            return 0
+
+         # Is the flow direction OK?
+         if nearPoint == firstPoint and not flowFirstToLast:
+            #shared.fpOut.write("\tFlow going wrong way in ditch segment " + str(localID) + "\n")
+
+            # Try the next ditch segment
+            continue
+
+         elif nearPoint == lastPoint and flowFirstToLast:
+            #shared.fpOut.write("\tFlow going wrong way in ditch segment " + str(localID) + "\n")
+
+            # Try the next ditch segment
+            continue
+
+         # We are flowing along at least part of this ditch segment
+         if flowFirstToLast:
+            startPoint = linePoints[numNearpoint+1]
+            AddFlowLine(point, startPoint, FLOW_VIA_DITCH, flowFieldCode, -1)
+            #shared.fpOut.write("\tAddFlowLine from " + DisplayOS(point.x(), point.y()) + " to " + DisplayOS(startPoint.x(), startPoint.y()) + "\n")
+
+            for m in range(numNearpoint+1, len(linePoints)-1):
+               thisPoint = linePoints[m]
+               nextPoint = linePoints[m+1]
+
+               AddFlowLine(thisPoint, nextPoint, FLOW_VIA_DITCH, flowFieldCode, -1)
+               #shared.fpOut.write("\tAddFlowLine 1 from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
+
+            lastPoint = linePoints[-1]
+         else:
+            startPoint = linePoints[numNearpoint-1]
+            AddFlowLine(point, startPoint, FLOW_VIA_DITCH, flowFieldCode, -1)
+            #shared.fpOut.write("\tAddFlowLine from " + DisplayOS(point.x(), point.y()) + " to " + DisplayOS(startPoint.x(), startPoint.y()) + "\n")
+
+            for m in range(numNearpoint-1, 1, -1):
+               thisPoint = linePoints[m]
+               nextPoint = linePoints[m-1]
+
+               AddFlowLine(thisPoint, nextPoint, FLOW_VIA_DITCH, flowFieldCode, -1)
+               #shared.fpOut.write("\tAddFlowLine 2 from " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
+
+            lastPoint = linePoints[0]
+
+         # OK we have flow routed along this ditch segment
+         ditchSegIDsFollowed.append(featID)
+         flowRouted = True
+
+         #shared.fpOut.write(feature.attributes())
+
+         shared.fpOut.write("\tFlow from field " + flowFieldCode + " along ditch segment with feature ID " + str(featID) + " '" + str(localID) + "' '" + str(desc) + "', from " + DisplayOS(point.x(), point.y()) + " to " + DisplayOS(lastPoint.x(), lastPoint.y()) + "\n")
+
+         if not inDitch:
+            AddFlowMarkerPoint(point, MARKER_ENTER_DITCH, flowFieldCode, -1)
+
+         # Set the end point of this ditch segment to be the start point, ready for next time round the loop
+         point = lastPoint
+
+         # Don't bother looking at other ditch segments since flow was routed along this ditch segment
+         inDitch = True
+
+         # Now look for a watercourse near here
+         rtn = FindNearbyWatercourse(point, flowFieldCode)
+         if rtn == -1:
+            # Problem! Exit the program
+            exit (-1)
+         elif rtn == 1:
+            # Flow entered a watercourse and reached the Rother. We are done here, so move on to the next field
+            #shared.fpOut.write("Hit a watercourse and reached the Rother\n")
+
+            return 1
+
+         # Did not find a watercourse, so continue round the loop, look for another ditch segment
+         break
+
+      # Have left the main loop
+      if not flowRouted:
+         inDitch = False
+
+         printStr = "\tNo suitable ditch segment found"
+         shared.fpOut.write(printStr + "\n")
+
+         return 0
+
+   shared.fpOut.write("\treturn 1\n")
+   return 1
+#======================================================================================================================
+
+

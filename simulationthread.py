@@ -3,10 +3,10 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from qgis.core import QgsPointXY, QgsGeometry, QgsFeatureRequest
 
 import shared
-from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_HIT_BLIND_PIT, MARKER_FORCE_FLOW, MARKER_ENTER_STREAM, LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_CATEGORY_PATH, MARKER_HIT_ROAD, MARKER_HIT_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
+from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_HIT_BLIND_PIT, MARKER_FORCE_FLOW, MARKER_ENTER_WATERCOURSE, LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_CATEGORY_PATH, MARKER_HIT_ROAD, MARKER_HIT_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
 from layers import AddFlowMarkerPoint, AddFlowLine, WriteVector
 from simulate import GetHighestAndLowestPointsOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoute
-from searches import FindNearbyStream, FindNearbyFlowLine, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
+from searches import FindNearbyWatercourse, FindNearbyFlowLine, FindNearbyDitch, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
 from utils import GetRasterElev, GetCentroidOfContainingDEMCell, DisplayOS, IsPointInPolygon
 
 
@@ -261,20 +261,20 @@ class SimulationThread(QThread):
                break
 
             #=============================================================================================================
-            # First search for nearby streams and rivers
+            # First search for nearby watercourses (streams and rivers)
             #=============================================================================================================
-            rtn = FindNearbyStream(thisPoint, fieldCode)
+            rtn = FindNearbyWatercourse(thisPoint, fieldCode)
             if rtn == -1:
                # Problem! Exit the program
                exit (-1)
             elif rtn == 1:
-               # Flow entered a stream and reached the Rother. We are done here, so move on to the next field
-               #shared.fpOut.write("In stream\n")
+               # Flow entered a watercourse and reached the Rother. We are done here, so move on to the next field
+               #shared.fpOut.write("In a watercourse and reached the Rother\n")
                self.refresh.emit()
                break
 
             #=============================================================================================================
-            # Flow did not enter a stream, so next search for nearby pre-existing flowlines
+            # Flow did not enter a watercourse, so next search for nearby pre-existing flowlines
             #=============================================================================================================
             adjX, adjY, hitFieldFlowFrom = FindNearbyFlowLine(thisPoint)
             if adjX != -1:
@@ -287,13 +287,19 @@ class SimulationThread(QThread):
                break
 
             #=============================================================================================================
-            # Flow did not merge with a pre-existing flowline. Make sure that this point is at the centroid of a DEM cell
+            # Flow did not merge with a flowline, so (if the switch is set) next search for nearby ditches
             #=============================================================================================================
-            #tempPoint = GetCentroidOfContainingDEMCell(thisPoint.x(), thisPoint.y())
-            #if not (inBlindPit or viaLEAndHitBlindPit or viaLEAndHitStream) and tempPoint != thisPoint:
-               ## We had to shift the location slightly, so show a connecting line
-               #AddFlowLine(thisPoint, tempPoint, FLOW_ADJUSTMENT_DUMMY, fieldCode, -1)
-               #thisPoint = tempPoint
+            if shared.considerDitches:
+               rtn = FindNearbyDitch(thisPoint, fieldCode)
+               if rtn == -1:
+                  # Problem! Exit the program
+                  exit (-1)
+               elif rtn == 1:
+                  # Flow entered a ditch, then either got stuck in the ditch, or entered a watercourse and reached the Rother. We are done here, so move on to the next field
+                  #shared.fpOut.write("Into ditch\n")
+                  self.refresh.emit()
+                  break
+
 
             #=============================================================================================================
             #  OK, we are now considering LE-flow interactions
@@ -363,6 +369,10 @@ class SimulationThread(QThread):
                   if rtn == -1:
                      # Problem! Exit the program
                      exit (-1)
+
+                  #elif rtn == 0:
+                     ## No paths found
+
                   elif rtn == 1:
                      # We have found a path, so mark it
                      AddFlowMarkerPoint(thisPoint, MARKER_HIT_PATH, fieldCode, -1)
@@ -411,6 +421,12 @@ class SimulationThread(QThread):
                         # Back to the start of the inner loop
                         continue
 
+                  elif rtn == 2:
+                     # Path found, but we need a field observation. So move onto the next field
+                     shared.fpOut.write("XXXX\n")
+                     self.refresh.emit()
+                     break
+
                #==========================================================================================================
                # Search for a field observation of a landscape element-flow interaction near this point
                #==========================================================================================================
@@ -427,7 +443,7 @@ class SimulationThread(QThread):
                      break
 
                   if viaRoadAndHitStream or viaPathAndHitStream or viaLEAndHitStream:
-                     AddFlowMarkerPoint(thisPoint, MARKER_ENTER_STREAM, fieldCode, -1)
+                     AddFlowMarkerPoint(thisPoint, MARKER_ENTER_WATERCOURSE, fieldCode, -1)
                      shared.fpOut.write("Flow from field " + str(fieldCode) + " hits a stream at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n*** Does flow enter the stream here?\n")
 
                      # Move on to next field
@@ -497,13 +513,13 @@ class SimulationThread(QThread):
                      hitBoundary = False
 
                   if hitRoadBehaviourUnknown:
-                     #shared.fpOut.write("YYY")
+                     #shared.fpOut.write("QQQQ\n")
                      if shared.fieldObservationCategory[indx] == LE_FLOW_INTERACTION_CATEGORY_ROAD:
                         # We passed across or along the road, so turn off the switch
                         hitRoadBehaviourUnknown = False
 
                   if hitPathBehaviourUnknown:
-                     #shared.fpOut.write("ZZZ")
+                     #shared.fpOut.write("ZZZ\n")
                      if shared.fieldObservationCategory[indx] == LE_FLOW_INTERACTION_CATEGORY_PATH:
                         # We passed across or along the path, so turn off the switch
                         hitPathBehaviourUnknown = False
@@ -530,23 +546,36 @@ class SimulationThread(QThread):
 
                   # No road found
 
-               #==========================================================================================================
-               # Search for vector paths/tracks near this point
-               #==========================================================================================================
-               if shared.considerTracks:
-                  rtn = FindNearbyPath(thisPoint, fieldCode, viaLEAndAlongPath)
-                  if rtn == -1:
-                     # Problem! Exit the program
-                     exit (-1)
-                  elif rtn == 1:
-                     # We have found a path or track, so mark it and set a switch since we don't know whether flow goes under, over or along the path
-                     AddFlowMarkerPoint(thisPoint, MARKER_HIT_PATH, fieldCode, -1)
-                     hitPathBehaviourUnknown = True
+               ##==========================================================================================================
+               ## Search for vector paths/tracks near this point
+               ##==========================================================================================================
+               #if shared.considerTracks:
+                  #rtn = FindNearbyPath(thisPoint, fieldCode, viaLEAndAlongPath)
+                  #if rtn == -1:
+                     ## Problem! Exit the program
+                     #exit (-1)
 
-                     # Back to the start of the inner loop
-                     continue
+                  ##elif rtn == 0:
+                     ### No path found
 
-                  # No path found
+                  #elif rtn == 1:
+                     ## We have found a path or track, so mark it and set a switch since we don't know whether flow goes under, over or along the path
+                     #AddFlowMarkerPoint(thisPoint, MARKER_HIT_PATH, fieldCode, -1)
+                     #hitPathBehaviourUnknown = True
+
+                     ## Back to the start of the inner loop
+                     #continue
+
+                                    #elif rtn == 1:
+                     ## Path found, but we need a field observation. So move on to the next field
+                     #shared.fpOut.write("ZZZZ\n")
+
+                     #self.refresh.emit()
+                     #break
+
+
+
+                  ## No path found
 
                #==========================================================================================================
                # Has flow hit a field boundary?

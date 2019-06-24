@@ -6,7 +6,7 @@ from PyQt5.QtCore import QVariant
 from qgis.core import QgsField, QgsSpatialIndex, QgsRectangle, QgsVectorLayer, QgsRasterLayer
 
 import shared
-from shared import FLOW_MARKERS, OUTPUT_TYPE, FLOW_LINES, OUTPUT_FIELD_CODE, OUTPUT_ELEVATION, INPUT_FIELD_BOUNDARIES, INPUT_WATER_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, OUTPUT_FLOW_MARKERS, OUTPUT_FLOW_LINES
+from shared import FLOW_MARKERS, OUTPUT_TYPE, FLOW_LINES, OUTPUT_FIELD_CODE, OUTPUT_ELEVATION, INPUT_FIELD_BOUNDARIES, INPUT_WATERCOURSE_NETWORK, INPUT_ROAD_NETWORK, INPUT_PATH_NETWORK, INPUT_DITCH_NETWORK, INPUT_DIGITAL_ELEVATION_MODEL, INPUT_RASTER_BACKGROUND, OUTPUT_FLOW_MARKERS, OUTPUT_FLOW_LINES
 from layers import createVector, ReadVectorLayer, readRasterLayer, ReadAndMergeVectorLayers
 from utils import GetCentroidOfContainingDEMCell, DisplayOS
 
@@ -60,6 +60,18 @@ def setUpSimulation():
       printStr = "Blind pits filled\n"
    else:
       printStr = "Blind pits not filled\n"
+   shared.fpOut.write(printStr)
+
+   if shared.considerWatercourses:
+      printStr = "Watercourses considered\n"
+   else:
+      printStr = "Watercourses not considered\n"
+   shared.fpOut.write(printStr)
+
+   if shared.considerDitches:
+      printStr = "Ditches considered\n"
+   else:
+      printStr = "Ditches not considered\n"
    shared.fpOut.write(printStr)
 
    if shared.considerFieldBoundaries:
@@ -216,6 +228,7 @@ def setUpSimulation():
    haveWaterNetwork = False
    haveRoadNetwork = False
    havePathNetwork = False
+   haveDitchnetwork = False
    haveDEM = False
    shared.haveRasterBackground = False    # Optional
 
@@ -224,7 +237,7 @@ def setUpSimulation():
          haveFieldBoundaries = True
          continue
 
-      if shared.vectorInputLayersCategory[layer] == INPUT_WATER_NETWORK:
+      if shared.vectorInputLayersCategory[layer] == INPUT_WATERCOURSE_NETWORK:
          haveWaterNetwork = True
          continue
 
@@ -234,6 +247,10 @@ def setUpSimulation():
 
       if shared.vectorInputLayersCategory[layer] == INPUT_PATH_NETWORK:
          havePathNetwork = True
+         continue
+
+      if shared.vectorInputLayersCategory[layer] == INPUT_DITCH_NETWORK:
+         haveDitchNetwork = True
          continue
 
    for layer in range(len(shared.rasterInputLayersCategory)):
@@ -269,6 +286,13 @@ def setUpSimulation():
 
    if not havePathNetwork:
       printStr = "ERROR: did not read in a vector layer for the path network\n"
+      shared.fpOut.write(printStr)
+      print(printStr)
+
+      return (-1, -1)
+
+   if not haveDitchNetwork:
+      printStr = "ERROR: did not read in a vector layer for the ditch network\n"
       shared.fpOut.write(printStr)
       print(printStr)
 
