@@ -108,7 +108,6 @@ def GetHighestAndLowestPointsOnFieldBoundary(fieldBoundary):
 # Routes flow through a field observation of some landscape element
 #
 # Return values are:
-# -1 = problem
 #  0 = continue downhill
 #  1 = hit blind pit
 #  2 = hit stream
@@ -134,7 +133,7 @@ def FlowViaFieldObservation(indx, fieldCode, thisPoint, elev):
             rtn, point = FlowAlongVectorRoute(ROUTE_ROAD, indx, fieldCode, thisPoint)
             if rtn == -1:
                # A problem! Exit the program
-               exit (-1)
+               exit(-1)
 
             elif rtn == 1:
                # Flow has hit a blind pit
@@ -171,7 +170,7 @@ def FlowViaFieldObservation(indx, fieldCode, thisPoint, elev):
             rtn, point = FlowAlongVectorRoute(ROUTE_PATH, indx, fieldCode, thisPoint)
             if rtn == -1:
                # A problem! Exit the program
-               exit (-1)
+               exit(-1)
 
             elif rtn == 1:
                # Flow has hit a blind pit
@@ -211,7 +210,7 @@ def FlowViaFieldObservation(indx, fieldCode, thisPoint, elev):
             #shared.fpOut.write("rtn = " + str(rtn) + ", point = " + DisplayOS(point.x(), point.y()) + "\n")
             if rtn == -1:
                # Problem! Exit the program
-               exit (-1)
+               exit(-1)
 
             elif rtn == 1:
                # Flow has hit a blind pit
@@ -1042,7 +1041,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
    #shared.fpOut.write("Entered flowAlongVectorFieldBoundary at point " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
    DEPTH_TOLERANCE = 0.5   # Vertical (depth) tolerance in metres
-   CROSS_PRODUCT_TOLERANCE = 1.0
+   CROSS_PRODUCT_TOLERANCE = 20.0
 
    if indx >= 0:
       shared.thisFieldFieldObsAlreadyFollowed.append(indx)
@@ -1403,10 +1402,9 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
                # TODO make a user option
                beforePoint = lineVert[nnBefore]
                z = CalcZCrossProduct(beforePoint, thisPoint, nextPoint)
+               #shared.fpOut.write("\tcross product = " + str(z) + "\n")
 
                if (z > CROSS_PRODUCT_TOLERANCE):
-                  #shared.fpOut.write("\tcross product = " + str(z) + "\n")
-
                   # Search for the adjacent raster cell with the steepest here-to-there slope, and get its centroid
                   adjPoint, adjElev = FindSteepestAdjacent(thisPoint, thisPointElev, geomFeat)
                   #shared.fpOut.write("\tadjPoint = " + DisplayOS(adjPoint.x(), adjPoint.y()) + ", adjElev = " + str(adjElev) + "\n")
@@ -1538,11 +1536,9 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
                # TODO make a user option
                beforePoint = lineVert[nnBefore]
                z = CalcZCrossProduct(beforePoint, thisPoint, nextPoint)
-
+               #shared.fpOut.write("\tcross product = " + str(z) + "\n")
 
                if (z < -CROSS_PRODUCT_TOLERANCE):
-                  #shared.fpOut.write("\tcross product = " + str(z) + "\n")
-
                   # Search for the adjacent raster cell with the steepest here-to-there slope, and get its centroid
                   adjPoint, adjElev = FindSteepestAdjacent(thisPoint, thisPointElev, geomFeat)
                   #shared.fpOut.write("\tadjPoint = " + DisplayOS(adjPoint.x(), adjPoint.y()) + ", adjElev = " + str(adjElev) + "\n")

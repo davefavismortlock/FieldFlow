@@ -1161,7 +1161,7 @@ def FindNearbyDitch(point, flowFieldCode):
          rtn = FindNearbyWatercourse(point, flowFieldCode)
          if rtn == -1:
             # Problem! Exit the program
-            exit (-1)
+            exit(-1)
          elif rtn == 1:
             # Flow entered a watercourse and reached the Rother. We are done here, so move on to the next field
             #shared.fpOut.write("Hit a watercourse and reached the Rother\n")

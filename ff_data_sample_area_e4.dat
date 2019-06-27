@@ -5,7 +5,7 @@
 #======================================================================================================================
 Run title                                                                     : West Sussex: Sample Area E. CONSIDER ALL FIELD OBERVATIONS
 
-Fields which generate flow (comma-separated list, blank for auto)             : H, M, N, O, P, Q
+Fields which generate flow (comma-separated list, blank for auto)             : H, M, N, O, P, Q, K
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
 Consider LE-flow interactions?                                                : Y
@@ -36,8 +36,8 @@ Initial magnification                                                         : 
 
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
-Coordinates of SW corner of area displayed                                    : 494500, 120115
-Coordinates of NE corner of area displayed                                    : 495800, 121797
+Coordinates of SW corner of area displayed                                    : 494600, 120115
+Coordinates of NE corner of area displayed                                    : 496000, 121797
 
 # Vector layers =======================================================================================================
 
@@ -206,6 +206,33 @@ Outflow location                                                              : 
 
 
 # FLOW FROM FIELD H +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+# FLOW FROM FIELD K +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Inflow location                                                               : 495620, 121304
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : out of second blind pit in field K
+Outflow location                                                              : 495600, 121273
+
+Inflow location                                                               : 495557, 121273
+Type                                                                          : boundary
+Behaviour                                                                     : through
+Description                                                                   : W edge of field K
+Outflow location                                                              : 495557, 121272
+
+Inflow location                                                               : 495557, 121272
+Type                                                                          : road
+Behaviour                                                                     : across
+Description                                                                   : between fields K and O
+Outflow location                                                              : 495557, 121271
+
+Inflow location                                                               : 495557, 121271
+Type                                                                          : boundary
+Behaviour                                                                     : through
+Description                                                                   : E edge of field O
+Outflow location                                                              : 495535, 121275
 
 
 END OF LE-FLOW INTERACTIONS =============================================================================================

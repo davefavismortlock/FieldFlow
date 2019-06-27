@@ -266,7 +266,7 @@ class SimulationThread(QThread):
             rtn = FindNearbyWatercourse(thisPoint, fieldCode)
             if rtn == -1:
                # Problem! Exit the program
-               exit (-1)
+               exit(-1)
             elif rtn == 1:
                # Flow entered a watercourse and reached the Rother. We are done here, so move on to the next field
                #shared.fpOut.write("In a watercourse and reached the Rother\n")
@@ -293,7 +293,7 @@ class SimulationThread(QThread):
                rtn = FindNearbyDitch(thisPoint, fieldCode)
                if rtn == -1:
                   # Problem! Exit the program
-                  exit (-1)
+                  exit(-1)
                elif rtn == 1:
                   # Flow entered a ditch, then either got stuck in the ditch, or entered a watercourse and reached the Rother. We are done here, so move on to the next field
                   #shared.fpOut.write("Into ditch\n")
@@ -312,7 +312,7 @@ class SimulationThread(QThread):
                   rtn = FindNearbyRoad(thisPoint, fieldCode, viaLEAndAlongRoad)
                   if rtn == -1:
                      # Problem! Exit the program
-                     exit (-1)
+                     exit(-1)
                   elif rtn == 1:
                      # We have found a road, so mark it
                      AddFlowMarkerPoint(thisPoint, MARKER_HIT_ROAD, fieldCode, -1)
@@ -322,7 +322,7 @@ class SimulationThread(QThread):
                      #shared.fpOut.write("\tFinished flow along road B at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
                      if rtn == -1:
                         # A problem! Exit the program
-                        exit (-1)
+                        exit(-1)
 
                      elif rtn == 1:
                         # Flow has hit a blind pit
@@ -368,7 +368,7 @@ class SimulationThread(QThread):
                   rtn = FindNearbyPath(thisPoint, fieldCode, viaLEAndAlongPath)
                   if rtn == -1:
                      # Problem! Exit the program
-                     exit (-1)
+                     exit(-1)
 
                   #elif rtn == 0:
                      ## No paths found
@@ -382,7 +382,7 @@ class SimulationThread(QThread):
                      #shared.fpOut.write("\tFinished flow along path B at " + DisplayOS(point.x(), point.y()) + " with rtn = " + str(rtn) + "\n")
                      if rtn == -1:
                         # A problem! Exit the program
-                        exit (-1)
+                        exit(-1)
 
                      elif rtn == 1:
                         # Flow has hit a blind pit
@@ -535,7 +535,7 @@ class SimulationThread(QThread):
                   rtn = FindNearbyRoad(thisPoint, fieldCode, viaLEAndAlongRoad)
                   if rtn == -1:
                      # Problem! Exit the program
-                     exit (-1)
+                     exit(-1)
                   elif rtn == 1:
                      # We have found a road, so mark it and set a switch since we don't know whether flow goes under, over or along the road
                      AddFlowMarkerPoint(thisPoint, MARKER_HIT_ROAD, fieldCode, -1)
@@ -553,7 +553,7 @@ class SimulationThread(QThread):
                   #rtn = FindNearbyPath(thisPoint, fieldCode, viaLEAndAlongPath)
                   #if rtn == -1:
                      ## Problem! Exit the program
-                     #exit (-1)
+                     #exit(-1)
 
                   ##elif rtn == 0:
                      ### No path found

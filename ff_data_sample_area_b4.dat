@@ -279,29 +279,29 @@ Behaviour                                                                     : 
 Description                                                                   : N edge of field 50
 Outflow location                                                              : 486312, 123370
 
-Inflow location                                                               : 486301, 123336
+Inflow location                                                               : 486302, 123337
 Type                                                                          : forcing
 Behaviour                                                                     : unknown
-Description                                                                   : to get moving S towards wood
-Outflow location                                                              : 486301, 123302
+Description                                                                   : to keep close to E side of field 50
+Outflow location                                                              : 486296, 123284
 
-Inflow location                                                               : 486304, 123298
+Inflow location                                                               : 486300, 123280
+Type                                                                          : boundary
+Behaviour                                                                     : along
+Description                                                                   : E edge of field 50
+Outflow location                                                              :
+
+Inflow location                                                               : 486283, 123197
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : E edge of field 50
-Outflow location                                                              : 486306, 123292
+Description                                                                   : SE corner of field 50
+Outflow location                                                              : 486284, 123192
 
-Inflow location                                                               : 486306, 123292
+Inflow location                                                               : 486284, 123192
 Type                                                                          : forcing
 Behaviour                                                                     : unknown
-Description                                                                   : to get moving S in wood
-Outflow location                                                              : 486285, 123178
-
-Inflow location                                                               : 486289, 123174
-Type                                                                          : forcing
-Behaviour                                                                     : unknown
-Description                                                                   : to get moving SE in wood
-Outflow location                                                              : 486312, 123156
+Description                                                                   : long forcing close to river, SE of field 50. Otherwise goes to blind pit
+Outflow location                                                              : 486326, 123146
 
 
 # FIELD 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

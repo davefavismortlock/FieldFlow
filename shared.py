@@ -20,7 +20,7 @@ ROUTE_PATH                    = 1
 INPUT_OBSERVED_FLOW_LINES     = 1
 INPUT_FIELD_BOUNDARIES        = 2
 INPUT_DIGITAL_ELEVATION_MODEL = 3
-INPUT_WATERCOURSE_NETWORK           = 4
+INPUT_WATERCOURSE_NETWORK     = 4
 INPUT_ROAD_NETWORK            = 5
 INPUT_PATH_NETWORK            = 6
 INPUT_DITCH_NETWORK           = 7
@@ -118,7 +118,7 @@ MARKER_FORCE_FLOW             = "Forced"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "24 Jun 2019 QGIS3 version"
+progVer = "27 Jun 2019 QGIS3 version"
 runTitle = ""
 
 considerLEFlowInteractions = ""
