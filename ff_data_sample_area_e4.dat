@@ -220,19 +220,19 @@ Inflow location                                                               : 
 Type                                                                          : boundary
 Behaviour                                                                     : through
 Description                                                                   : W edge of field K
-Outflow location                                                              : 495557, 121272
+Outflow location                                                              : 495551, 121268
 
-Inflow location                                                               : 495557, 121272
+Inflow location                                                               : 495551, 121268
 Type                                                                          : road
 Behaviour                                                                     : across
 Description                                                                   : between fields K and O
-Outflow location                                                              : 495557, 121271
+Outflow location                                                              : 495546, 121261
 
-Inflow location                                                               : 495557, 121271
+Inflow location                                                               : 495546, 121261
 Type                                                                          : boundary
 Behaviour                                                                     : through
 Description                                                                   : E edge of field O
-Outflow location                                                              : 495535, 121275
+Outflow location                                                              : 495539, 121248
 
 
 END OF LE-FLOW INTERACTIONS =============================================================================================

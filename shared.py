@@ -118,7 +118,7 @@ MARKER_FORCE_FLOW             = "Forced"
 
 # SHARED VARIABLES ======================================================================================================
 progName = "FieldFlow"
-progVer = "27 Jun 2019 QGIS3 version"
+progVer = "17 July 2019 QGIS3 version"
 runTitle = ""
 
 considerLEFlowInteractions = ""
