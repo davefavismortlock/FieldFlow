@@ -3,7 +3,7 @@
 # Data for FieldFlow: West Sussex Sample Area D
 #
 #======================================================================================================================
-Run title                                                                     : West Sussex: Sample Area D. CONSIDER ALL FIELD OBERVATIONS
+Run title                                                                     : West Sussex: Sample Area D CONSIDER ALL FIELD OBERVATIONS
 
 Fields which generate flow (comma-separated list, blank for auto)             : A5, F, 86, 88
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75

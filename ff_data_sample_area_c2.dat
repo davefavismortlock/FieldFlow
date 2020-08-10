@@ -3,7 +3,7 @@
 # Data for FieldFlow: West Sussex Sample Area C
 #
 #======================================================================================================================
-Run title                                                                     : West Sussex: Sample Area C. SIMPLE MODE, FILL BLIND PITS
+Run title                                                                     : West Sussex: Sample Area C SIMPLE MODE, FILL BLIND PITS
 
 Fields which generate flow (comma-separated list, blank for auto)             : 69, 71, 73, 77
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
