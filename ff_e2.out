@@ -1,0 +1,120 @@
+FieldFlow (31 July 2020 QGIS3 version)
+---------------------------------------
+
+RUN DETAILS
+
+West Sussex: Sample Area E. SIMPLE MODE, FILL BLIND PITS
+Input data read from ff_data_sample_area_e2.dat
+Flow from source fields H, M, N, O, P, Q, K
+LE-flow interactions not considered
+Blind pits filled
+Watercourses not considered
+Ditches not considered
+Field boundaries not considered
+Roads not considered
+Paths/tracks not considered
+DEM resolution = 5.0 m
+Distance to search = 5.0 m
+
+Vector layer 'FlowMarker' created
+Vector layer 'FlowLine' created
+Vector layer 'OS Mastermap Water Network SU9020' loaded
+Vector layer 'OS Mastermap Water Network SU9520' loaded
+	Merged layers 'OS Mastermap Water Network SU9020' 'OS Mastermap Water Network SU9520' 
+Vector layer 'OS VectorMap Local Road Centreline SU92sw' loaded
+Vector layer 'OS VectorMap Local Road Centreline SU92se' loaded
+	Merged layers 'OS VectorMap Local Road Centreline SU92sw' 'OS VectorMap Local Road Centreline SU92se' 
+Vector layer 'Boundaries of connected fields' loaded
+Vector layer 'Centrelines of selected paths and tracks' loaded
+Vector layer 'Centrelines of ditches' loaded
+Vector layer 'Observed flow lines E' loaded
+Raster layer 'OS Mastermap 1:1000 SU9521' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9520' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9421' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9420' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Terrain 5 SU92sw' loaded with X, Y resolution = 5.0, 5.0 m
+Raster layer 'OS Terrain 5 SU92se' loaded with X, Y resolution = 5.0, 5.0 m
+
+******************************************************************************************************************************************************
+
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW START POINTS, PER FIELD
+
+Flow from field H begins at {495466, 120522}
+Not calculating start of flow for field R, this is not a source field
+Flow from field P begins at {495474, 121133}
+Flow from field Q begins at {494806, 120770}
+Flow from field M begins at {495226, 121676}
+Flow from field O begins at {495529, 121390}
+Not calculating start of flow for field A7, this is not a source field
+Flow from field N begins at {495490, 121692}
+Not calculating start of flow for field L, this is not a source field
+Flow from field K begins at {495799, 121499}
+Not calculating start of flow for field J, this is not a source field
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD K
+
+Flow from field K starts at {495799, 121499}
+Flow from field K enters the River Rother at {495154, 120114} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD M
+
+Flow from field M starts at {495226, 121676}
+Flow from field M hit flow from field K at {495194, 120994}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD N
+
+Flow from field N starts at {495490, 121692}
+Flow from field N hit flow from field M at {495176, 121151}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD O
+
+Flow from field O starts at {495529, 121390}
+Flow from field O hit flow from field N at {495396, 121422}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD P
+
+Flow from field P starts at {495474, 121133}
+Flow from field P hit flow from field K at {495314, 121134}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD H
+
+Flow from field H starts at {495466, 120522}
+Flow from field H hit flow from field K at {495264, 120614}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD Q
+
+Flow from field Q starts at {494806, 120770}
+Flow from field Q hit flow from field K at {495069, 120219}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+Area of filled blind pits = 11450.0 m2
+Maximum flow depth to fill any blind pit = 0.200 m
+
+******************************************************************************************************************************************************
+
+SAVING GIS FILES
+
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_marker_points_E2.shp' saved
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_E2.shp' saved
+
+******************************************************************************************************************************************************
+
+Simulation finished

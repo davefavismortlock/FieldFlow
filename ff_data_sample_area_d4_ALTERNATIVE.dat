@@ -1,11 +1,11 @@
 #======================================================================================================================
 #
-# Data for FieldFlow: West Sussex Sample Area C
+# Data for FieldFlow: West Sussex Sample Area D
 #
 #======================================================================================================================
-Run title                                                                     : West Sussex: Sample Area C. CONSIDER ALL FIELD OBERVATIONS
+Run title                                                                     : West Sussex: Sample Area D. CONSIDER ALL FIELD OBERVATIONS
 
-Fields which generate flow (comma-separated list, blank for auto)             : 69, 71, 73, 77
+Fields which generate flow (comma-separated list, blank for auto)             : A5, F, 86, 88
 Weighting for flow start point on fields (is a weighted average of the highest boundary point and the field's centroid) : 0.75
 
 Consider LE-flow interactions?                                                : Y
@@ -22,26 +22,26 @@ Distance to search (metres)                                                   : 
 #======================================================================================================================
 Path to all GIS data (all paths below are relative to this)                   : /home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/
 
-Output shapefile for flow marker points (no extension)                        : ff_flow_marker_points_C4_ALTERNATIVE
+Output shapefile for flow marker points (no extension)                        : ff_flow_marker_points_D4_ALTERNATIVE
 Style file (with extension, blank for default style)                          : ff_flow_marker_points.qml
 Transparency for flow marker points (0-100)                                   : 0
 
-Output shapefile for flow lines (no extension)                                : ff_flow_C4_ALTERNATIVE
+Output shapefile for flow lines (no extension)                                : ff_flow_D4_ALTERNATIVE
 Style file (with extension, blank for default style)                          : ff_flow.qml
 Transparency for flow lines (0-100)                                           : 0
 
-Width of window (pixels)                                                      : 850
+Width of window (pixels)                                                      : 500
 Height of window (pixels)                                                     : 1150
 Initial magnification                                                         : 1.0
 
 Coordinate reference system                                                   : epsg:27700         # OSGB 1936 / British NationalGrid
 
-Coordinates of SW corner of area displayed                                    : 488410, 121000
-Coordinates of NE corner of area displayed                                    : 490600, 124300
+Coordinates of SW corner of area displayed                                    : 490880, 120791
+Coordinates of NE corner of area displayed                                    : 492260, 124314
 
 # Vector layers =======================================================================================================
 
-# Field boundaries REQUIRED ===========================================================================================
+# Field boundaries REQUIRED
 File for vector field boundaries (with extension)                             : field_boundaries/connected_field_boundaries.shp
 Table name                                                                    : boundaries
 Title                                                                         : Boundaries of connected fields
@@ -50,16 +50,7 @@ Style file (with extension, blank for default style)                          : 
 Transparency (0-100)                                                          : 70
 Type                                                                          : INPUT_FIELD_BOUNDARIES
 
-# Water network REQUIRED ==============================================================================================
-# OS Mastermap Water Network file
-File for vector water network (with extension)                                : MasterMap Water Network_1718110/su/SU8520.gml|layerid=1
-Table name                                                                    : WatercourseLink
-Title                                                                         : OS Mastermap Water Network SU8520
-File type                                                                     : ogr
-Style file (with extension, blank for default style)                          : MasterMap Water Network_1718110/default_WatercourseLink.qml
-Transparency (0-100)                                                          : 0
-Type                                                                          : INPUT_WATERCOURSE_NETWORK
-
+# Water network REQUIRED
 # OS Mastermap Water Network file
 File for vector water network (with extension)                                : MasterMap Water Network_1718110/su/SU9020.gml|layerid=1
 Table name                                                                    : WatercourseLink
@@ -70,9 +61,9 @@ Transparency (0-100)                                                          : 
 Type                                                                          : INPUT_WATERCOURSE_NETWORK
 
 # Roads REQUIRED ======================================================================================================
-File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su82se_Road_Centreline.shp
+File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su92sw_Road_Centreline.shp
 Table name                                                                    : vml-su82sw_Road_Centreline
-Title                                                                         : OS VectorMap Local Road Centreline SU82se
+Title                                                                         : OS VectorMap Local Road Centreline SU92sw
 File type                                                                     : ogr
 Style file (with extension, blank for default style)                          : OS VectorMap Local/su/roads.qml
 Transparency (0-100)                                                          : 50
@@ -97,9 +88,9 @@ Transparency (0-100)                                                          : 
 Type                                                                          : INPUT_DITCH_NETWORK
 
 # Observed flow lines OPTIONAL ========================================================================================
-File for observed flow lines (with extension)                                 : Connectivity/flow_lines_c.sqlite
+File for observed flow lines (with extension)                                 : Connectivity/flow_lines_d.sqlite
 Table name for observed flow lines                                            : flow_paths
-Title for observed flow lines                                                 : Observed flow lines C
+Title for observed flow lines                                                 : Observed flow lines D
 Layer type                                                                    : spatialite
 Style file (with extension, blank for default style)                          : Connectivity/flow_lines.qml
 Transparency for observed flow lines (0-100)                                  : 0
@@ -110,12 +101,6 @@ END OF VECTOR LAYERS ===========================================================
 # Raster layers =======================================================================================================
 
 # DEM REQUIRED ========================================================================================================
-DEM file (with extension)                                                     : terrain-5-dtm/su/terrain-5-dtm-SU82SE.tif
-DEM title                                                                     : OS Terrain 5 SU82se
-Style file (with extension, blank for default style)                          : terrain-5-dtm/default.qml
-DEM transparency (0-100)                                                      : 70
-Type                                                                          : INPUT_DIGITAL_ELEVATION_MODEL
-
 DEM file (with extension)                                                     : terrain-5-dtm/su/terrain-5-dtm-SU92SW.tif
 DEM title                                                                     : OS Terrain 5 SU92sw
 Style file (with extension, blank for default style)                          : terrain-5-dtm/default.qml
@@ -123,50 +108,8 @@ DEM transparency (0-100)                                                      : 
 Type                                                                          : INPUT_DIGITAL_ELEVATION_MODEL
 
 # Background OPTIONAL =================================================================================================
-File for raster background (with extension)                                   : mastermap_1_to_1000/su/su82/su8821.tif
-Title for raster background                                                   : OS Mastermap 1:1000 SU8821
-Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
-Transparency for raster background (0-100)                                    : 0
-Type                                                                          : INPUT_RASTER_BACKGROUND
-
-File for raster background (with extension)                                   : mastermap_1_to_1000/su/su82/su8822.tif
-Title for raster background                                                   : OS Mastermap 1:1000 SU8822
-Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
-Transparency for raster background (0-100)                                    : 0
-Type                                                                          : INPUT_RASTER_BACKGROUND
-
-File for raster background (with extension)                                   : mastermap_1_to_1000/su/su82/su8823.tif
-Title for raster background                                                   : OS Mastermap 1:1000 SU8823
-Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
-Transparency for raster background (0-100)                                    : 0
-Type                                                                          : INPUT_RASTER_BACKGROUND
-
-File for raster background (with extension)                                   : mastermap_1_to_1000/su/su82/su8824.tif
-Title for raster background                                                   : OS Mastermap 1:1000 SU8824
-Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
-Transparency for raster background (0-100)                                    : 0
-Type                                                                          : INPUT_RASTER_BACKGROUND
-
-File for raster background (with extension)                                   : mastermap_1_to_1000/su/su82/su8921.tif
-Title for raster background                                                   : OS Mastermap 1:1000 SU8921
-Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
-Transparency for raster background (0-100)                                    : 0
-Type                                                                          : INPUT_RASTER_BACKGROUND
-
-File for raster background (with extension)                                   : mastermap_1_to_1000/su/su82/su8922.tif
-Title for raster background                                                   : OS Mastermap 1:1000 SU8922
-Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
-Transparency for raster background (0-100)                                    : 0
-Type                                                                          : INPUT_RASTER_BACKGROUND
-
-File for raster background (with extension)                                   : mastermap_1_to_1000/su/su82/su8923.tif
-Title for raster background                                                   : OS Mastermap 1:1000 SU8923
-Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
-Transparency for raster background (0-100)                                    : 0
-Type                                                                          : INPUT_RASTER_BACKGROUND
-
-File for raster background (with extension)                                   : mastermap_1_to_1000/su/su82/su8924.tif
-Title for raster background                                                   : OS Mastermap 1:1000 SU8924
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9020.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9020
 Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
 Transparency for raster background (0-100)                                    : 0
 Type                                                                          : INPUT_RASTER_BACKGROUND
@@ -195,100 +138,160 @@ Style file (with extension, blank for default style)                          : 
 Transparency for raster background (0-100)                                    : 0
 Type                                                                          : INPUT_RASTER_BACKGROUND
 
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9120.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9120
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9121.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9121
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9122.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9122
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9123.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9123
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9124.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9124
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9220.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9220
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9221.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9221
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9222.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9222
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9223.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9223
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
+File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9224.tif
+Title for raster background                                                   : OS Mastermap 1:1000 SU9224
+Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
+Transparency for raster background (0-100)                                    : 0
+Type                                                                          : INPUT_RASTER_BACKGROUND
+
 END OF RASTER LAYERS ==================================================================================================
 
 # LE-flow interactions ==================================================================================================
 
-# FIELD 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Inflow location                                                               : 490108, 124066
+# FLOW FROM FIELD A5 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Inflow location                                                               : 491527, 123659
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : between fields 69 and 70
-Outflow location                                                              : 490107, 124064
+Description                                                                   : S edge of field A5
+Outflow location                                                              : 491527, 123656
 
-Inflow location                                                               : 489947, 123912
-Type                                                                          : boundary
-Behaviour                                                                     : through
-Description                                                                   : between fields 70 and 71
-Outflow location                                                              : 489940, 123908
-
-Inflow location                                                               : 489670, 123770
-Type                                                                          : boundary
-Behaviour                                                                     : through
-Description                                                                   : S edge of field 71
-Outflow location                                                              : 489667, 123767
-
-Inflow location                                                               : 489667, 123767
+Inflow location                                                               : 491527, 123656
 Type                                                                          : road
-Behaviour                                                                     : along
-Description                                                                   : Wick Lane
-Outflow location                                                              :
-
-
-# FIELD 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-Inflow location                                                               : 489395, 123450
-Type                                                                          : boundary
-Behaviour                                                                     : through
-Description                                                                   : S edge of field 73
-Outflow location                                                              : 489394, 123449
-
-Inflow location                                                               : 489394, 123449
-Type                                                                          : path
 Behaviour                                                                     : across
-Description                                                                   : path between fields 73 and 75
-Outflow location                                                              : 489393, 123448
+Description                                                                   : unmarked road
+Outflow location                                                              : 491528, 123651
 
-Inflow location                                                               : 489393, 123448
+Inflow location                                                               : 491528, 123651
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : NE edge of field 75
-Outflow location                                                              : 489388, 123444
+Description                                                                   : N edge of field F
+Outflow location                                                              : 491528, 123645
 
-Inflow location                                                               : 489192, 123364
+Inflow location                                                               : 491503, 123335
 Type                                                                          : boundary
+Behaviour                                                                     : through
+Description                                                                   : S edge of field F (HAD TO FORCE ALONG_PATH DOWNHILL FLOW)
+Outflow location                                                              : 491517, 123325
+
+Inflow location                                                               : 491517, 123325
+Type                                                                          : path
 Behaviour                                                                     : along
-Description                                                                   : W edge of field 73
+Description                                                                   : to Love's Farm
 Outflow location                                                              :
 
-Inflow location                                                               : 489164, 123326
+Inflow location                                                               : 491809, 123268
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : W corner of field 75
-Outflow location                                                              : 489154, 123306
+Description                                                                   : out of blind pit on path segment 91 'Track from Loves Farm'
+Outflow location                                                              : 491820, 123237
 
-Inflow location                                                               : 489154, 123306
-Type                                                                          : boundary
-Behaviour                                                                     : through
-Description                                                                   : between fields 75 and 76
-Outflow location                                                              : 489153, 123304
-
-Inflow location                                                               : 489149, 123305
-Type                                                                          : boundary
+Inflow location                                                               : 491820, 123237
+Type                                                                          : path
 Behaviour                                                                     : along
-Description                                                                   : NW corner of field 76
+Description                                                                   : to Love's Farm
 Outflow location                                                              :
 
-Inflow location                                                               : 489114, 123218
+
+# FLOW FROM FIELD 86 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Inflow location                                                               : 491837, 123217
+Type                                                                          : boundary
+Behaviour                                                                     : through
+Description                                                                   : SW edge of field 86
+Outflow location                                                              : 491832, 123212
+
+Inflow location                                                               : 491832, 123212
+Type                                                                          : path
+Behaviour                                                                     : along
+Description                                                                   : unmarked path
+Outflow location                                                              :
+
+
+Inflow location                                                               : 491896, 122610
 Type                                                                          : blindpit
 Behaviour                                                                     : overtop
-Description                                                                   : W edge of field 76
-Outflow location                                                              : 489100, 123189
+Description                                                                   : out of blind pit on path segment 92 'Long track starting near 88a'
+Outflow location                                                              : 491882, 122610
 
 
-# FIELD 77 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Inflow location                                                               : 489617, 122812
+
+# FLOW FROM FIELD F +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+# FLOW FROM FIELD 88 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Inflow location                                                               : 491722, 122478
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : out of blind pit in field 88
+Outflow location                                                              : 491682, 122460
+
+Inflow location                                                               : 491680, 122450
 Type                                                                          : boundary
 Behaviour                                                                     : through
-Description                                                                   : S edge of 77
-Outflow location                                                              : 489617, 122803
+Description                                                                   : between fields 88 and 88a
+Outflow location                                                              : 491680, 122443
 
-Inflow location                                                               : 489602, 122682
-Type                                                                          : road
-Behaviour                                                                     : along
-Description                                                                   : Glaziers Lane
-Outflow location                                                              :
+Inflow location                                                               : 491652, 122402
+Type                                                                          : blindpit
+Behaviour                                                                     : overtop
+Description                                                                   : out of blind pit in field 88a
+Outflow location                                                              : 491605, 122343
 
 
 END OF LE-FLOW INTERACTIONS =============================================================================================
+
 

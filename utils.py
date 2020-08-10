@@ -1,6 +1,6 @@
 from math import isclose
 
-from qgis.core import QgsPointXY, QgsRaster
+from qgis.core import QgsRaster, QgsPointXY
 
 import shared
 from shared import INPUT_DIGITAL_ELEVATION_MODEL
@@ -123,7 +123,7 @@ def GetPointsOnLine(startPoint, endPoint, spacing):
       x += XInc
       y += YInc
 
-   points.append(endPoint)
+   points.append(QgsPointXY(endPoint))
 
    return points
 #======================================================================================================================
@@ -150,8 +150,7 @@ def GetRasterElev(x, y):
          dpi = shared.rasterInputData[layerNum][1][6]
 
          # Now look up the elevation value at this point
-         point = QgsPointXY(x, y)
-         result = provider.identify(point, QgsRaster.IdentifyFormatValue, extent, xSize, ySize, dpi)
+         result = provider.identify(QgsPointXY(x, y), QgsRaster.IdentifyFormatValue, extent, xSize, ySize, dpi)
          error = result.error()
          if not error.isEmpty() or not result.isValid():
             shared.fpOut.write(error.summary())

@@ -121,7 +121,7 @@ class SimulationThread(QThread):
 
                   # In some cases, the flow start point may not be within the field polygon. if it isn't, then find the nearest within-polygon point
                   if not IsPointInPolygon(startPoint, fieldBoundary):
-                     nearPointGeom = fieldBoundary.geometry().nearestPoint(QgsGeometry.fromPointXY(startPoint))
+                     nearPointGeom = fieldBoundary.geometry().nearestPoint(QgsGeometry.fromPointXY(QgsPointXY(startPoint)))
                      nearPoint = nearPointGeom.asPoint()
 
                      printStr = "For field " + str(fieldCode) +", the flow start point " + DisplayOS(xFlowStart, yFlowStart) + " is not within the field, so changing the flow start point to " + DisplayOS(nearPoint.x(), nearPoint.y()) + "\n"

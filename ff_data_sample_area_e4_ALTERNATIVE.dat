@@ -22,11 +22,11 @@ Distance to search (metres)                                                   : 
 #======================================================================================================================
 Path to all GIS data (all paths below are relative to this)                   : /home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/
 
-Output shapefile for flow marker points (no extension)                        : ff_flow_marker_points_E4
+Output shapefile for flow marker points (no extension)                        : ff_flow_marker_points_E4_ALTERNATIVE
 Style file (with extension, blank for default style)                          : ff_flow_marker_points.qml
 Transparency for flow marker points (0-100)                                   : 0
 
-Output shapefile for flow lines (no extension)                                : ff_flow_E4
+Output shapefile for flow lines (no extension)                                : ff_flow_E4_ALTERNATIVE
 Style file (with extension, blank for default style)                          : ff_flow.qml
 Transparency for flow lines (0-100)                                           : 0
 
@@ -224,15 +224,23 @@ Outflow location                                                              : 
 
 Inflow location                                                               : 495551, 121268
 Type                                                                          : path
-Behaviour                                                                     : across
+Behaviour                                                                     : along
 Description                                                                   : between fields K and O
-Outflow location                                                              : 495546, 121261
+Outflow location                                                              :
 
-Inflow location                                                               : 495546, 121261
-Type                                                                          : boundary
-Behaviour                                                                     : through
-Description                                                                   : E edge of field O
-Outflow location                                                              : 495539, 121248
+
+
+#Inflow location                                                               : 495551, 121268
+#Type                                                                          : road
+#Behaviour                                                                     : across
+#Description                                                                   : between fields K and O
+#Outflow location                                                              : 495546, 121261
+
+#Inflow location                                                               : 495546, 121261
+#Type                                                                          : boundary
+#Behaviour                                                                     : through
+#Description                                                                   : E edge of field O
+#Outflow location                                                              : 495539, 121248
 
 
 END OF LE-FLOW INTERACTIONS =============================================================================================

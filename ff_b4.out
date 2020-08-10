@@ -1,0 +1,186 @@
+FieldFlow (31 July 2020 QGIS3 version)
+---------------------------------------
+
+RUN DETAILS
+
+West Sussex: Sample Area B. CONSIDER ALL FIELD OBERVATIONS
+Input data read from ff_data_sample_area_b4.dat
+Flow from source fields 44, 45, 47, 52
+LE-flow interactions considered
+Blind pits not filled
+Watercourses considered
+Ditches considered
+Field boundaries considered
+Roads considered
+Paths/tracks considered
+DEM resolution = 5.0 m
+Distance to search = 5.0 m
+
+Vector layer 'FlowMarker' created
+Vector layer 'FlowLine' created
+Vector layer 'Boundaries of connected fields' loaded
+Vector layer 'OS Mastermap Water Network SU8520' loaded
+Vector layer 'OS VectorMap Local Road Centreline SU82se' loaded
+Vector layer 'Centrelines of selected paths and tracks' loaded
+Vector layer 'Centrelines of ditches' loaded
+Vector layer 'Observed flow lines B' loaded
+Raster layer 'OS Mastermap 1:1000 SU8624' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8623' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8622' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8524' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8523' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8522' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Terrain 5 SU82se' loaded with X, Y resolution = 5.0, 5.0 m
+Raster layer 'OS Terrain 5 SU92sw' loaded with X, Y resolution = 5.0, 5.0 m
+
+******************************************************************************************************************************************************
+
+LE-FLOW INTERACTIONS
+
+1: 'through boundary, between fields 45 and 46' from {486406, 123941} to {486404, 123939}
+2: 'through boundary, between fields 46 and 47' from {486305, 123835} to {486303, 123833}
+3: 'through boundary, between fields 47 and 48' from {486248, 123645} to {486246, 123643}
+4: 'overtop blindpit, out of blind pit in field 48' from {486082, 123442} to {486021, 123415}
+5: 'along road, onto Stedham Lane' from {486021, 123415}
+6: 'unknown forcing, needed to negotiate Stedham Lane junction' from {486014, 123412} to {486005, 123393}
+7: 'along road, needed because of Stedham Lane junction' from {486005, 123393}
+8: 'overtop blindpit, out of road blind pit by Meadowhills Cottage on Stedham Lane' from {486106, 123164} to {486133, 123102}
+9: 'overtop blindpit, out of road blind pit S of Meadowhills Cottage on Stedham Lane' from {486133, 123102} to {486140, 123027}
+10: 'along road, needed because of blind pit S of Meadowhills Cottage on Stedham Lane' from {486140, 123027}
+11: 'across path, to E of former Talbots building' from {485792, 123622} to {485781, 123614}
+12: 'overtop blindpit, S of former Talbots building' from {485728, 123558} to {485723, 123544}
+13: 'through boundary, SW edge of field 44' from {485712, 123542} to {485708, 123538}
+14: 'along road, Stanwater Lane' from {485708, 123538}
+15: 'overtop blindpit, S of Stanwater Lane bend' from {485706, 123532} to {485702, 123519}
+16: 'along road, Stanwater Lane' from {485702, 123519}
+17: 'overtop blindpit, Stanwater Lane, near stream' from {485587, 123484} to {485533, 123468}
+18: 'through boundary, S edge of field 47' from {486363, 123569} to {486361, 123564}
+19: 'across road, Stedham Lane' from {486312, 123386} to {486312, 123382}
+20: 'through boundary, N edge of field 50' from {486312, 123382} to {486312, 123370}
+21: 'unknown forcing, to keep close to E side of field 50' from {486302, 123337} to {486296, 123284}
+22: 'along boundary, E edge of field 50' from {486300, 123280}
+23: 'through boundary, SE corner of field 50' from {486283, 123197} to {486284, 123192}
+24: 'unknown forcing, long forcing close to river, SE of field 50. Otherwise goes to blind pit' from {486284, 123192} to {486326, 123146}
+25: 'through boundary, S edge of field 52' from {486518, 123371} to {486518, 123369}
+26: 'across road, Stedham Lane' from {486517, 123367} to {486517, 123350}
+27: 'across path, in wood near Rother' from {486518, 123352} to {486518, 123342}
+28: 'across path, next to Rother' from {486518, 123302} to {486518, 123294}
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW START POINTS, PER FIELD
+
+Flow from field 44 begins at {486119, 123992}
+Not calculating start of flow for field 50, this is not a source field
+Flow from field 47 begins at {486472, 123764}
+Not calculating start of flow for field 46, this is not a source field
+Not calculating start of flow for field 48, this is not a source field
+Flow from field 45 begins at {486433, 124114}
+Not calculating start of flow for field 49, this is not a source field
+Flow from field 52 begins at {486679, 123684}
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 45
+
+Flow from field 45 starts at {486433, 124114}
+	LE-flow interaction found for location {486406, 123941} 'through boundary, between fields 45 and 46'
+Flow from field 45 routed 'through boundary between fields 45 and 46' from {486408, 123944} via {486406, 123941} to {486404, 123939}
+	LE-flow interaction found for location {486305, 123835} 'through boundary, between fields 46 and 47'
+Flow from field 45 routed 'through boundary between fields 46 and 47' from {486309, 123839} via {486305, 123835} to {486303, 123833}
+	LE-flow interaction found for location {486248, 123645} 'through boundary, between fields 47 and 48'
+Flow from field 45 routed 'through boundary between fields 47 and 48' from {486248, 123648} via {486248, 123645} to {486246, 123643}
+	LE-flow interaction found for location {486082, 123442} 'overtop blindpit, out of blind pit in field 48'
+Flow from field 45 routed 'overtop blindpit out of blind pit in field 48' from {486081, 123443} via {486082, 123442} to {486021, 123415}
+	LE-flow interaction found for location {486021, 123415} 'along road, onto Stedham Lane'
+	Flow from field 45 onto the road segment 149 '15750 Minor Road, alignment STEDHAM LANE NULL' at {486021, 123415} F 
+	Flow from field 45 along road, from {486021, 123415} to {486021, 123414} F
+	LE-flow interaction found for location {486014, 123412} 'unknown forcing, needed to negotiate Stedham Lane junction'
+	Flow from field 45 along road segment 149 '15750 Minor Road, alignment STEDHAM LANE NULL' from {486020, 123414} to LE-flow interaction at {486014, 123412}
+Flow from field 45 routed 'unknown forcing needed to negotiate Stedham Lane junction' from {486014, 123412} to {486005, 123393}
+	LE-flow interaction found for location {486005, 123393} 'along road, needed because of Stedham Lane junction'
+	LE-flow interaction found for location {486106, 123164} 'overtop blindpit, out of road blind pit by Meadowhills Cottage on Stedham Lane'
+	Flow from field 45 along road segment 429 '15750 Minor Road, alignment STEDHAM LANE NULL' from {486072, 123211} to LE-flow interaction at {486106, 123164}
+Flow from field 45 routed 'overtop blindpit out of road blind pit by Meadowhills Cottage on Stedham Lane' from {486104, 123167} via {486106, 123164} to {486133, 123102}
+	LE-flow interaction found for location {486133, 123102} 'overtop blindpit, out of road blind pit S of Meadowhills Cottage on Stedham Lane'
+Flow from field 45 routed 'overtop blindpit out of road blind pit S of Meadowhills Cottage on Stedham Lane' from {486133, 123102} to {486140, 123027}
+	LE-flow interaction found for location {486140, 123027} 'along road, needed because of blind pit S of Meadowhills Cottage on Stedham Lane'
+	Flow from field 45 onto the road segment 224 '15750 Minor Road, alignment STEDHAM LANE NULL' at {486140, 123027} F 
+	Flow from field 45 along road, from {486140, 123027} to {486140, 123027} F
+Flow from field 45 enters the River Rother at {486224, 122634} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 44
+
+Flow from field 44 starts at {486119, 123992}
+	LE-flow interaction found for location {485792, 123622} 'across path, to E of former Talbots building'
+Flow from field 44 routed 'across path to E of former Talbots building' from {485794, 123622} via {485792, 123622} to {485781, 123614}
+	LE-flow interaction found for location {485728, 123558} 'overtop blindpit, S of former Talbots building'
+Flow from field 44 routed 'overtop blindpit S of former Talbots building' from {485726, 123559} via {485728, 123558} to {485723, 123544}
+	LE-flow interaction found for location {485712, 123542} 'through boundary, SW edge of field 44'
+Flow from field 44 routed 'through boundary SW edge of field 44' from {485713, 123544} via {485712, 123542} to {485708, 123538}
+	LE-flow interaction found for location {485708, 123538} 'along road, Stanwater Lane'
+Flow from field 44 onto road, from {485708, 123538} to {485705, 123538} C
+	LE-flow interaction found for location {485706, 123532} 'overtop blindpit, S of Stanwater Lane bend'
+	Flow from field 44 along road segment 499 '15760 Local Street, alignment NULL NULL' from {485705, 123538} to LE-flow interaction at {485706, 123532}
+Flow from field 44 routed 'overtop blindpit S of Stanwater Lane bend' from {485705, 123536} via {485706, 123532} to {485702, 123519}
+	LE-flow interaction found for location {485702, 123519} 'along road, Stanwater Lane'
+Flow from field 44 onto road, from {485702, 123519} to {485702, 123520} C
+	LE-flow interaction found for location {485587, 123484} 'overtop blindpit, Stanwater Lane, near stream'
+	Flow from field 44 along road segment 689 '15750 Minor Road, alignment STANWATER LANE NULL' from {485592, 123485} to LE-flow interaction at {485587, 123484}
+Flow from field 44 routed 'overtop blindpit Stanwater Lane, near stream' from {485591, 123484} via {485587, 123484} to {485533, 123468}
+Flow from field 44 enters the River Rother at {485552, 123121} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 47
+
+Flow from field 47 starts at {486472, 123764}
+	LE-flow interaction found for location {486363, 123569} 'through boundary, S edge of field 47'
+Flow from field 47 routed 'through boundary S edge of field 47' from {486362, 123570} via {486363, 123569} to {486361, 123564}
+Flow from field 47 hits a field boundary at {486311, 123390}, this is between vertices at {486311, 123394} and {486311, 123389}
+	LE-flow interaction found for location {486312, 123386} 'across road, Stedham Lane'
+Flow from field 47 routed 'across road Stedham Lane' from {486311, 123390} via {486312, 123386} to {486312, 123382}
+	LE-flow interaction found for location {486312, 123382} 'through boundary, N edge of field 50'
+Flow from field 47 routed 'through boundary N edge of field 50' from {486312, 123382} to {486312, 123370}
+	LE-flow interaction found for location {486302, 123337} 'unknown forcing, to keep close to E side of field 50'
+Flow from field 47 routed 'unknown forcing to keep close to E side of field 50' from {486302, 123340} via {486302, 123337} to {486296, 123284}
+	LE-flow interaction found for location {486300, 123280} 'along boundary, E edge of field 50'
+Flow from field 47 begins to flow along the boundary of field 50 at {486296, 123284} F
+	LE-flow interaction found for location {486283, 123197} 'through boundary, SE corner of field 50'
+Flow from field 47 routed 'through boundary SE corner of field 50' from {486284, 123200} via {486283, 123197} to {486284, 123192}
+	LE-flow interaction found for location {486284, 123192} 'unknown forcing, long forcing close to river, SE of field 50. Otherwise goes to blind pit'
+Flow from field 47 routed 'unknown forcing long forcing close to river, SE of field 50. Otherwise goes to blind pit' from {486284, 123192} to {486326, 123146}
+Flow from field 47 enters the River Rother at {486331, 123146} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 52
+
+Flow from field 52 starts at {486679, 123684}
+	LE-flow interaction found for location {486518, 123371} 'through boundary, S edge of field 52'
+Flow from field 52 routed 'through boundary S edge of field 52' from {486519, 123374} via {486518, 123371} to {486518, 123369}
+	LE-flow interaction found for location {486517, 123367} 'across road, Stedham Lane'
+Flow from field 52 routed 'across road Stedham Lane' from {486518, 123369} via {486517, 123367} to {486517, 123350}
+	LE-flow interaction found for location {486518, 123352} 'across path, in wood near Rother'
+Flow from field 52 routed 'across path in wood near Rother' from {486517, 123350} via {486518, 123352} to {486518, 123342}
+	LE-flow interaction found for location {486518, 123302} 'across path, next to Rother'
+Flow from field 52 routed 'across path next to Rother' from {486518, 123302} to {486518, 123294}
+Flow from field 52 enters the River Rother at {486518, 123294} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+UNUSED LE-FLOW INTERACTIONS
+
+
+******************************************************************************************************************************************************
+
+SAVING GIS FILES
+
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_marker_points_B4.shp' saved
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_B4.shp' saved
+
+******************************************************************************************************************************************************
+
+Simulation finished

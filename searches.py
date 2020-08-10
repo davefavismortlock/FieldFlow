@@ -200,14 +200,14 @@ def FindNearbyFlowLine(thisPoint):
 
    #shared.fpOut.write("Entered FindNearbyFlowLine() at point " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
    #layerNum = -1
-   thisPoint = QgsPointXY(thisPoint)
-   geomThisPoint = QgsGeometry.fromPointXY(QgsPointXY(thisPoint))
+   thisPointXY = QgsPointXY(thisPoint)
+   geomThisPoint = QgsGeometry.fromPointXY(thisPointXY)
 
    # TODO make this a user setting
    numberToSearchFor = 3
 
    # Now search for the nearest flowline segments
-   nearestIDs = shared.outFlowLineLayerIndex.nearestNeighbor(QgsPointXY(thisPoint), numberToSearchFor)
+   nearestIDs = shared.outFlowLineLayerIndex.nearestNeighbor(thisPointXY, numberToSearchFor)
    #if len(nearestIDs) > 0:
       #print("Nearest flowline segment IDs = " + str(nearestIDs))
 
@@ -730,7 +730,8 @@ def FindNearbyWatercourse(point, flowFieldCode):
 
          #if watercourseName.find(TARGET_RIVER) >= 0:
          # NOTE have no idea why some branches of the Rother are called "M" in the OS watercourse layer, maybe "M"  is "main channel"?
-         if watercourseName.find(TARGET_RIVER) >= 0 or watercourseName == "M":
+         #if watercourseName.find(TARGET_RIVER) >= 0 or watercourseName == "M":
+         if watercourseName.find(TARGET_RIVER) >= 0:
             # Yes, flow has entered the Rother
             shared.fpOut.write("Flow from field " + flowFieldCode + " enters the " + TARGET_RIVER_NAME + " at " + DisplayOS(point.x(), point.y()) + " (" + str(watercourseName) + ")\n")
             AddFlowMarkerPoint(point, MARKER_ENTER_RIVER, flowFieldCode, -1)
@@ -850,22 +851,22 @@ def FindNearbyWatercourse(point, flowFieldCode):
 # Finds the steeper of two road segments
 #
 #======================================================================================================================
-def FindSteepestSegment(firstPoint, nearPoint, lastPoint, elevDiffNearToFirst, elevDiffNearToLast):
-   geomFirstPoint = QgsGeometry.fromPointXY(QgsPointXY(firstPoint))
-   geomNearPoint = QgsGeometry.fromPointXY(QgsPointXY(nearPoint))
-   geomLastPoint = QgsGeometry.fromPointXY(QgsPointXY(lastPoint))
+#def FindSteepestSegment(firstPoint, nearPoint, lastPoint, elevDiffNearToFirst, elevDiffNearToLast):
+   #geomFirstPoint = QgsGeometry.fromPointXY(QgsPointXY(firstPoint))
+   #geomNearPoint = QgsGeometry.fromPointXY(QgsPointXY(nearPoint))
+   #geomLastPoint = QgsGeometry.fromPointXY(QgsPointXY(lastPoint))
 
-   # Note that this calculates the straight-line distance, which will not be appropriate if the roads are very twisty
-   distAlongRoadNearToFirst = geomNearPoint.distance(geomFirstPoint)
-   distAlongRoadNearToLast = geomNearPoint.distance(geomLastPoint)
+   ## Note that this calculates the straight-line distance, which will not be appropriate if the roads are very twisty
+   #distAlongRoadNearToFirst = geomNearPoint.distance(geomFirstPoint)
+   #distAlongRoadNearToLast = geomNearPoint.distance(geomLastPoint)
 
-   gradientNearToFirst = elevDiffNearToFirst / distAlongRoadNearToFirst
-   gradientNearToLast = elevDiffNearToLast / distAlongRoadNearToLast
+   #gradientNearToFirst = elevDiffNearToFirst / distAlongRoadNearToFirst
+   #gradientNearToLast = elevDiffNearToLast / distAlongRoadNearToLast
 
-   if gradientNearToLast > gradientNearToFirst:
-      return True
+   #if gradientNearToLast > gradientNearToFirst:
+      #return True
 
-   return False
+   #return False
 #======================================================================================================================
 
 

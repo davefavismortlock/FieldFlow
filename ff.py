@@ -10,7 +10,6 @@ from initialize import setUpSimulation
 
 # TODO in future version, check for all vector intersections when drawing the flow line, if an intersection is found then only draw the flow line to the point of intersection
 
-
 #======================================================================================================================
 #
 # The MainApp class
@@ -23,8 +22,6 @@ class MainApp(QgsApplication):
          args2.append(arg.encode('utf-8'))
 
       super(MainApp, self).__init__(args2, True)
-
-      #print(self.showSettings())
 
       # Set the path to QGIS and initialize
       qgisPath = "/usr" # TODO Put in shared

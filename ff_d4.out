@@ -1,0 +1,161 @@
+FieldFlow (31 July 2020 QGIS3 version)
+---------------------------------------
+
+RUN DETAILS
+
+West Sussex: Sample Area D. CONSIDER ALL FIELD OBERVATIONS
+Input data read from ff_data_sample_area_d4.dat
+Flow from source fields A5, F, 86, 88
+LE-flow interactions considered
+Blind pits not filled
+Watercourses considered
+Ditches considered
+Field boundaries considered
+Roads considered
+Paths/tracks considered
+DEM resolution = 5.0 m
+Distance to search = 5.0 m
+
+Vector layer 'FlowMarker' created
+Vector layer 'FlowLine' created
+Vector layer 'Boundaries of connected fields' loaded
+Vector layer 'OS Mastermap Water Network SU9020' loaded
+Vector layer 'OS VectorMap Local Road Centreline SU92sw' loaded
+Vector layer 'Centrelines of selected paths and tracks' loaded
+Vector layer 'Centrelines of ditches' loaded
+Vector layer 'Observed flow lines D' loaded
+Raster layer 'OS Mastermap 1:1000 SU9224' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9223' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9222' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9221' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9220' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9124' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9123' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9122' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9121' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9120' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9024' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9023' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9022' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9021' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU9020' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Terrain 5 SU92sw' loaded with X, Y resolution = 5.0, 5.0 m
+
+******************************************************************************************************************************************************
+
+LE-FLOW INTERACTIONS
+
+1: 'through boundary, S edge of field A5' from {491527, 123659} to {491527, 123656}
+2: 'across road, unmarked road' from {491527, 123656} to {491528, 123651}
+3: 'through boundary, N edge of field F' from {491528, 123651} to {491528, 123645}
+4: 'through boundary, S edge of field F (HAD TO FORCE ALONG_PATH DOWNHILL FLOW)' from {491503, 123335} to {491517, 123325}
+5: 'along path, to Love's Farm' from {491517, 123325}
+6: 'leave path, to Love's Farm (HAD TO FORCE THIS)' from {491580, 123300} to {491581, 123298}
+7: 'through boundary, N edge of field 85' from {491581, 123298} to {491585, 123293}
+8: 'unknown forcing, to force flow eastwards at S end of field 85' from {491590, 123168} to {491697, 123105}
+9: 'along boundary, S edge of field 85' from {491697, 123102}
+10: 'through boundary, S edge of field 85' from {491741, 123088} to {491741, 123081}
+11: 'through boundary, S edge of field 87' from {491706, 122930} to {491708, 122923}
+12: 'through boundary, SW edge of field 86' from {491837, 123217} to {491832, 123212}
+13: 'across path, unmarked path' from {491832, 123212} to {491828, 123208}
+14: 'through boundary, NE edge of field 87' from {491828, 123208} to {491822, 123198}
+15: 'through boundary, between fields 85 and 87' from {491747, 123087} to {491747, 123080}
+16: 'overtop blindpit, out of blind pit in field 88' from {491722, 122478} to {491682, 122460}
+17: 'through boundary, between fields 88 and 88a' from {491680, 122450} to {491680, 122443}
+18: 'overtop blindpit, out of blind pit in field 88a' from {491652, 122402} to {491605, 122343}
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW START POINTS, PER FIELD
+
+Flow from field A5 begins at {491482, 123983}
+Flow from field F begins at {491602, 123610}
+Flow from field 86 begins at {491878, 123582}
+Not calculating start of flow for field 87, this is not a source field
+Not calculating start of flow for field 85, this is not a source field
+Not calculating start of flow for field 88a, this is not a source field
+Flow from field 88 begins at {491864, 122832}
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD A5
+
+Flow from field A5 starts at {491482, 123983}
+	LE-flow interaction found for location {491527, 123659} 'through boundary, S edge of field A5'
+Flow from field A5 routed 'through boundary S edge of field A5' from {491527, 123663} via {491527, 123659} to {491527, 123656}
+	LE-flow interaction found for location {491527, 123656} 'across road, unmarked road'
+Flow from field A5 routed 'across road unmarked road' from {491527, 123656} to {491528, 123651}
+	LE-flow interaction found for location {491528, 123651} 'through boundary, N edge of field F'
+Flow from field A5 routed 'through boundary N edge of field F' from {491528, 123651} to {491528, 123645}
+Flow from field A5 hits a field boundary at {491504, 123336}, this is between vertices at {491508, 123340} and {491503, 123335}
+	LE-flow interaction found for location {491503, 123335} 'through boundary, S edge of field F (HAD TO FORCE ALONG_PATH DOWNHILL FLOW)'
+Flow from field A5 routed 'through boundary S edge of field F (HAD TO FORCE ALONG_PATH DOWNHILL FLOW)' from {491504, 123336} via {491503, 123335} to {491517, 123325}
+	LE-flow interaction found for location {491517, 123325} 'along path, to Love's Farm'
+	Flow from field A5 onto the path segment 91 'Track from Loves Farm' at {491517, 123325} F 
+	Flow from field A5 along path, from {491517, 123325} to {491517, 123325} F
+	LE-flow interaction found for location {491580, 123300} 'leave path, to Love's Farm (HAD TO FORCE THIS)'
+	Flow from field A5 along path segment 91 'Track from Loves Farm' from {491569, 123304} to LE-flow interaction at {491580, 123300}
+Flow from field A5 routed 'leave path to Love's Farm (HAD TO FORCE THIS)' from {491578, 123300} via {491580, 123300} to {491581, 123298}
+	LE-flow interaction found for location {491581, 123298} 'through boundary, N edge of field 85'
+Flow from field A5 routed 'through boundary N edge of field 85' from {491581, 123298} to {491585, 123293}
+	LE-flow interaction found for location {491590, 123168} 'unknown forcing, to force flow eastwards at S end of field 85'
+Flow from field A5 routed 'unknown forcing to force flow eastwards at S end of field 85' from {491590, 123168} to {491697, 123105}
+	LE-flow interaction found for location {491697, 123102} 'along boundary, S edge of field 85'
+Flow from field A5 begins to flow along the boundary of field 85 at {491697, 123105} E
+	LE-flow interaction found for location {491741, 123088} 'through boundary, S edge of field 85'
+Flow from field A5 routed 'through boundary S edge of field 85' from {491741, 123088} via {491741, 123088} to {491741, 123081}
+	LE-flow interaction found for location {491706, 122930} 'through boundary, S edge of field 87'
+Flow from field A5 routed 'through boundary S edge of field 87' from {491706, 122931} via {491706, 122930} to {491708, 122923}
+	LE-flow interaction found for location {491722, 122478} 'overtop blindpit, out of blind pit in field 88'
+Flow from field A5 routed 'overtop blindpit out of blind pit in field 88' from {491723, 122478} via {491722, 122478} to {491682, 122460}
+Flow from field A5 hits a field boundary at {491678, 122451}, this is between vertices at {491682, 122455} and {491677, 122450}
+	LE-flow interaction found for location {491680, 122450} 'through boundary, between fields 88 and 88a'
+Flow from field A5 routed 'through boundary between fields 88 and 88a' from {491678, 122451} via {491680, 122450} to {491680, 122443}
+	LE-flow interaction found for location {491652, 122402} 'overtop blindpit, out of blind pit in field 88a'
+Flow from field A5 routed 'overtop blindpit out of blind pit in field 88a' from {491650, 122403} via {491652, 122402} to {491605, 122343}
+Flow from field A5 enters the River Rother at {492151, 121160} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 86
+
+Flow from field 86 starts at {491878, 123582}
+	LE-flow interaction found for location {491837, 123217} 'through boundary, SW edge of field 86'
+Flow from field 86 routed 'through boundary SW edge of field 86' from {491838, 123216} via {491837, 123217} to {491832, 123212}
+	LE-flow interaction found for location {491832, 123212} 'across path, unmarked path'
+Flow from field 86 routed 'across path unmarked path' from {491832, 123212} to {491828, 123208}
+	LE-flow interaction found for location {491828, 123208} 'through boundary, NE edge of field 87'
+Flow from field 86 routed 'through boundary NE edge of field 87' from {491828, 123208} to {491822, 123198}
+	LE-flow interaction found for location {491747, 123087} 'through boundary, between fields 85 and 87'
+Flow from field 86 routed 'through boundary between fields 85 and 87' from {491747, 123088} via {491747, 123087} to {491747, 123080}
+Flow from field 86 hit flow from field A5 at {491741, 123076}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD F
+
+Flow from field F starts at {491602, 123610}
+Flow from field F hit flow from field A5 at {491528, 123525}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 88
+
+Flow from field 88 starts at {491864, 122832}
+Flow from field 88 hit flow from field A5 at {491738, 122563}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+UNUSED LE-FLOW INTERACTIONS
+
+
+******************************************************************************************************************************************************
+
+SAVING GIS FILES
+
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_marker_points_D4.shp' saved
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_D4.shp' saved
+
+******************************************************************************************************************************************************
+
+Simulation finished

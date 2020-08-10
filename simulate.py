@@ -1,12 +1,13 @@
 from math import sqrt, isclose
 from operator import itemgetter
 
-from qgis.core import QgsRaster, QgsFeature, QgsFeatureRequest, QgsGeometry, QgsPointXY, QgsRectangle, QgsPoint
+from qgis.core import QgsRaster, QgsFeature, QgsFeatureRequest, QgsGeometry, QgsRectangle, QgsPointXY
 
 import shared
 from shared import INPUT_DIGITAL_ELEVATION_MODEL, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_BEHAVIOUR_ALONG, MARKER_HIT_ROAD, MARKER_LEAVE_ROAD, LE_FLOW_INTERACTION_CATEGORY_PATH, MARKER_HIT_PATH, MARKER_LEAVE_PATH, LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, MARKER_HIT_FIELD_BOUNDARY, MARKER_LEAVE_FIELD_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_BLIND_PIT, MARKER_HIT_BLIND_PIT, LE_FLOW_INTERACTION_CATEGORY_CULVERT, MARKER_ENTER_CULVERT, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_VIA_ROAD, INPUT_PATH_NETWORK, PATH_DESC, PREV_POINT, THIS_POINT, POST_POINT, FLOW_VIA_PATH, INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, FLOW_VIA_BOUNDARY, FLOW_DOWN_STEEPEST, FLOW_INTO_BLIND_PIT, ROUTE_ROAD, ROUTE_PATH, LE_FLOW_INTERACTION_CATEGORY_FORCING, LE_FLOW_INTERACTION_BEHAVIOUR_FORCING, MARKER_FORCE_FLOW
 from layers import AddFlowMarkerPoint, AddFlowLine
-from searches import FindSteepestAdjacent, FindSegmentIntersectionWithWatercourse, FindSteepestSegment, FindNearbyFlowLine, FindNearbyFieldObservation, CanOverflowTo
+#from searches import FindSteepestAdjacent, FindSegmentIntersectionWithWatercourse, FindSteepestSegment, FindNearbyFlowLine, FindNearbyFieldObservation, CanOverflowTo
+from searches import FindSteepestAdjacent, FindSegmentIntersectionWithWatercourse, FindNearbyFlowLine, FindNearbyFieldObservation, CanOverflowTo
 from utils import GetPointsOnLine, GetCentroidOfContainingDEMCell, DisplayOS, GetRasterElev, CalcZCrossProduct, GetSteeperOfTwoLines, ToSentenceCase
 
 # pylint: disable=too-many-lines
@@ -68,7 +69,7 @@ def GetHighestAndLowestPointsOnFieldBoundary(fieldBoundary):
                   #print("{" + str(boundaryPoint.x()) + ", " + str(boundaryPoint.y()) + "} and {" + str(pixelCentroidPoint.x()) + ", " + str(pixelCentroidPoint.y()) + "}")
 
                   # Now look up the elevation value at the centroid point
-                  result = provider.identify(pixelCentroidPoint, QgsRaster.IdentifyFormatValue, extent, xSize, ySize, dpi)
+                  result = provider.identify(QgsPointXY(pixelCentroidPoint), QgsRaster.IdentifyFormatValue, extent, xSize, ySize, dpi)
                   error = result.error()
                   if not error.isEmpty() or not result.isValid():
                      shared.fpOut.write(error.summary())
@@ -394,11 +395,11 @@ def FlowAlongVectorRoute(RoadOrPath, indx, fieldCode, thisPoint):
          # Find the closest segment of the route polyline
          _sqrDist, _minDistPoint, afterVertex, _leftOf = geomSeg.closestSegmentWithContext(nearPoint)
 
-         afterVertexPoint = geomSeg.vertexAt(afterVertex)
+         afterVertexPoint = QgsPointXY(geomSeg.vertexAt(afterVertex))
          afterVertexElev = GetRasterElev(afterVertexPoint.x(), afterVertexPoint.y())
 
          prevVertex = afterVertex - 1
-         prevVertexPoint = geomSeg.vertexAt(prevVertex)
+         prevVertexPoint = QgsPointXY(geomSeg.vertexAt(prevVertex))
          prevVertexElev = GetRasterElev(prevVertexPoint.x(), prevVertexPoint.y())
 
          xDistPrevToNear = abs(prevVertexPoint.x() - nearPoint.x())
@@ -451,7 +452,8 @@ def FlowAlongVectorRoute(RoadOrPath, indx, fieldCode, thisPoint):
          # Go through this list of untravelled route segments till we find a suitable one
          feature = routeSeg[0]
          featID = feature.id()
-         nearPoint = routeSeg[1]
+         nearPoint = QgsPointXY(routeSeg[1])
+         #shared.fpOut.write("nearPoint = " + str(nearPoint) + "\n");
          nearPointElev = GetRasterElev(nearPoint.x(), nearPoint.y())
          lineVert = routeSeg[4]
 
@@ -706,7 +708,7 @@ def FlowAlongVectorRoute(RoadOrPath, indx, fieldCode, thisPoint):
 
                # OK, the route segment is, overall, downhill. Now get a list of the along-segment points, i.e. between thisVertex and nextVertex
                betweenPoints = GetPointsOnLine(thisVertex, nextVertex, shared.resolutionOfDEM)
-               #shared.fpOut.write(str(betweenPoints) + "\n")
+               #shared.fpOut.write(str("betweenPoints = ") + str(betweenPoints) + "\n")
                nBetween = len(betweenPoints) - 1
                for p in range(0, nBetween):
                   # Look at every pair of points
@@ -717,7 +719,8 @@ def FlowAlongVectorRoute(RoadOrPath, indx, fieldCode, thisPoint):
 
                   # Check to see whether this section of the route segment intersects a watercourse segment (note that we have not yet checked whether the next point is downhill from this point, but is a reasonable assumption that any intersect point must be downhill from this point)
                   #shared.fpOut.write("\tthisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + ", nextPoint = " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
-                  geomLine = QgsGeometry.fromPolyline([QgsPoint(thisPoint), QgsPoint(nextPoint)])
+                  #shared.fpOut.write("thisPoint = " + str(thisPoint) + " nextPoint = " + str(nextPoint) + "\n");
+                  geomLine = QgsGeometry.fromPolylineXY([thisPoint, nextPoint])
                   rtn = -1
                   streamIntersectPoints = []
                   rtn, streamIntersectPoints = FindSegmentIntersectionWithWatercourse(geomLine)
@@ -847,7 +850,7 @@ def FlowAlongVectorRoute(RoadOrPath, indx, fieldCode, thisPoint):
 
                   # Check to see whether this route segment intersects a watercourse segment (note that we have not yet checked whether the next point is downhill from this point, but is a reasonable assumption that any intersect point must be downhill from this point)
                   #shared.fpOut.write("\tthisPoint = " + DisplayOS(thisPoint.x(), thisPoint.y()) + ", nextPoint = " + DisplayOS(nextPoint.x(), nextPoint.y()) + "\n")
-                  geomLine = QgsGeometry.fromPolyline([QgsPoint(thisPoint), QgsPoint(nextPoint)])
+                  geomLine = QgsGeometry.fromPolylineXY([QgsPointXY(thisPoint), QgsPointXY(nextPoint)])
                   rtn = -1
                   streamIntersectPoints = []
                   rtn, streamIntersectPoints = FindSegmentIntersectionWithWatercourse(geomLine)
@@ -954,8 +957,10 @@ def FlowHitFieldBoundary(firstPoint, secondPoint, flowFieldCode):
    # pylint: disable=too-many-locals
    # pylint: disable=too-many-nested-blocks
 
+   #shared.fpOut.write("firstPoint = " + str(firstPoint) + " secondPoint = " + str(secondPoint) + "\n");
+
    flowLineFeature = QgsFeature()
-   flowLineFeature.setGeometry(QgsGeometry.fromPolyline([QgsPoint(firstPoint), QgsPoint(secondPoint)]))
+   flowLineFeature.setGeometry(QgsGeometry.fromPolylineXY([firstPoint, secondPoint]))
    geomFlowLine = flowLineFeature.geometry()
 
    # Construct a bounding box
@@ -1004,16 +1009,17 @@ def FlowHitFieldBoundary(firstPoint, secondPoint, flowFieldCode):
                   nextBoundaryPointY = point[j+1][1]
 
                   boundaryLineFeature = QgsFeature()
-                  boundaryLineFeature.setGeometry(QgsGeometry.fromPolyline([QgsPoint(thisBoundaryPointX, thisBoundaryPointY), QgsPoint(nextBoundaryPointX, nextBoundaryPointY)]))
+                  boundaryLineFeature.setGeometry(QgsGeometry.fromPolylineXY([QgsPointXY(thisBoundaryPointX, thisBoundaryPointY), QgsPointXY(nextBoundaryPointX, nextBoundaryPointY)]))
 
                   geomBoundaryLine = boundaryLineFeature.geometry()
 
                   if geomFlowLine.intersects(geomBoundaryLine):
                      intersection = geomFlowLine.intersection(geomBoundaryLine)
-                     intersectPoint = intersection.asPoint()
+                     intersectPoint = QgsPointXY(intersection.asPoint())
 
                      AddFlowMarkerPoint(intersectPoint, MARKER_HIT_FIELD_BOUNDARY, flowFieldCode, -1)
 
+                     #shared.fpOut.write("intersectPoint = " + str(intersectPoint) + "\n")
                      return True, intersectPoint, fieldCode
 
    return False, QgsPointXY(-1, -1), -1
@@ -1149,11 +1155,11 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
          # Find the closest segment of the field boundary polygon
          _sqrDist, _minDistPoint, afterVertex, _leftOf = geomFeat.closestSegmentWithContext(nearPoint)
 
-         afterVertexPoint = geomFeat.vertexAt(afterVertex)
+         afterVertexPoint = QgsPointXY(geomFeat.vertexAt(afterVertex))
          afterVertexElev = GetRasterElev(afterVertexPoint.x(), afterVertexPoint.y())
 
          prevVertex = afterVertex - 1
-         prevVertexPoint = geomFeat.vertexAt(prevVertex)
+         prevVertexPoint = QgsPointXY(geomFeat.vertexAt(prevVertex))
          prevVertexElev = GetRasterElev(prevVertexPoint.x(), prevVertexPoint.y())
 
          #shared.fpOut.write("\t" + DisplayOS(prevVertexPoint.x(), prevVertexPoint.y(), False) + " " + DisplayOS(nearPoint.x(), nearPoint.y(), False) + " " + DisplayOS(afterVertexPoint.x(), afterVertexPoint.y(), False) + "\n")
@@ -1362,7 +1368,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
                nextPointElev = GetRasterElev(nextPoint.x(), nextPoint.y())
 
                # Check to see whether this field boundary polygon segment intersects a watercourse segment (note that we have not yet checked whether the next point is downhill from this point, but is a reasonable assumption that any intersect point must be downhill from this point)
-               geomLine = QgsGeometry.fromPolyline([QgsPoint(thisPoint), QgsPoint(nextPoint)])
+               geomLine = QgsGeometry.fromPolylineXY([QgsPointXY(thisPoint), QgsPointXY(nextPoint)])
                rtn = -1
                streamIntersectPoints = []
                rtn, streamIntersectPoints = FindSegmentIntersectionWithWatercourse(geomLine)
@@ -1497,7 +1503,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
                nextPointElev = GetRasterElev(nextPoint.x(), nextPoint.y())
 
                # Check to see whether this field boundary segment intersects a watercourse segment (note that we have not yet checked whether the next point is downhill from this point, but is a reasonable assumption that any intersect point must be downhill from this point)
-               geomLine = QgsGeometry.fromPolyline([QgsPoint(thisPoint), QgsPoint(nextPoint)])
+               geomLine = QgsGeometry.fromPolylineXY([QgsPointXY(thisPoint), QgsPointXY(nextPoint)])
                rtn = -1
                streamIntersectPoints = []
                rtn, streamIntersectPoints = FindSegmentIntersectionWithWatercourse(geomLine)

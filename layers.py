@@ -1,4 +1,4 @@
-from qgis.core import QgsProject, QgsRasterLayer, QgsVectorLayer, QgsDataSourceUri, QgsFeatureRequest, QgsWkbTypes, QgsVectorFileWriter, QgsFeature, QgsGeometry, QgsRectangle, QgsCoordinateReferenceSystem, QgsPoint, QgsPointXY, QgsField
+from qgis.core import QgsProject, QgsRasterLayer, QgsVectorLayer, QgsDataSourceUri, QgsFeatureRequest, QgsWkbTypes, QgsVectorFileWriter, QgsFeature, QgsGeometry, QgsRectangle, QgsCoordinateReferenceSystem, QgsPointXY, QgsField
 
 from PyQt5.QtCore import QFileInfo     #, QVariant
 
@@ -434,8 +434,11 @@ def AddFlowMarkerPoint(thisPoint, desc, fieldCode, elev):
 #
 #======================================================================================================================
 def AddFlowLine(lineStartPoint, lineEndPoint, desc, fieldCode, elev):
+
+   #shared.fpOut.write("lineStartPoint = " + str(lineStartPoint) + " lineEndPoint = " + str(lineEndPoint) + "\n")
+
    feature = QgsFeature()
-   feature.setGeometry(QgsGeometry.fromPolyline([QgsPoint(lineStartPoint), QgsPoint(lineEndPoint)]))
+   feature.setGeometry(QgsGeometry.fromPolylineXY([lineStartPoint, lineEndPoint]))
 
    fields = shared.outFlowLineLayer.fields()
    feature.setFields(fields)

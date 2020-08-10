@@ -18,9 +18,14 @@ mv ff.ini ff.ini.OLD
 ./run_3.sh
 
 # ===================================================================
-# No Field obs, fill blind pits, consider ditches/streams and roads
+# Field obs
 
 ./run_4.sh
+
+# ===================================================================
+# Field obs, alternatives
+
+./run_5.sh
 
 # ===================================================================
 mv ff.ini.OLD ff.ini

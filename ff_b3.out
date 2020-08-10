@@ -1,0 +1,94 @@
+FieldFlow (31 July 2020 QGIS3 version)
+---------------------------------------
+
+RUN DETAILS
+
+West Sussex: Sample Area B. SIMPLE MODE, FILL BLIND PITS, CONSIDER DITCHES/STREAMS
+Input data read from ff_data_sample_area_b3.dat
+Flow from source fields 44, 45, 47, 52
+LE-flow interactions not considered
+Blind pits filled
+Watercourses considered
+Ditches not considered
+Field boundaries not considered
+Roads not considered
+Paths/tracks not considered
+DEM resolution = 5.0 m
+Distance to search = 5.0 m
+
+Vector layer 'FlowMarker' created
+Vector layer 'FlowLine' created
+Vector layer 'Boundaries of connected fields' loaded
+Vector layer 'OS Mastermap Water Network SU8520' loaded
+Vector layer 'OS VectorMap Local Road Centreline SU82se' loaded
+Vector layer 'Centrelines of selected paths and tracks' loaded
+Vector layer 'Centrelines of ditches' loaded
+Vector layer 'Observed flow lines B' loaded
+Raster layer 'OS Mastermap 1:1000 SU8624' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8623' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8622' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8524' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8523' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Mastermap 1:1000 SU8522' loaded with X, Y resolution = 0.3125, 0.3125 m
+Raster layer 'OS Terrain 5 SU82se' loaded with X, Y resolution = 5.0, 5.0 m
+Raster layer 'OS Terrain 5 SU92sw' loaded with X, Y resolution = 5.0, 5.0 m
+
+******************************************************************************************************************************************************
+
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW START POINTS, PER FIELD
+
+Flow from field 44 begins at {486119, 123992}
+Not calculating start of flow for field 50, this is not a source field
+Flow from field 47 begins at {486472, 123764}
+Not calculating start of flow for field 46, this is not a source field
+Not calculating start of flow for field 48, this is not a source field
+Flow from field 45 begins at {486433, 124114}
+Not calculating start of flow for field 49, this is not a source field
+Flow from field 52 begins at {486679, 123684}
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 45
+
+Flow from field 45 starts at {486433, 124114}
+Flow from field 45 enters the River Rother at {486248, 122694} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 44
+
+Flow from field 44 starts at {486119, 123992}
+Flow from field 44 enters the River Rother at {485552, 123121} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 47
+
+Flow from field 47 starts at {486472, 123764}
+Flow from field 47 enters the River Rother at {486388, 123230} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+SIMULATED FLOW FROM SOURCE FIELD 52
+
+Flow from field 52 starts at {486679, 123684}
+Flow from field 52 enters the River Rother at {486519, 123299} (RIVER ROTHER)
+
+******************************************************************************************************************************************************
+
+Area of filled blind pits = 5200.0 m2
+Maximum flow depth to fill any blind pit = 0.900 m
+
+******************************************************************************************************************************************************
+
+SAVING GIS FILES
+
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_marker_points_B3.shp' saved
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_B3.shp' saved
+
+******************************************************************************************************************************************************
+
+Simulation finished
