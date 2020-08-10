@@ -13,7 +13,7 @@ from simulationthread import SimulationThread
 
 #======================================================================================================================
 #
-# Class for a map tool, which returns coordinates when the mouse is clicked
+# Class for a map tool, which returns coordinates when mouse is clicked
 #
 #======================================================================================================================
 class PointTool(QgsMapToolEmitPoint):

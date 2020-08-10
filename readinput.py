@@ -8,7 +8,7 @@ from utils import DisplayOS
 
 #======================================================================================================================
 #
-# Processes a single line from a text file, ignoring comments. Each valid data line must contain a colon
+# Processes one line from a text file, ignoring comments. Each valid data line must contain a colon
 #
 #======================================================================================================================
 def checkDataLine(inData, fileName):

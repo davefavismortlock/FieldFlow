@@ -3,7 +3,7 @@ FieldFlow (31 July 2020 QGIS3 version)
 
 RUN DETAILS
 
-West Sussex: Sample Area C. SIMPLE MODE, DON'T FILL BLIND PITS
+West Sussex: Sample Area C SIMPLE MODE, DON'T FILL BLIND PITS
 Input data read from ff_data_sample_area_c1.dat
 Flow from source fields 69, 71, 73, 77
 LE-flow interactions not considered
@@ -20,7 +20,7 @@ Vector layer 'FlowMarker' created
 Vector layer 'FlowLine' created
 Vector layer 'OS Mastermap Water Network SU8520' loaded
 Vector layer 'OS Mastermap Water Network SU9020' loaded
-	Merged layers 'OS Mastermap Water Network SU8520' 'OS Mastermap Water Network SU9020' 
+	Merged layers 'OS Mastermap Water Network SU8520' 'OS Mastermap Water Network SU9020'
 Vector layer 'Boundaries of connected fields' loaded
 Vector layer 'OS VectorMap Local Road Centreline SU82se' loaded
 Vector layer 'Centrelines of selected paths and tracks' loaded

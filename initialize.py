@@ -13,7 +13,7 @@ from utils import GetCentroidOfContainingDEMCell, DisplayOS
 
 #======================================================================================================================
 #
-# Create the GIS output layers, reads in the GIS input layers, and sets everything up ready for the simulation
+# Create the GIS output layers, then reads in the GIS input layers, and sets everything up ready for the simulation
 #
 #======================================================================================================================
 def setUpSimulation():
