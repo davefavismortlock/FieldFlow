@@ -20,10 +20,10 @@ Vector layer 'FlowMarker' created
 Vector layer 'FlowLine' created
 Vector layer 'OS Mastermap Water Network SU9020' loaded
 Vector layer 'OS Mastermap Water Network SU9520' loaded
-	Merged layers 'OS Mastermap Water Network SU9020' 'OS Mastermap Water Network SU9520'
+	Merged layers 'OS Mastermap Water Network SU9020' 'OS Mastermap Water Network SU9520' 
 Vector layer 'OS VectorMap Local Road Centreline SU92sw' loaded
 Vector layer 'OS VectorMap Local Road Centreline SU92se' loaded
-	Merged layers 'OS VectorMap Local Road Centreline SU92sw' 'OS VectorMap Local Road Centreline SU92se'
+	Merged layers 'OS VectorMap Local Road Centreline SU92sw' 'OS VectorMap Local Road Centreline SU92se' 
 Vector layer 'Boundaries of connected fields' loaded
 Vector layer 'Centrelines of selected paths and tracks' loaded
 Vector layer 'Centrelines of ditches' loaded
@@ -125,7 +125,7 @@ SIMULATED FLOW FROM SOURCE FIELD P
 Flow from field P starts at {495474, 121133}
 	LE-flow interaction found for location {495160, 120958} 'across path, track to W of field P'
 Flow from field P routed 'across path track to W of field P' from {495164, 120963} via {495160, 120958} to {495152, 120954}
-Flow from field P hit flow from field N at {495153, 120966}, so stopped tracing flow from this field
+Flow from field P hit flow from field M at {495153, 120966}, so stopped tracing flow from this field
 
 ******************************************************************************************************************************************************
 

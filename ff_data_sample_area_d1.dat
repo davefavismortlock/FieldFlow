@@ -41,7 +41,7 @@ Coordinates of NE corner of area displayed                                    : 
 
 # Vector layers =======================================================================================================
 
-# Field boundaries REQUIRED
+# Field boundaries REQUIRED if considering field boundaries in LE flow interaction mode
 File for vector field boundaries (with extension)                             : field_boundaries/connected_field_boundaries.shp
 Table name                                                                    : boundaries
 Title                                                                         : Boundaries of connected fields
@@ -60,7 +60,7 @@ Style file (with extension, blank for default style)                          : 
 Transparency (0-100)                                                          : 0
 Type                                                                          : INPUT_WATERCOURSE_NETWORK
 
-# Roads REQUIRED ======================================================================================================
+# Roads REQUIRED if considering roads in LE flow interaction mode
 File for vector road network (with extension)                                 : OS VectorMap Local/su/vml-su92sw_Road_Centreline.shp
 Table name                                                                    : vml-su82sw_Road_Centreline
 Title                                                                         : OS VectorMap Local Road Centreline SU92sw
@@ -69,7 +69,7 @@ Style file (with extension, blank for default style)                          : 
 Transparency (0-100)                                                          : 50
 Type                                                                          : INPUT_ROAD_NETWORK
 
-# Paths REQUIRED ======================================================================================================
+# Paths REQUIRED if considering paths in LE flow interaction mode
 File for vector path network (with extension)                                 : selected_paths.shp
 Table name                                                                    : Footpaths
 Title                                                                         : Centrelines of selected paths and tracks
@@ -78,7 +78,7 @@ Style file (with extension, blank for default style)                          : 
 Transparency (0-100)                                                          : 50
 Type                                                                          : INPUT_PATH_NETWORK
 
-# Ditches REQUIRED ======================================================================================================
+# Ditches REQUIRED if considering ditches in LE flow interaction mode
 File for vector path network (with extension)                                 : ditches.shp
 Table name                                                                    : Ditches
 Title                                                                         : Centrelines of ditches
@@ -87,7 +87,7 @@ Style file (with extension, blank for default style)                          : 
 Transparency (0-100)                                                          : 50
 Type                                                                          : INPUT_DITCH_NETWORK
 
-# Observed flow lines OPTIONAL ========================================================================================
+# Observed flow lines OPTIONAL, visualisation only
 File for observed flow lines (with extension)                                 : Connectivity/flow_lines_d.sqlite
 Table name for observed flow lines                                            : flow_paths
 Title for observed flow lines                                                 : Observed flow lines D
@@ -100,14 +100,14 @@ END OF VECTOR LAYERS ===========================================================
 
 # Raster layers =======================================================================================================
 
-# DEM REQUIRED ========================================================================================================
+# DEM REQUIRED
 DEM file (with extension)                                                     : terrain-5-dtm/su/terrain-5-dtm-SU92SW.tif
 DEM title                                                                     : OS Terrain 5 SU92sw
 Style file (with extension, blank for default style)                          : terrain-5-dtm/default.qml
 DEM transparency (0-100)                                                      : 70
 Type                                                                          : INPUT_DIGITAL_ELEVATION_MODEL
 
-# Background OPTIONAL =================================================================================================
+# Background OPTIONAL, visualisation only
 File for raster background (with extension)                                   : mastermap_1_to_1000/su/su92/su9020.tif
 Title for raster background                                                   : OS Mastermap 1:1000 SU9020
 Style file (with extension, blank for default style)                          : mastermap_1_to_1000/default.qml
