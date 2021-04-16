@@ -6,8 +6,7 @@ from qgis.core import QgsRaster, QgsFeature, QgsFeatureRequest, QgsGeometry, Qgs
 import shared
 from shared import INPUT_DIGITAL_ELEVATION_MODEL, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_BEHAVIOUR_ALONG, MARKER_HIT_ROAD, MARKER_LEAVE_ROAD, LE_FLOW_INTERACTION_CATEGORY_PATH, MARKER_HIT_PATH, MARKER_LEAVE_PATH, LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, MARKER_HIT_FIELD_BOUNDARY, MARKER_LEAVE_FIELD_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_BLIND_PIT, MARKER_HIT_BLIND_PIT, LE_FLOW_INTERACTION_CATEGORY_CULVERT, MARKER_ENTER_CULVERT, INPUT_ROAD_NETWORK, OS_VECTORMAP_FEAT_CODE, OS_VECTORMAP_FEAT_DESC, OS_VECTORMAP_ROAD_NAME, OS_VECTORMAP_ROAD_NUMBER, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_VIA_ROAD, INPUT_PATH_NETWORK, PATH_DESC, PREV_POINT, THIS_POINT, POST_POINT, FLOW_VIA_PATH, INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, FLOW_VIA_BOUNDARY, FLOW_DOWN_STEEPEST, FLOW_INTO_BLIND_PIT, ROUTE_ROAD, ROUTE_PATH, LE_FLOW_INTERACTION_CATEGORY_FORCING, LE_FLOW_INTERACTION_BEHAVIOUR_FORCING, MARKER_FORCE_FLOW
 from layers import AddFlowMarkerPoint, AddFlowLine
-#from searches import FindSteepestAdjacent, FindSegmentIntersectionWithWatercourse, FindSteepestSegment, FindNearbyFlowLine, FindNearbyFieldObservation, CanOverflowTo
-from searches import FindSteepestAdjacent, FindSegmentIntersectionWithWatercourse, FindNearbyFlowLine, FindNearbyFieldObservation, CanOverflowTo
+from searches import FindSteepestDownhillAdjacent, FindSegmentIntersectionWithWatercourse, FindNearbyFlowLine, FindNearbyFieldObservation, CanOverflowTo, FindLowestAdjacent
 from utils import GetPointsOnLine, GetCentroidOfContainingDEMCell, DisplayOS, GetRasterElev, CalcZCrossProduct, GetSteeperOfTwoLines, ToSentenceCase
 
 # pylint: disable=too-many-lines
@@ -1412,7 +1411,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
                if (z > CROSS_PRODUCT_TOLERANCE):
                   # Search for the adjacent raster cell with the steepest here-to-there slope, and get its centroid
-                  adjPoint, adjElev = FindSteepestAdjacent(thisPoint, thisPointElev, geomFeat)
+                  adjPoint, adjElev = FindSteepestDownhillAdjacent(thisPoint, thisPointElev, geomFeat)
                   #shared.fpOut.write("\tadjPoint = " + DisplayOS(adjPoint.x(), adjPoint.y()) + ", adjElev = " + str(adjElev) + "\n")
                   if adjPoint.x() != -1:
                      # There is a within-polygon cell with a steeper gradient
@@ -1546,7 +1545,7 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 
                if (z < -CROSS_PRODUCT_TOLERANCE):
                   # Search for the adjacent raster cell with the steepest here-to-there slope, and get its centroid
-                  adjPoint, adjElev = FindSteepestAdjacent(thisPoint, thisPointElev, geomFeat)
+                  adjPoint, adjElev = FindSteepestDownhillAdjacent(thisPoint, thisPointElev, geomFeat)
                   #shared.fpOut.write("\tadjPoint = " + DisplayOS(adjPoint.x(), adjPoint.y()) + ", adjElev = " + str(adjElev) + "\n")
                   if adjPoint.x() != -1:
                      # There is a within-polygon cell with a steeper gradient
@@ -1618,36 +1617,31 @@ def flowAlongVectorFieldBoundary(indx, fieldCode, thisPoint):
 #
 #======================================================================================================================
 def FillBlindPit(thisPoint, fieldCode):
-
-   startElev = GetRasterElev(thisPoint.x(), thisPoint.y())
-   pondedCells = [thisPoint]
-   increment = 0.1
-   topElev = startElev
-
-   while True:
-      topElev += increment
-      #print("Start of FillBlindPit loop at " + DisplayOS(thisPoint.x(), thisPoint.y()) + " startElev = " +str(startElev) + " topElev = " + str(topElev))
-      for cell in pondedCells:
-         #print("pondedCell " + DisplayOS(cell.x(), cell.y()))
-         AddFlowLine(thisPoint, cell, FLOW_INTO_BLIND_PIT, fieldCode, -1)
-
-      newOverflowCells = []
-      for point in pondedCells:
-         adjPoint, _adjElev = FindSteepestAdjacent(point, topElev)
-
-         if adjPoint.x() != -1:
-            # We have found a new overflow point to which we have not travelled before
-            #print("Overflow cell found at " + DisplayOS(adjPoint.x(), adjPoint.y()) + " startElev = " +str(startElev)  + " topElev = " + str(topElev))
-            return adjPoint, topElev - startElev
-
-         # No new overflow point, so just add to list of ponded cells
-         tempCells = CanOverflowTo(thisPoint, topElev, pondedCells)
-         newOverflowCells.extend(tempCells)
-         #print("newOverflowCells = " + str(newOverflowCells))
-
-      pondedCells.extend(newOverflowCells)
-      #print("pondedCells = " + str(pondedCells))
-
-   # No overflow point
+   # First assume a sufficienr depth of ponding has accumulated, to overflow to the lowest adjacent cell to which this flowline has not previously travelled. Will always work, unless this cell is surrounded by cells to which this flowline has previously travelled  
+   thisElev = GetRasterElev(thisPoint.x(), thisPoint.y())
+   
+   found, outPoint, lowElev = FindLowestAdjacent(thisPoint)
+   if found:
+      # We have found a new overflow point to which we have not travelled before
+      #print("Overflow from this cell " + DisplayOS(thisPoint.x(), thisPoint.y()) + " to " + DisplayOS(outPoint.x(), outPoint.y()) + " thisElev = " +str(thisElev)  + " lowElev = " + str(lowElev))
+      return outPoint, lowElev - thisElev
+   
+   # OK, this cell is surrounded by cells to which this flowline has previously travelled. So travel back up the flowline, checking each cel until we find one which is nor surrounded by cells to which this flowline has previously travelled
+   nPrev = len(shared.thisFieldFlowLine) - 1
+   while nPrev >= 0:
+      prevPoint = shared.thisFieldFlowLine[nPrev]
+      prevElev = GetRasterElev(prevPoint.x(), prevPoint.y())
+      
+      found, outPoint, lowelev = FindLowestAdjacent(prevPoint)
+      if found:
+         # We have found a new overflow point to which we have not travelled before
+         print("Overflow from previous cell " + DisplayOS(prevPoint.x(), prevPoint.y()) + " to " + DisplayOS(outPoint.x(), outPoint.y()) + " prevElev = " +str(prevElev)  + " lowElev = " + str(lowElev))
+         return outPoint, lowElev - prevElev
+      
+      print("NO overflow from previous cell " + DisplayOS(prevPoint.x(), prevPoint.y()) + ", nPrev = " + str(nPrev))
+      nPrev = nPrev - 1
+      
+   # No overflow point (should never get here)
+   print("Could not continue from cell " + DisplayOS(thisPoint.x(), thisPoint.y()))   
    return -1, -1
 #======================================================================================================================

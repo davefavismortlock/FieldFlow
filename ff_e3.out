@@ -1,4 +1,4 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
@@ -20,10 +20,10 @@ Vector layer 'FlowMarker' created
 Vector layer 'FlowLine' created
 Vector layer 'OS Mastermap Water Network SU9020' loaded
 Vector layer 'OS Mastermap Water Network SU9520' loaded
-	Merged layers 'OS Mastermap Water Network SU9020' 'OS Mastermap Water Network SU9520'
+	Merged layers 'OS Mastermap Water Network SU9020' 'OS Mastermap Water Network SU9520' 
 Vector layer 'OS VectorMap Local Road Centreline SU92sw' loaded
 Vector layer 'OS VectorMap Local Road Centreline SU92se' loaded
-	Merged layers 'OS VectorMap Local Road Centreline SU92sw' 'OS VectorMap Local Road Centreline SU92se'
+	Merged layers 'OS VectorMap Local Road Centreline SU92sw' 'OS VectorMap Local Road Centreline SU92se' 
 Vector layer 'Boundaries of connected fields' loaded
 Vector layer 'Centrelines of selected paths and tracks' loaded
 Vector layer 'Centrelines of ditches' loaded
@@ -84,7 +84,7 @@ Flow from field N hit flow from field K at {495228, 121238}, so stopped tracing 
 SIMULATED FLOW FROM SOURCE FIELD O
 
 Flow from field O starts at {495529, 121390}
-Flow from field O hit flow from field N at {495396, 121422}, so stopped tracing flow from this field
+Flow from field O hit flow from field N at {495390, 121422}, so stopped tracing flow from this field
 
 ******************************************************************************************************************************************************
 
@@ -110,7 +110,7 @@ Flow from field Q enters the River Rother at {495480, 120253} (RIVER ROTHER)
 ******************************************************************************************************************************************************
 
 Area of filled blind pits = 375.0 m2
-Maximum flow depth to fill any blind pit = 0.100 m
+Maximum flow depth to fill any blind pit = 0.030 m
 
 ******************************************************************************************************************************************************
 

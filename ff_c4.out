@@ -1,4 +1,4 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
@@ -20,7 +20,7 @@ Vector layer 'FlowMarker' created
 Vector layer 'FlowLine' created
 Vector layer 'OS Mastermap Water Network SU8520' loaded
 Vector layer 'OS Mastermap Water Network SU9020' loaded
-	Merged layers 'OS Mastermap Water Network SU8520' 'OS Mastermap Water Network SU9020'
+	Merged layers 'OS Mastermap Water Network SU8520' 'OS Mastermap Water Network SU9020' 
 Vector layer 'Boundaries of connected fields' loaded
 Vector layer 'OS VectorMap Local Road Centreline SU82se' loaded
 Vector layer 'Centrelines of selected paths and tracks' loaded
@@ -123,7 +123,7 @@ Flow from field 69 begins to flow along the boundary of field 76 at {489153, 123
 Flow from field 69 routed 'overtop blindpit W edge of field 76' from {489114, 123218} via {489114, 123218} to {489100, 123189}
 	LE-flow interaction found for location {489100, 123189} 'along road, Dodsley Lane'
 Flow from field 69 onto road, from {489100, 123189} to {489100, 123189} E
-Flow from field 69 enters the River Rother at {489430, 121462} (RIVER ROTHER)
+Flow from field 69 enters the River Rother at {490679, 120980} (RIVER ROTHER)
 
 ******************************************************************************************************************************************************
 
@@ -153,9 +153,9 @@ Flow from field 77 starts at {489608, 123018}
 	LE-flow interaction found for location {489617, 122812} 'through boundary, S edge of 77'
 Flow from field 77 routed 'through boundary S edge of 77' from {489618, 122814} via {489617, 122812} to {489617, 122803}
 	LE-flow interaction found for location {489602, 122682} 'along road, Glaziers Lane'
-	Flow from field 77 onto the road segment 468 '15760 Local Street, alignment GLAZIERS LANE NULL' at {489602, 122683} F
+	Flow from field 77 onto the road segment 468 '15760 Local Street, alignment GLAZIERS LANE NULL' at {489602, 122683} F 
 	Flow from field 77 along road, from {489602, 122683} to {489599, 122681} F
-Flow from field 77 enters the River Rother at {489430, 121462} (RIVER ROTHER)
+Flow from field 77 enters the River Rother at {490679, 120980} (RIVER ROTHER)
 
 ******************************************************************************************************************************************************
 

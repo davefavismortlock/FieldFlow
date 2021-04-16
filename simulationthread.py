@@ -6,7 +6,7 @@ import shared
 from shared import INPUT_FIELD_BOUNDARIES, CONNECTED_FIELD_ID, INPUT_RASTER_BACKGROUND, MARKER_FLOW_START_POINT_1, MARKER_FLOW_START_POINT_2, MERGED_WITH_ADJACENT_FLOWLINE, FLOW_ADJUSTMENT_DUMMY, MARKER_HIT_BLIND_PIT, MARKER_FORCE_FLOW, MARKER_ENTER_WATERCOURSE, LE_FLOW_INTERACTION_CATEGORY_BOUNDARY, LE_FLOW_INTERACTION_CATEGORY_ROAD, LE_FLOW_INTERACTION_CATEGORY_PATH, MARKER_HIT_ROAD, MARKER_HIT_PATH, FLOW_OUT_OF_BLIND_PIT, FLOW_TO_FIELD_BOUNDARY, FLOW_DOWN_STEEPEST, MARKER_HIGHEST_POINT, MARKER_LOWEST_POINT, MARKER_CENTROID, ROUTE_ROAD, ROUTE_PATH
 from layers import AddFlowMarkerPoint, AddFlowLine, WriteVector
 from simulate import GetHighestAndLowestPointsOnFieldBoundary, FlowViaFieldObservation, FlowHitFieldBoundary, FillBlindPit, FlowAlongVectorRoute
-from searches import FindNearbyWatercourse, FindNearbyFlowLine, FindNearbyDitch, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestAdjacent
+from searches import FindNearbyWatercourse, FindNearbyFlowLine, FindNearbyDitch, FindNearbyFieldObservation, FindNearbyRoad, FindNearbyPath, FindSteepestDownhillAdjacent
 from utils import GetRasterElev, GetCentroidOfContainingDEMCell, DisplayOS, IsPointInPolygon
 
 
@@ -596,7 +596,7 @@ class SimulationThread(QThread):
 
                   newPoint, flowDepth = FillBlindPit(thisPoint, fieldCode)
                   if newPoint == -1:
-                     # Could not find and overflow point
+                     # Could not find an overflow point
                      print("Flow from field " + fieldCode + ", no overflow point found from blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()))
                      shared.fpOut.write("Flow from field " + fieldCode + ", no overflow point found from blind pit at " + DisplayOS(thisPoint.x(), thisPoint.y()) + "\n")
 
@@ -640,7 +640,7 @@ class SimulationThread(QThread):
             elev = GetRasterElev(thisPoint.x(), thisPoint.y())
 
             # Search for the adjacent raster cell with the steepest here-to-there slope, and get its centroid
-            adjPoint, _adjElev = FindSteepestAdjacent(thisPoint, elev)
+            adjPoint, _adjElev = FindSteepestDownhillAdjacent(thisPoint, elev)
             #shared.fpOut.write("Steepest adjacent is " + DisplayOS(adjPoint.x(), adjPoint.y()) + "\n")
 
             # Is this adjacent point in a blind pit?

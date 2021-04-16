@@ -188,6 +188,7 @@ def ReadAndMergeVectorLayers(vectorLayers):
 
       print("Copying features from vector layer '" + shared.vectorFileTitle[i] + "'")
       feats += features
+      #print("N features =", len(feats))
       #for feat in features:
          #newFeature = QgsFeature()
          #newFeature.setGeometry(feat.geometry())
@@ -203,6 +204,10 @@ def ReadAndMergeVectorLayers(vectorLayers):
          ##print(feat)
 
          ##feats.append(feat)
+
+      flds = thisLayer.fields()
+      #print(shared.vectorFileTitle[i] + " FIELD NAMES " + str(flds.names()))
+      #print(shared.vectorFileTitle[i]  + " number of attribute fields = " + str(len(flds.names())))
 
       category = shared.vectorFileCategory[i]
 
@@ -252,28 +257,24 @@ def ReadAndMergeVectorLayers(vectorLayers):
       return -1, -1
 
    # Sort the list of features by identifier
-   #for i in range(10):
-      #shared.fpOut.write(feats[i].attributes())
-
    feats.sort(key = lambda feat : feat.attributes()[1])
 
    #for i in range(10):
       #print("BEFORE MERGE " + str(feats[i].attributes()))
    #print("=================")
 
-   # BODGE
-   # This is needed because QGIS 3 handles Boolean layers incorrectly
+   ##BODGE This is needed because QGIS 3 handles Boolean layers incorrectly
    #print("*********************")
    #print("*** ORIGINAL: " + str(thisLayerFieldList))
    #for fld in thisLayerFieldList:
       #print(fld.type())
    #print("*********************")
 
-   for fld in thisLayerFieldList:
-      fldName = fld.typeName()
-      if fldName == "Boolean":
-         fld.setTypeName("Integer64")
-         fld.setType(4)
+   #for fld in thisLayerFieldList:
+      #fldName = fld.typeName()
+      #if fldName == "Boolean":
+         #fld.setTypeName("Integer64")
+         #fld.setType(4)
 
    #print("**** CHANGED : " + str(thisLayerFieldList))
    #for fld in thisLayerFieldList:
@@ -282,8 +283,8 @@ def ReadAndMergeVectorLayers(vectorLayers):
 
    # Add the field attributes to the merged layer
    provider = mergedLayer.dataProvider()
-   #print(provider)
-   #print("Number of attribute fields = " + str(len(thisLayerFieldList)))
+   #print("PROVIDER: " + str(provider))
+   #print("PROVIDER Number of attribute fields = " + str(len(thisLayerFieldList)))
    if not provider.addAttributes(thisLayerFieldList):
       errStr = "ERROR: could not add attributes to merged layer"
       print(errStr)
@@ -293,9 +294,8 @@ def ReadAndMergeVectorLayers(vectorLayers):
    mergedLayer.updateFields()
 
    flds = mergedLayer.fields()
-   #print(flds.names())
-   #print("Number of attribute fields = " + str(len(flds.names())))
-
+   #print("MERGED FIELD NAMES " + str(flds.names()))
+   #print("MERGED number of attribute fields = " + str(len(flds.names())))
 
    if not mergedLayer.startEditing():
       errStr = "ERROR: could not edit merged layer"
@@ -303,16 +303,28 @@ def ReadAndMergeVectorLayers(vectorLayers):
       shared.fpOut.write(errStr + "\n")
       return -1, -1
 
-   if not provider.addFeatures(feats):
+   if not mergedLayer.addFeatures(feats):
       errStr = "ERROR: could not add features to merged layer"
       print(errStr)
       shared.fpOut.write(errStr + "\n")
       return -1, -1
 
+   #testFeats = mergedLayer.getFeatures()
+   #print("BEFORE testFeats = " + str(testFeats))
+   #nMergedFeat = 0
+   #for feat in features:
+      #nMergedFeat += 1
+   #print("BEFORE N features in testFeats =", nMergedFeat)
+
    mergedLayer.commitChanges()
 
    #testFeats = mergedLayer.getFeatures()
-   #print("testFeats = " + str(list(testFeats)))
+   #print("AFTER testFeats = " + str(testFeats))
+   #nMergedFeat = 0
+   #for feat in features:
+      #nMergedFeat += 1
+   #print("AFTER N features in testFeats =", nMergedFeat)
+
 
    #features = mergedLayer.getFeatures()
    #for feat in features:

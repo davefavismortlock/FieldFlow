@@ -1,4 +1,4 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
@@ -79,8 +79,8 @@ Flow from field 52 enters the River Rother at {486519, 123299} (RIVER ROTHER)
 
 ******************************************************************************************************************************************************
 
-Area of filled blind pits = 5200.0 m2
-Maximum flow depth to fill any blind pit = 0.900 m
+Area of filled blind pits = 3725.0 m2
+Maximum flow depth to fill any blind pit = 0.830 m
 
 ******************************************************************************************************************************************************
 

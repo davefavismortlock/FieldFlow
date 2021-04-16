@@ -1,4 +1,4 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
@@ -91,7 +91,7 @@ Flow from field A5 hits a field boundary at {491504, 123336}, this is between ve
 	LE-flow interaction found for location {491503, 123335} 'through boundary, S edge of field F (HAD TO FORCE ALONG_PATH DOWNHILL FLOW)'
 Flow from field A5 routed 'through boundary S edge of field F (HAD TO FORCE ALONG_PATH DOWNHILL FLOW)' from {491504, 123336} via {491503, 123335} to {491517, 123325}
 	LE-flow interaction found for location {491517, 123325} 'along path, to Love's Farm'
-	Flow from field A5 onto the path segment 91 'Track from Loves Farm' at {491517, 123325} F
+	Flow from field A5 onto the path segment 91 'Track from Loves Farm' at {491517, 123325} F 
 	Flow from field A5 along path, from {491517, 123325} to {491517, 123325} F
 	LE-flow interaction found for location {491580, 123300} 'leave path, to Love's Farm (HAD TO FORCE THIS)'
 	Flow from field A5 along path segment 91 'Track from Loves Farm' from {491569, 123304} to LE-flow interaction at {491580, 123300}

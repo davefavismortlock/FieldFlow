@@ -1,9 +1,9 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
 
-West Sussex: Sample Area C. SIMPLE MODE, FILL BLIND PITS
+West Sussex: Sample Area C SIMPLE MODE, FILL BLIND PITS
 Input data read from ff_data_sample_area_c2.dat
 Flow from source fields 69, 71, 73, 77
 LE-flow interactions not considered
@@ -64,7 +64,7 @@ Not calculating start of flow for field 78, this is not a source field
 SIMULATED FLOW FROM SOURCE FIELD 69
 
 Flow from field 69 starts at {490272, 124206}
-Flow from field 69 enters the River Rother at {489522, 121566} (RIVER ROTHER)
+Flow from field 69 enters the River Rother at {489427, 121460} (RIVER ROTHER)
 
 ******************************************************************************************************************************************************
 
@@ -85,12 +85,12 @@ Flow from field 73 hit flow from field 69 at {489182, 123370}, so stopped tracin
 SIMULATED FLOW FROM SOURCE FIELD 77
 
 Flow from field 77 starts at {489608, 123018}
-Flow from field 77 hit flow from field 69 at {488972, 121966}, so stopped tracing flow from this field
+Flow from field 77 hit flow from field 69 at {488967, 121966}, so stopped tracing flow from this field
 
 ******************************************************************************************************************************************************
 
-Area of filled blind pits = 49900.0 m2
-Maximum flow depth to fill any blind pit = 1.100 m
+Area of filled blind pits = 41125.0 m2
+Maximum flow depth to fill any blind pit = inf m
 
 ******************************************************************************************************************************************************
 

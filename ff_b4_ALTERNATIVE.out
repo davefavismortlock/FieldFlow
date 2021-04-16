@@ -1,4 +1,4 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
@@ -88,7 +88,7 @@ Flow from field 45 routed 'through boundary between fields 47 and 48' from {4862
 	LE-flow interaction found for location {486082, 123442} 'overtop blindpit, out of blind pit in field 48'
 Flow from field 45 routed 'overtop blindpit out of blind pit in field 48' from {486081, 123443} via {486082, 123442} to {486021, 123415}
 	LE-flow interaction found for location {486021, 123415} 'along road, onto Stedham Lane'
-	Flow from field 45 onto the road segment 149 '15750 Minor Road, alignment STEDHAM LANE NULL' at {486021, 123415} F
+	Flow from field 45 onto the road segment 149 '15750 Minor Road, alignment STEDHAM LANE NULL' at {486021, 123415} F 
 	Flow from field 45 along road, from {486021, 123415} to {486021, 123414} F
 	LE-flow interaction found for location {486014, 123412} 'unknown forcing, needed to negotiate Stedham Lane junction'
 	Flow from field 45 along road segment 149 '15750 Minor Road, alignment STEDHAM LANE NULL' from {486020, 123414} to LE-flow interaction at {486014, 123412}
@@ -100,7 +100,7 @@ Flow from field 45 routed 'overtop blindpit out of road blind pit by Meadowhills
 	LE-flow interaction found for location {486133, 123102} 'overtop blindpit, out of road blind pit S of Meadowhills Cottage on Stedham Lane'
 Flow from field 45 routed 'overtop blindpit out of road blind pit S of Meadowhills Cottage on Stedham Lane' from {486133, 123102} to {486140, 123027}
 	LE-flow interaction found for location {486140, 123027} 'along road, needed because of blind pit S of Meadowhills Cottage on Stedham Lane'
-	Flow from field 45 onto the road segment 224 '15750 Minor Road, alignment STEDHAM LANE NULL' at {486140, 123027} F
+	Flow from field 45 onto the road segment 224 '15750 Minor Road, alignment STEDHAM LANE NULL' at {486140, 123027} F 
 	Flow from field 45 along road, from {486140, 123027} to {486140, 123027} F
 Flow from field 45 enters the River Rother at {486224, 122634} (RIVER ROTHER)
 
@@ -136,7 +136,7 @@ Flow from field 47 starts at {486472, 123764}
 Flow from field 47 routed 'through boundary S edge of field 47' from {486362, 123570} via {486363, 123569} to {486361, 123564}
 Flow from field 47 hits a field boundary at {486311, 123390}, this is between vertices at {486311, 123394} and {486311, 123389}
 	LE-flow interaction found for location {486312, 123386} 'along road, Stedham Lane'
-	Flow from field 47 onto the road segment 146 '15750 Minor Road, alignment STEDHAM LANE NULL' at {486311, 123390} F
+	Flow from field 47 onto the road segment 146 '15750 Minor Road, alignment STEDHAM LANE NULL' at {486311, 123390} F 
 	Flow from field 47 along road, from {486311, 123390} to {486310, 123386} F
 	Flow from field 47 hit a blind pit in road segment 146 '15750 Minor Road, alignment STEDHAM LANE NULL' at {486308, 123387}
 Flow from field 47 ends at {486310, 123386}

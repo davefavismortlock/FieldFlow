@@ -1,9 +1,9 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
 
-West Sussex: Sample Area B. SIMPLE MODE, FILL BLIND PITS
+West Sussex: Sample Area B SIMPLE MODE, FILL BLIND PITS
 Input data read from ff_data_sample_area_b2.dat
 Flow from source fields 44, 45, 47, 52
 LE-flow interactions not considered
@@ -79,8 +79,8 @@ Flow from field 52 enters the River Rother at {486519, 123299} (RIVER ROTHER)
 
 ******************************************************************************************************************************************************
 
-Area of filled blind pits = 7250.0 m2
-Maximum flow depth to fill any blind pit = 0.900 m
+Area of filled blind pits = 5400.0 m2
+Maximum flow depth to fill any blind pit = 0.840 m
 
 ******************************************************************************************************************************************************
 

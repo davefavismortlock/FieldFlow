@@ -1,4 +1,4 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
@@ -20,10 +20,10 @@ Vector layer 'FlowMarker' created
 Vector layer 'FlowLine' created
 Vector layer 'OS Mastermap Water Network SU9020' loaded
 Vector layer 'OS Mastermap Water Network SU9520' loaded
-	Merged layers 'OS Mastermap Water Network SU9020' 'OS Mastermap Water Network SU9520'
+	Merged layers 'OS Mastermap Water Network SU9020' 'OS Mastermap Water Network SU9520' 
 Vector layer 'OS VectorMap Local Road Centreline SU92sw' loaded
 Vector layer 'OS VectorMap Local Road Centreline SU92se' loaded
-	Merged layers 'OS VectorMap Local Road Centreline SU92sw' 'OS VectorMap Local Road Centreline SU92se'
+	Merged layers 'OS VectorMap Local Road Centreline SU92sw' 'OS VectorMap Local Road Centreline SU92se' 
 Vector layer 'Boundaries of connected fields' loaded
 Vector layer 'Centrelines of selected paths and tracks' loaded
 Vector layer 'Centrelines of ditches' loaded
@@ -75,7 +75,7 @@ Flow from field K routed 'overtop blindpit out of blind pit in field K' from {49
 	LE-flow interaction found for location {495557, 121273} 'through boundary, W edge of field K'
 Flow from field K routed 'through boundary W edge of field K' from {495560, 121273} via {495557, 121273} to {495551, 121268}
 	LE-flow interaction found for location {495551, 121268} 'along path, between fields K and O'
-	Flow from field K onto the path segment 112 'Track near N' at {495551, 121268} F
+	Flow from field K onto the path segment 112 'Track near N' at {495551, 121268} F 
 	Flow from field K along path, from {495551, 121268} to {495551, 121268} F
 	Flow from field K hit a blind pit in path segment 109 'Track from Southdean Farm' at {495142, 121053}
 Flow from field K hit a blind pit at {495535, 121184} while flowing along a path

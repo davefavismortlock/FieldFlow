@@ -1,4 +1,4 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
@@ -86,8 +86,8 @@ Flow from field 88 hit flow from field A5 at {491737, 122563}, so stopped tracin
 
 ******************************************************************************************************************************************************
 
-Area of filled blind pits = 725.0 m2
-Maximum flow depth to fill any blind pit = 0.300 m
+Area of filled blind pits = 875.0 m2
+Maximum flow depth to fill any blind pit = 0.310 m
 
 ******************************************************************************************************************************************************
 

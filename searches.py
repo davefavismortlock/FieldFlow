@@ -10,10 +10,10 @@ from layers import AddFlowMarkerPoint, AddFlowLine
 
 #======================================================================================================================
 #
-# Finds the adjacent grid cell with the steepest downhill gradient, to which this field's flow has not already travelled
+# Finds the adjacent grid cell to which water can flow, with the steepest downhill gradient, and to which this field's flow has not already travelled
 #
 #======================================================================================================================
-def FindSteepestAdjacent(thisPoint, thisElev, geomPolygon = -1):
+def FindSteepestDownhillAdjacent(thisPoint, thisElev, geomPolygon = -1):
    # pylint: disable=too-many-locals
    # pylint: disable=too-many-branches
    # pylint: disable=too-many-statements
@@ -1183,6 +1183,137 @@ def FindNearbyDitch(point, flowFieldCode):
 
    shared.fpOut.write("\treturn 1\n")
    return 1
+#======================================================================================================================
+
+
+#======================================================================================================================
+#
+# Finds the adjacent grid which is lowest and to which this field's flow has not already travelled
+#
+#======================================================================================================================
+def FindLowestAdjacent(thisPoint):
+   # pylint: disable=too-many-locals
+   # pylint: disable=too-many-branches
+   # pylint: disable=too-many-statements
+
+   lowElev = float("inf")
+   found = False
+   newAdjX = -1
+   newAdjY = -1
+   
+   # N
+   adjX = thisPoint.x()
+   adjY = thisPoint.y() + shared.resolutionOfDEM
+   adjElev = GetRasterElev(adjX, adjY)
+
+   #print("thispoint = " + str(DisplayOS(thisPoint.x(), thisPoint.y())) + ", trying N " + str(DisplayOS(adjX, adjY)) + " adjElev = " + str(adjElev))
+   if adjElev < lowElev:
+      adjPoint = QgsPointXY(adjX, adjY)
+      if adjPoint not in shared.thisFieldFlowLine:
+         found = True
+         newAdjX = adjX
+         newAdjY = adjY
+         lowElev = adjElev
+
+   # NE
+   adjX = thisPoint.x() + shared.resolutionOfDEM
+   adjY = thisPoint.y() + shared.resolutionOfDEM
+   adjElev = GetRasterElev(adjX, adjY)
+
+   #print("thispoint = " + str(DisplayOS(thisPoint.x(), thisPoint.y())) + ", trying NE " + str(DisplayOS(adjX, adjY)) + " adjElev = " + str(adjElev))
+   if adjElev < lowElev:
+      adjPoint = QgsPointXY(adjX, adjY)
+      if adjPoint not in shared.thisFieldFlowLine:
+         found = True
+         newAdjX = adjX
+         newAdjY = adjY
+         lowElev = adjElev
+
+   # E
+   adjX = thisPoint.x() + shared.resolutionOfDEM
+   adjY = thisPoint.y()
+   adjElev = GetRasterElev(adjX, adjY)
+
+   #print("thispoint = " + str(DisplayOS(thisPoint.x(), thisPoint.y())) + ", trying E " + str(DisplayOS(adjX, adjY)) + " adjElev = " + str(adjElev))
+   if adjElev < lowElev:
+      adjPoint = QgsPointXY(adjX, adjY)
+      if adjPoint not in shared.thisFieldFlowLine:
+         found = True
+         newAdjX = adjX
+         newAdjY = adjY
+         lowElev = adjElev
+
+   # SE
+   adjX = thisPoint.x() + shared.resolutionOfDEM
+   adjY = thisPoint.y() - shared.resolutionOfDEM
+   adjElev = GetRasterElev(adjX, adjY)
+
+   #print("thispoint = " + str(DisplayOS(thisPoint.x(), thisPoint.y())) + ", trying SE " + str(DisplayOS(adjX, adjY)) + " adjElev = " + str(adjElev))
+   if adjElev < lowElev:
+      adjPoint = QgsPointXY(adjX, adjY)
+      if adjPoint not in shared.thisFieldFlowLine:
+         found = True
+         newAdjX = adjX
+         newAdjY = adjY
+         lowElev = adjElev
+
+   # S
+   adjX = thisPoint.x()
+   adjY = thisPoint.y() - shared.resolutionOfDEM
+   adjElev = GetRasterElev(adjX, adjY)
+
+   #print("thispoint = " + str(DisplayOS(thisPoint.x(), thisPoint.y())) + ", trying S " + str(DisplayOS(adjX, adjY)) + " adjElev = " + str(adjElev))
+   if adjElev < lowElev:
+      adjPoint = QgsPointXY(adjX, adjY)
+      if adjPoint not in shared.thisFieldFlowLine:
+         found = True
+         newAdjX = adjX
+         newAdjY = adjY
+         lowElev = adjElev
+
+   # SW
+   adjX = thisPoint.x() - shared.resolutionOfDEM
+   adjY = thisPoint.y() - shared.resolutionOfDEM
+   adjElev = GetRasterElev(adjX, adjY)
+
+   #print("thispoint = " + str(DisplayOS(thisPoint.x(), thisPoint.y())) + ", trying SW " + str(DisplayOS(adjX, adjY)) + " adjElev = " + str(adjElev))
+   if adjElev < lowElev:
+      adjPoint = QgsPointXY(adjX, adjY)
+      if adjPoint not in shared.thisFieldFlowLine:
+         found = True
+         newAdjX = adjX
+         newAdjY = adjY
+         lowElev = adjElev
+
+   # W
+   adjX = thisPoint.x() - shared.resolutionOfDEM
+   adjY = thisPoint.y()
+   adjElev = GetRasterElev(adjX, adjY)
+
+   #print("thispoint = " + str(DisplayOS(thisPoint.x(), thisPoint.y())) + ", trying W " + str(DisplayOS(adjX, adjY)) + " adjElev = " + str(adjElev))
+   if adjElev < lowElev:
+      adjPoint = QgsPointXY(adjX, adjY)
+      if adjPoint not in shared.thisFieldFlowLine:
+         found = True
+         newAdjX = adjX
+         newAdjY = adjY
+         lowElev = adjElev
+
+   # NW
+   adjX = thisPoint.x() - shared.resolutionOfDEM
+   adjY = thisPoint.y() + shared.resolutionOfDEM
+   adjElev = GetRasterElev(adjX, adjY)
+
+   #print("thispoint = " + str(DisplayOS(thisPoint.x(), thisPoint.y())) + ", trying NW " + str(DisplayOS(adjX, adjY)) + " adjElev = " + str(adjElev))
+   if adjElev < lowElev:
+      adjPoint = QgsPointXY(adjX, adjY)
+      if adjPoint not in shared.thisFieldFlowLine:
+         found = True
+         newAdjX = adjX
+         newAdjY = adjY
+         lowElev = adjElev
+      
+   return found, QgsPointXY(newAdjX, newAdjY), lowElev
 #======================================================================================================================
 
 

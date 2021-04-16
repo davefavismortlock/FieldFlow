@@ -1,4 +1,4 @@
-FieldFlow (31 July 2020 QGIS3 version)
+FieldFlow (1 April 2021 QGIS3 version)
 ---------------------------------------
 
 RUN DETAILS
@@ -125,7 +125,7 @@ SIMULATED FLOW FROM SOURCE FIELD P
 Flow from field P starts at {495474, 121133}
 	LE-flow interaction found for location {495160, 120958} 'across path, track to W of field P'
 Flow from field P routed 'across path track to W of field P' from {495164, 120963} via {495160, 120958} to {495152, 120954}
-Flow from field P hit flow from field M at {495153, 120966}, so stopped tracing flow from this field
+Flow from field P hit flow from field K at {495153, 120966}, so stopped tracing flow from this field
 
 ******************************************************************************************************************************************************
 

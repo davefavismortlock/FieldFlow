@@ -3,12 +3,12 @@ FieldFlow (1 April 2021 QGIS3 version)
 
 RUN DETAILS
 
-West Sussex: Sample Area A SIMPLE MODE, FILL BLIND PITS
-Input data read from ff_data_sample_area_a2.dat
+West Sussex: Sample Area A SIMPLE MODE, FILL BLIND PITS, CONSIDER DITCHES/STREAMS *** COARSE DEM
+Input data read from ff_data_sample_area_a3_COARSE.dat
 Flow from source fields 22a, 21, B6
 LE-flow interactions not considered
 Blind pits filled
-Watercourses not considered
+Watercourses considered
 Ditches not considered
 Field boundaries not considered
 Roads not considered
@@ -38,8 +38,8 @@ Raster layer 'OS Mastermap 1:1000 SU7922' loaded with X, Y resolution = 0.3125, 
 Raster layer 'OS Mastermap 1:1000 SU7923' loaded with X, Y resolution = 0.3125, 0.3125 m
 Raster layer 'OS Mastermap 1:1000 SU7924' loaded with X, Y resolution = 0.3125, 0.3125 m
 Raster layer 'OS Mastermap 1:1000 SU7925' loaded with X, Y resolution = 0.3125, 0.3125 m
-Raster layer 'OS Terrain 5 SU82sw' loaded with X, Y resolution = 5.0, 5.0 m
-Raster layer 'OS Terrain 5 SU72se' loaded with X, Y resolution = 5.0, 5.0 m
+Raster layer 'OS Terrain 50 SU82' loaded with X, Y resolution = 50.0, 50.0 m
+Raster layer 'OS Terrain 50 SU72' loaded with X, Y resolution = 50.0, 50.0 m
 
 ******************************************************************************************************************************************************
 
@@ -48,44 +48,44 @@ Raster layer 'OS Terrain 5 SU72se' loaded with X, Y resolution = 5.0, 5.0 m
 
 SIMULATED FLOW START POINTS, PER FIELD
 
-Flow from field B6 begins at {480336, 124886}
+Flow from field B6 begins at {480288, 124894}
 Not calculating start of flow for field 22, this is not a source field
-Flow from field 22a begins at {480511, 124465}
-For field 21, the flow start point {480056, 124608} is not within the field, so changing the flow start point to {480054, 124608}
-Flow from field 21 begins at {480054, 124608}
+Flow from field 22a begins at {480506, 124466}
+For field 21, the flow start point {480046, 124588} is not within the field, so changing the flow start point to {480044, 124588}
+Flow from field 21 begins at {480044, 124588}
 
 ******************************************************************************************************************************************************
 
 SIMULATED FLOW FROM SOURCE FIELD B6
 
-Flow from field B6 starts at {480336, 124886}
-Flow from field B6 enters the River Rother at {479896, 123142} (RIVER ROTHER)
-
-******************************************************************************************************************************************************
-
-SIMULATED FLOW FROM SOURCE FIELD 21
-
-Flow from field 21 starts at {480054, 124608}
-Flow from field 21 hit flow from field B6 at {480310, 123996}, so stopped tracing flow from this field
+Flow from field B6 starts at {480288, 124894}
+Flow from field B6 enters the River Rother at {479820, 123135} (RIVER ROTHER)
 
 ******************************************************************************************************************************************************
 
 SIMULATED FLOW FROM SOURCE FIELD 22a
 
-Flow from field 22a starts at {480511, 124465}
-Flow from field 22a hit flow from field B6 at {480400, 124296}, so stopped tracing flow from this field
+Flow from field 22a starts at {480506, 124466}
+Flow from field 22a hit flow from field B6 at {480398, 123844}, so stopped tracing flow from this field
 
 ******************************************************************************************************************************************************
 
-Area of filled blind pits = 3125.0 m2
-Maximum flow depth to fill any blind pit = 0.450 m
+SIMULATED FLOW FROM SOURCE FIELD 21
+
+Flow from field 21 starts at {480044, 124588}
+Flow from field 21 hit flow from field B6 at {480148, 124348}, so stopped tracing flow from this field
+
+******************************************************************************************************************************************************
+
+Area of filled blind pits = 140250.0 m2
+Maximum flow depth to fill any blind pit = inf m
 
 ******************************************************************************************************************************************************
 
 SAVING GIS FILES
 
-Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_marker_points_A2.shp' saved
-Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_A2.shp' saved
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_marker_points_A3_COARSE.shp' saved
+Vector layer '/home/davefm/Documents/Research/0 To Do/JB_West_Sussex_GIS/ff_flow_A3_COARSE.shp' saved
 
 ******************************************************************************************************************************************************
 
